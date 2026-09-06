@@ -1,0 +1,27 @@
+{
+  "miniprogramRoot": "miniprogram/",
+  "projectname": "geek-box-miniprogram",
+  "description": "极客资源盒原生微信小程序项目",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "lazyCodeLoading": "requiredComponents"
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.3.4",
+  "condition": {}
+}

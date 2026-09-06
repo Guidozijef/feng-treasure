@@ -1,0 +1,60 @@
+/** 全局微信小程序基础样式 **/
+page {
+  background-color: #f8f9ff;
+  color: #1e293b;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+view, text, image, navigator, input, button {
+  box-sizing: border-box;
+}
+
+/* 主题颜色变量定义 */
+.text-primary { color: #0052d9; }
+.bg-primary { background-color: #0052d9; color: #ffffff; }
+.text-secondary { color: #475569; }
+.text-muted { color: #94a3b8; }
+.bg-surface { background-color: #ffffff; }
+
+/* 常用卡片与布局通用类 */
+.card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  border: 1rpx solid #e2e8f0;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* 按钮点击触感反馈 */
+.btn-hover {
+  opacity: 0.85;
+  transform: scale(0.98);
+}

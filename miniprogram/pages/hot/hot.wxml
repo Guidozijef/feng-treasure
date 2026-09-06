@@ -1,0 +1,121 @@
+<!-- pages/hot/hot.wxml -->
+<view class="container">
+  <!-- 顶部主维度 Tab 切换 -->
+  <view class="tab-bar-wrap">
+    <view class="tab-item {{activeTab === 'soar' ? 'active' : ''}}" bindtap="setTab" data-tab="soar">总榜·飙升</view>
+    <view class="tab-item {{activeTab === 'week' ? 'active' : ''}}" bindtap="setTab" data-tab="week">本周热门</view>
+    <view class="tab-item {{activeTab === 'new' ? 'active' : ''}}" bindtap="setTab" data-tab="new">今日新上</view>
+    <view class="tab-item {{activeTab === 'rating' ? 'active' : ''}}" bindtap="setTab" data-tab="rating">评分最高</view>
+  </view>
+
+  <!-- 二级分类药丸标签 -->
+  <scroll-view class="pill-scroll" scroll-x="true" enable-flex="true">
+    <view class="pill-item {{activeCategory === 'all' ? 'active' : ''}}" bindtap="setCategory" data-cat="all">全部品类</view>
+    <view class="pill-item {{activeCategory === 'pc' ? 'active' : ''}}" bindtap="setCategory" data-cat="pc">💻 电脑应用</view>
+    <view class="pill-item {{activeCategory === 'tools' ? 'active' : ''}}" bindtap="setCategory" data-cat="tools">⚡ 实用工具</view>
+    <view class="pill-item {{activeCategory === 'study' ? 'active' : ''}}" bindtap="setCategory" data-cat="study">🎓 学霸考研</view>
+    <view class="pill-item {{activeCategory === 'dev' ? 'active' : ''}}" bindtap="setCategory" data-cat="dev">⚙️ 源码组件</view>
+  </scroll-view>
+
+  <!-- 榜单更新指标卡片 -->
+  <view class="index-card">
+    <view class="index-header">
+      <view class="index-title">
+        <text class="dot-pulse"></text>
+        <text class="index-title-text">极客风云榜 · 全网热度指数</text>
+      </view>
+      <text class="index-rule">计算规则</text>
+    </view>
+    <view class="index-desc">根据真实下载次数、收藏增长率与转存热度实时动态排序，每小时准点结算。</view>
+  </view>
+
+  <!-- TOP 1 冠亚季军 领跑区 -->
+  <view class="section-title-wrap">
+    <text class="crown-icon">👑</text>
+    <text class="section-title">三甲领跑榜</text>
+  </view>
+
+  <!-- 冠军卡片 (TOP 1) -->
+  <view class="top1-card" bindtap="goToDetail" data-id="picgo" hover-class="btn-hover">
+    <view class="top1-crown">TOP 1 冠军</view>
+    <view class="top1-body">
+      <view class="top1-icon">🖼️</view>
+      <view class="top1-info">
+        <view class="top1-title">PicGo 图床利器</view>
+        <view class="top1-sub">免安装绿色版 · 开发者必装</view>
+        <view class="top1-meta">
+          <text class="heat-tag">🔥 98.6w 热度</text>
+          <text class="rate-tag">⭐ 4.9 高分</text>
+        </view>
+      </view>
+      <view class="top1-btn">高速获取</view>
+    </view>
+  </view>
+
+  <!-- TOP 2 & TOP 3 双列网格 -->
+  <view class="top23-grid">
+    <!-- TOP 2 -->
+    <view class="top23-card" bindtap="goToDetail" data-id="typora" hover-class="btn-hover">
+      <view class="top23-badge badge-silver">TOP 2</view>
+      <view class="top23-icon">📝</view>
+      <view class="top23-name">Typora 经典版</view>
+      <view class="top23-desc">v0.11.18 离线免安装</view>
+      <view class="top23-footer">
+        <text class="top23-heat">89.2w</text>
+        <view class="top23-btn">获取</view>
+      </view>
+    </view>
+
+    <!-- TOP 3 -->
+    <view class="top23-card" bindtap="goToDetail" data-id="docker" hover-class="btn-hover">
+      <view class="top23-badge badge-bronze">TOP 3</view>
+      <view class="top23-icon">🐳</view>
+      <view class="top23-name">Docker Desktop</view>
+      <view class="top23-desc">v4.28 调优纯净版</view>
+      <view class="top23-footer">
+        <text class="top23-heat">87.5w</text>
+        <view class="top23-btn">获取</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上升最快榜单 (04 - 08) -->
+  <view class="section-title-wrap mt-20">
+    <text class="section-title">上升最快热度榜单</text>
+  </view>
+
+  <view class="rank-list">
+    <block wx:for="{{rankList}}" wx:key="id">
+      <view class="rank-item" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
+        <view class="rank-num">{{item.rank}}</view>
+        <view class="rank-icon-box" style="background-color: {{item.iconBg}};">
+          {{item.icon}}
+        </view>
+        <view class="rank-content">
+          <view class="rank-title-row">
+            <text class="rank-title">{{item.title}}</text>
+            <text class="rank-version">{{item.version}}</text>
+          </view>
+          <view class="rank-meta-row">
+            <text class="rank-tag">{{item.tag}}</text>
+            <text class="rank-change {{item.changeType}}">{{item.change}}</text>
+            <text class="rank-heat">🔥 {{item.heat}}</text>
+          </view>
+        </view>
+        <view class="rank-actions">
+          <view class="fav-icon" catchtap="toggleFav" data-id="{{item.id}}">
+            <text class="heart {{item.isFav ? 'fav' : ''}}">{{item.isFav ? '❤️' : '🤍'}}</text>
+          </view>
+          <view class="rank-get-btn">获取</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 极客心愿单提示卡片 -->
+  <view class="wish-card">
+    <view class="wish-title">🎯 找不到心仪的冷门神器？</view>
+    <view class="wish-sub">在心愿单提交资源名称或链接，技术管理员 24 小时内帮您找寻原版绿色包。</view>
+    <button class="wish-btn" hover-class="btn-hover">提交求资源诉求</button>
+  </view>
+</view>

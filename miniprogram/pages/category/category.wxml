@@ -1,0 +1,121 @@
+<!-- pages/category/category.wxml -->
+<view class="category-page">
+  <!-- 顶部搜索与筛选 -->
+  <view class="cat-top-bar">
+    <view class="cat-search-box">
+      <icon type="search" size="14" color="#94a3b8" />
+      <input class="cat-search-input" placeholder="搜索 12,000+ 精选资源..." />
+    </view>
+    <view class="cat-filter-btn" bindtap="toggleDrawer">
+      <text class="filter-icon">⚙️ 筛选</text>
+    </view>
+  </view>
+
+  <!-- 左右分栏布局 -->
+  <view class="cat-main">
+    <!-- 左侧纵向导航 -->
+    <scroll-view class="cat-sidebar" scroll-y="true">
+      <view class="nav-item {{activeNav === 'pc' ? 'active' : ''}}" bindtap="switchNav" data-nav="pc">
+        <text class="nav-icon">💻</text>
+        <text class="nav-text">电脑应用</text>
+      </view>
+      <view class="nav-item {{activeNav === 'study' ? 'active' : ''}}" bindtap="switchNav" data-nav="study">
+        <text class="nav-icon">📚</text>
+        <text class="nav-text">学习资料</text>
+      </view>
+      <view class="nav-item {{activeNav === 'tools' ? 'active' : ''}}" bindtap="switchNav" data-nav="tools">
+        <text class="nav-icon">⚡</text>
+        <text class="nav-text">效率利器</text>
+      </view>
+      <view class="nav-item {{activeNav === 'dev' ? 'active' : ''}}" bindtap="switchNav" data-nav="dev">
+        <text class="nav-icon">⚙️</text>
+        <text class="nav-text">源码开发</text>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧内容列表 -->
+    <scroll-view class="cat-content" scroll-y="true">
+      <!-- 细分场景标签 -->
+      <view class="sub-scene-card">
+        <view class="sub-scene-title">细分场景标签</view>
+        <view class="sub-scene-grid">
+          <view class="tag-cell active">Mac 专区</view>
+          <view class="tag-cell">Windows常用</view>
+          <view class="tag-cell">装机必备</view>
+          <view class="tag-cell">开源神器</view>
+          <view class="tag-cell">浏览器插件</view>
+          <view class="tag-cell">便携绿色</view>
+        </view>
+      </view>
+
+      <!-- 排序状态栏 -->
+      <view class="sort-bar">
+        <view class="sort-options">
+          <text class="sort-item {{activeSort === 'comprehensive' ? 'active' : ''}}" bindtap="setSort" data-sort="comprehensive">综合排序</text>
+          <text class="sort-item {{activeSort === 'downloads' ? 'active' : ''}}" bindtap="setSort" data-sort="downloads">下载最多</text>
+          <text class="sort-item {{activeSort === 'rating' ? 'active' : ''}}" bindtap="setSort" data-sort="rating">评分优先</text>
+        </view>
+        <text class="total-count">共 428 款</text>
+      </view>
+
+      <!-- 资源卡片列表 -->
+      <view class="resource-list">
+        <block wx:for="{{items}}" wx:key="id">
+          <view class="res-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
+            <view class="res-icon">{{item.icon}}</view>
+            <view class="res-info">
+              <view class="res-title-row">
+                <text class="res-title">{{item.title}}</text>
+                <text class="res-badge">{{item.version}}</text>
+              </view>
+              <view class="res-desc">{{item.desc}}</view>
+              <view class="res-meta-row">
+                <view class="res-tags">
+                  <text class="pill">{{item.platform}}</text>
+                  <text class="pill">{{item.size}}</text>
+                  <text class="pill star">⭐ {{item.rating}}</text>
+                </view>
+                <view class="res-get-btn">获取</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <view class="footer-tip">已加载该分类全部资源 · 极客纯净收录</view>
+    </scroll-view>
+  </view>
+
+  <!-- 侧边多维高级筛选抽屉 -->
+  <view class="drawer-mask {{showDrawer ? 'show' : ''}}" bindtap="closeDrawer"></view>
+  <view class="drawer-panel {{showDrawer ? 'show' : ''}}">
+    <view class="drawer-header">
+      <text class="drawer-title">多维高级筛选</text>
+      <text class="drawer-close" bindtap="closeDrawer">✕</text>
+    </view>
+    <view class="drawer-body">
+      <view class="filter-section">
+        <view class="filter-label">适用操作系统 (多选)</view>
+        <view class="filter-chips">
+          <view class="chip active">Windows 10/11</view>
+          <view class="chip active">macOS (Apple M)</view>
+          <view class="chip">网页版 / Chrome</view>
+        </view>
+      </view>
+
+      <view class="filter-section">
+        <view class="filter-label">文件体积区间</view>
+        <view class="filter-chips">
+          <view class="chip active">不限体积</view>
+          <view class="chip">&lt; 10 MB (轻量)</view>
+          <view class="chip">10 - 100 MB</view>
+          <view class="chip">&gt; 1 GB (大包)</view>
+        </view>
+      </view>
+    </view>
+    <view class="drawer-footer">
+      <button class="drawer-reset-btn" bindtap="closeDrawer">重置</button>
+      <button class="drawer-confirm-btn" bindtap="applyFilter">查看筛选结果 (168款)</button>
+    </view>
+  </view>
+</view>

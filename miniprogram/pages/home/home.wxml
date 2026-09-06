@@ -1,0 +1,120 @@
+<!-- pages/home/home.wxml -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <icon type="search" size="16" color="#94a3b8" class="search-icon" />
+      <input 
+        class="search-input" 
+        placeholder="搜索 12,000+ 精选资源、开发工具、破解学习包..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+    </view>
+    <button class="search-btn" hover-class="btn-hover" bindtap="onSearchConfirm">搜索</button>
+  </view>
+
+  <!-- AI 生产力大赏 Banner -->
+  <view class="banner-card" bindtap="goToDetail" data-id="ai-tools">
+    <view class="banner-tag">2025 精选特辑</view>
+    <view class="banner-title">独立开发者与高效学习工具箱</view>
+    <view class="banner-sub">聚合全网高星开源工具 · 原版绿化免安装 · 稳定直链</view>
+    <view class="banner-btn" hover-class="btn-hover">立即探索专区 ➔</view>
+  </view>
+
+  <!-- 金刚区 5 大分类导航 -->
+  <view class="category-grid">
+    <view class="grid-item" bindtap="goToCategory" data-type="pc">
+      <view class="grid-icon-box bg-blue">💻</view>
+      <text class="grid-label">电脑应用</text>
+    </view>
+    <view class="grid-item" bindtap="goToCategory" data-type="study">
+      <view class="grid-icon-box bg-green">📚</view>
+      <text class="grid-label">学习资料</text>
+    </view>
+    <view class="grid-item" bindtap="goToCategory" data-type="tools">
+      <view class="grid-icon-box bg-orange">⚡</view>
+      <text class="grid-label">效率利器</text>
+    </view>
+    <view class="grid-item" bindtap="goToCategory" data-type="design">
+      <view class="grid-icon-box bg-purple">🎨</view>
+      <text class="grid-label">设计素材</text>
+    </view>
+    <view class="grid-item" bindtap="goToCategory" data-type="dev">
+      <view class="grid-icon-box bg-cyan">⚙️</view>
+      <text class="grid-label">编程开发</text>
+    </view>
+  </view>
+
+  <!-- 今日更新广播 -->
+  <view class="notice-bar">
+    <text class="notice-tag">今日更新</text>
+    <text class="notice-text">新增 Docker Desktop 4.28 优化镜像与沉浸式翻译 Pro 增强脚本</text>
+  </view>
+
+  <!-- 热门飙升榜 (横滑卡片) -->
+  <view class="section-wrap">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="title-bar"></text>
+        <text class="title-text">热门飙升榜</text>
+      </view>
+      <navigator url="/pages/hot/hot" open-type="switchTab" class="section-more">
+        查看完整榜单 ➔
+      </navigator>
+    </view>
+
+    <scroll-view class="horizontal-scroll" scroll-x="true" enable-flex="true">
+      <block wx:for="{{topPicks}}" wx:key="id">
+        <view class="top-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
+          <view class="top-card-badge">{{item.tag}}</view>
+          <view class="top-card-header">
+            <view class="top-card-icon">{{item.icon}}</view>
+            <view class="top-card-meta">
+              <view class="top-card-title">{{item.title}}</view>
+              <view class="top-card-version">{{item.version}}</view>
+            </view>
+          </view>
+          <view class="top-card-desc">{{item.desc}}</view>
+          <view class="top-card-footer">
+            <text class="tag-pill">{{item.size}}</text>
+            <text class="tag-pill">⭐ {{item.rating}}</text>
+            <view class="btn-get">获取</view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <!-- 综合精选列表 -->
+  <view class="section-wrap">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="title-bar"></text>
+        <text class="title-text">综合精选推荐</text>
+      </view>
+      <text class="section-count">共 428 款可用</text>
+    </view>
+
+    <view class="feed-list">
+      <block wx:for="{{feedList}}" wx:key="id">
+        <view class="feed-item" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
+          <view class="feed-content">
+            <view class="feed-header">
+              <text class="feed-title">{{item.title}}</text>
+              <text class="feed-badge">{{item.badge}}</text>
+            </view>
+            <view class="feed-desc">{{item.desc}}</view>
+            <view class="feed-tags">
+              <text class="tag-chip">{{item.platform}}</text>
+              <text class="tag-chip">{{item.size}}</text>
+              <text class="tag-chip rating">⭐ {{item.rating}}</text>
+            </view>
+          </view>
+          <button class="feed-btn" catchtap="goToDetail" data-id="{{item.id}}">立即获取</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

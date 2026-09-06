@@ -1,0 +1,6 @@
+{
+  "name": "极客资源盒",
+  "description": "极客开发者与学习者的专属精选资源分享与高效获取平台",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

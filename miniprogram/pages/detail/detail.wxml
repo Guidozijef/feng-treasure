@@ -1,0 +1,134 @@
+<!-- pages/detail/detail.wxml -->
+<view class="detail-container">
+  <!-- 头部主卡片 -->
+  <view class="hero-card">
+    <view class="hero-top">
+      <view class="hero-icon">🖼️</view>
+      <view class="hero-header-text">
+        <view class="hero-title">{{resource.title}}</view>
+        <view class="hero-version-pill">{{resource.version}}</view>
+        <view class="safe-badge">🛡️ 官方绿化认证 · 纯净无毒无捆绑</view>
+      </view>
+    </view>
+
+    <!-- 四格核心指标 -->
+    <view class="meta-grid">
+      <view class="meta-cell">
+        <text class="meta-val">{{resource.size}}</text>
+        <text class="meta-lbl">文件体积</text>
+      </view>
+      <view class="meta-cell">
+        <text class="meta-val">{{resource.rating}}</text>
+        <text class="meta-lbl">极客好评</text>
+      </view>
+      <view class="meta-cell">
+        <text class="meta-val">{{resource.downloads}}</text>
+        <text class="meta-lbl">累计转存</text>
+      </view>
+      <view class="meta-cell">
+        <text class="meta-val">免解压</text>
+        <text class="meta-lbl">运行模式</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 直链就绪快捷通知 -->
+  <view class="ready-bar" bindtap="openDownload">
+    <view class="ready-left">
+      <text class="ready-dot"></text>
+      <text class="ready-text">高速直链通道已就绪 · 不限速</text>
+    </view>
+    <view class="ready-btn">选节点 ➔</view>
+  </view>
+
+  <!-- 选项卡 -->
+  <view class="detail-tabs">
+    <view class="tab-btn {{activeTab === 'features' ? 'active' : ''}}" bindtap="setTab" data-tab="features">功能特性</view>
+    <view class="tab-btn {{activeTab === 'logs' ? 'active' : ''}}" bindtap="setTab" data-tab="logs">更新日志</view>
+    <view class="tab-btn {{activeTab === 'setup' ? 'active' : ''}}" bindtap="setTab" data-tab="setup">配置说明</view>
+  </view>
+
+  <!-- 选项卡对应正文 -->
+  <view class="content-card">
+    <block wx:if="{{activeTab === 'features'}}">
+      <view class="feature-title">💡 核心特性</view>
+      <view class="feature-p">1. 支持七牛云、又拍云、阿里云 OSS、腾讯云 COS、GitHub、SM.MS 等 10+ 常见云存储与图床服务。</view>
+      <view class="feature-p">2. 支持拖拽图片至托盘一键上传，剪贴板自动写入 Markdown / HTML 格式代码。</view>
+      <view class="feature-p">3. 绿色免安装，解压即用，不修改注册表，支持配置文件便携导出。</view>
+      <view class="feature-title mt-16">📸 界面实拍</view>
+      <view class="screenshot-tip">原生界面清爽无干扰，支持暗黑模式自适应。</view>
+    </block>
+
+    <block wx:if="{{activeTab === 'logs'}}">
+      <view class="feature-title">📜 历史更新记录</view>
+      <view class="feature-p">• 修复 macOS 14 偶现的权限弹窗阻断问题；</view>
+      <view class="feature-p">• 升级内置上传核心引擎，网络超时自动重试；</view>
+      <view class="feature-p">• 支持自定义快捷键触发截图上传与水印滤镜。</view>
+    </block>
+
+    <block wx:if="{{activeTab === 'setup'}}">
+      <view class="feature-title">🛠️ 便携与解压说明</view>
+      <view class="feature-p">1. 下载压缩包后，解压至任意无中文路径的文件夹；</view>
+      <view class="feature-p">2. 双击运行 PicGo.exe 或 PicGo.app 即可启动；</view>
+      <view class="feature-p">3. 首次使用请进入「图床设置」中配置 Token 密钥。</view>
+    </block>
+  </view>
+
+  <!-- 免责声明 -->
+  <view class="disclaimer-card">
+    <view class="disclaimer-title">⚠️ 免责与安全说明</view>
+    <view class="disclaimer-text">本平台资源均来自开源社区与开发者公开分发渠道，仅供极客学习与个人研析使用。严禁用于任何商业牟利行为。</view>
+  </view>
+
+  <!-- 垫高底部，防止遮挡 -->
+  <view class="bottom-placeholder"></view>
+
+  <!-- 底部固定操作栏 -->
+  <view class="action-footer">
+    <view class="action-btn" bindtap="toggleFav">
+      <text class="action-icon">{{isFav ? '❤️' : '🤍'}}</text>
+      <text class="action-lbl">{{isFav ? '已收藏' : '收藏'}}</text>
+    </view>
+    <button class="action-btn share-btn" open-type="share">
+      <text class="action-icon">↗️</text>
+      <text class="action-lbl">分享</text>
+    </button>
+    <button class="get-resource-btn" hover-class="btn-hover" bindtap="openDownload">
+      立即获取资源 (免费)
+    </button>
+  </view>
+
+  <!-- 下载浮层 ActionSheet -->
+  <view class="modal-mask {{showDownloadModal ? 'show' : ''}}" bindtap="closeDownload"></view>
+  <view class="modal-sheet {{showDownloadModal ? 'show' : ''}}">
+    <view class="modal-header">
+      <text class="modal-title">获取下载链接</text>
+      <text class="modal-close" bindtap="closeDownload">✕</text>
+    </view>
+    <view class="modal-body">
+      <view class="node-status">
+        <text class="status-dot"></text>
+        <text class="status-text">官方直链节点校验通过 · 100% 可用</text>
+      </view>
+
+      <view class="link-box">
+        <view class="link-label">网盘专属直链：</view>
+        <view class="link-url">{{resource.panUrl}}</view>
+      </view>
+
+      <view class="pwd-box">
+        <view class="pwd-left">
+          <text class="pwd-label">提取密码：</text>
+          <text class="pwd-val">{{resource.pwd}}</text>
+        </view>
+        <button class="pwd-copy-btn" bindtap="copyPwd">复制密码</button>
+      </view>
+
+      <button class="copy-all-btn" hover-class="btn-hover" bindtap="copyLink">
+        一键复制网盘直链与提取密码
+      </button>
+
+      <view class="modal-tip">复制后在浏览器中打开，免登录即可极速转存/下载</view>
+    </view>
+  </view>
+</view>
