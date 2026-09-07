@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "miniprogram/",
-  "projectname": "geek-box-miniprogram",
-  "description": "极客资源盒原生微信小程序项目",
-  "appid": "touristappid",
+  "projectname": "feng-treasure",
+  "description": "枫的藏宝阁原生微信小程序项目",
+  "appid": "wxa96095c00f58c2ea",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -19,9 +19,30 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "lazyCodeLoading": "requiredComponents"
+    "lazyCodeLoading": "requiredComponents",
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "compileType": "miniprogram",
   "libVersion": "3.3.4",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }

@@ -1,120 +1,252 @@
 <!-- pages/home/home.wxml -->
-<view class="container">
-  <!-- 搜索栏 -->
-  <view class="search-bar">
-    <view class="search-input-wrap">
-      <icon type="search" size="16" color="#94a3b8" class="search-icon" />
-      <input 
-        class="search-input" 
-        placeholder="搜索 12,000+ 精选资源、开发工具、破解学习包..." 
-        value="{{searchKeyword}}"
-        bindinput="onSearchInput"
-        bindconfirm="onSearchConfirm"
-      />
-    </view>
-    <button class="search-btn" hover-class="btn-hover" bindtap="onSearchConfirm">搜索</button>
-  </view>
+<view class="page-container">
 
-  <!-- AI 生产力大赏 Banner -->
-  <view class="banner-card" bindtap="goToDetail" data-id="ai-tools">
-    <view class="banner-tag">2025 精选特辑</view>
-    <view class="banner-title">独立开发者与高效学习工具箱</view>
-    <view class="banner-sub">聚合全网高星开源工具 · 原版绿化免安装 · 稳定直链</view>
-    <view class="banner-btn" hover-class="btn-hover">立即探索专区 ➔</view>
-  </view>
-
-  <!-- 金刚区 5 大分类导航 -->
-  <view class="category-grid">
-    <view class="grid-item" bindtap="goToCategory" data-type="pc">
-      <view class="grid-icon-box bg-blue">💻</view>
-      <text class="grid-label">电脑应用</text>
-    </view>
-    <view class="grid-item" bindtap="goToCategory" data-type="study">
-      <view class="grid-icon-box bg-green">📚</view>
-      <text class="grid-label">学习资料</text>
-    </view>
-    <view class="grid-item" bindtap="goToCategory" data-type="tools">
-      <view class="grid-icon-box bg-orange">⚡</view>
-      <text class="grid-label">效率利器</text>
-    </view>
-    <view class="grid-item" bindtap="goToCategory" data-type="design">
-      <view class="grid-icon-box bg-purple">🎨</view>
-      <text class="grid-label">设计素材</text>
-    </view>
-    <view class="grid-item" bindtap="goToCategory" data-type="dev">
-      <view class="grid-icon-box bg-cyan">⚙️</view>
-      <text class="grid-label">编程开发</text>
-    </view>
-  </view>
-
-  <!-- 今日更新广播 -->
-  <view class="notice-bar">
-    <text class="notice-tag">今日更新</text>
-    <text class="notice-text">新增 Docker Desktop 4.28 优化镜像与沉浸式翻译 Pro 增强脚本</text>
-  </view>
-
-  <!-- 热门飙升榜 (横滑卡片) -->
-  <view class="section-wrap">
-    <view class="section-header">
-      <view class="section-title">
-        <text class="title-bar"></text>
-        <text class="title-text">热门飙升榜</text>
+  <!-- 1. 自定义顶部导航栏 (适配各设备状态栏与微信原生胶囊) -->
+  <view class="custom-nav-bar" style="padding-top: {{statusBarHeight}}px; height: {{statusBarHeight + navBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuButtonRight}}px;">
+      <view class="nav-brand">
+        <image class="nav-logo" src="/images/logo.svg" mode="aspectFit" />
+        <text class="nav-title">枫的藏宝阁</text>
       </view>
-      <navigator url="/pages/hot/hot" open-type="switchTab" class="section-more">
-        查看完整榜单 ➔
-      </navigator>
     </view>
-
-    <scroll-view class="horizontal-scroll" scroll-x="true" enable-flex="true">
-      <block wx:for="{{topPicks}}" wx:key="id">
-        <view class="top-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
-          <view class="top-card-badge">{{item.tag}}</view>
-          <view class="top-card-header">
-            <view class="top-card-icon">{{item.icon}}</view>
-            <view class="top-card-meta">
-              <view class="top-card-title">{{item.title}}</view>
-              <view class="top-card-version">{{item.version}}</view>
-            </view>
-          </view>
-          <view class="top-card-desc">{{item.desc}}</view>
-          <view class="top-card-footer">
-            <text class="tag-pill">{{item.size}}</text>
-            <text class="tag-pill">⭐ {{item.rating}}</text>
-            <view class="btn-get">获取</view>
-          </view>
-        </view>
-      </block>
-    </scroll-view>
   </view>
 
-  <!-- 综合精选列表 -->
-  <view class="section-wrap">
-    <view class="section-header">
-      <view class="section-title">
-        <text class="title-bar"></text>
-        <text class="title-text">综合精选推荐</text>
+  <!-- 导航栏占位块 -->
+  <view class="nav-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
+
+  <!-- 主体内容滚动区 -->
+  <view class="content-body">
+
+    <!-- 2. 搜索栏 (全宽圆角无多余外置按钮，左放大镜右参数调谐滑块) -->
+    <view class="search-section">
+      <view class="search-bar-wrap">
+        <image class="search-icon" src="/images/search.svg" mode="aspectFit" />
+        <input 
+          class="search-input" 
+          placeholder="{{searchPlaceholder}}" 
+          placeholder-class="search-placeholder-style"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <image class="filter-icon" src="/images/filter.svg" mode="aspectFit" bindtap="onFilterTap" hover-class="btn-hover" />
       </view>
-      <text class="section-count">共 428 款可用</text>
     </view>
 
-    <view class="feed-list">
-      <block wx:for="{{feedList}}" wx:key="id">
-        <view class="feed-item" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
-          <view class="feed-content">
-            <view class="feed-header">
-              <text class="feed-title">{{item.title}}</text>
-              <text class="feed-badge">{{item.badge}}</text>
+    <!-- 3. AI 生产力工具全集 Banner 轮播 (蓝绿渐变、光晕、企划胶囊、获取按钮、右下角药丸分页点) -->
+    <view class="banner-section">
+      <swiper 
+        class="banner-swiper" 
+        circular="true" 
+        autoplay="true" 
+        interval="5000" 
+        duration="400" 
+        bindchange="onBannerChange"
+      >
+        <block wx:for="{{bannerList}}" wx:key="id">
+          <swiper-item>
+            <view class="banner-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
+              <!-- 右上角半透明发光几何光晕圈 -->
+              <view class="banner-glow-circle"></view>
+              
+              <!-- 企划标签 -->
+              <view class="banner-pill">
+                <view class="pill-dot"></view>
+                <text>{{item.tag}}</text>
+              </view>
+
+              <!-- 主副标题 -->
+              <view class="banner-title">{{item.title}}</view>
+              <view class="banner-sub">{{item.subTitle}}</view>
+
+              <!-- 立即获取按钮 -->
+              <view class="banner-btn-row">
+                <view class="banner-btn" hover-class="btn-hover">
+                  <text>{{item.btnText}}</text>
+                  <text class="banner-btn-arrow">→</text>
+                </view>
+              </view>
             </view>
-            <view class="feed-desc">{{item.desc}}</view>
-            <view class="feed-tags">
-              <text class="tag-chip">{{item.platform}}</text>
-              <text class="tag-chip">{{item.size}}</text>
-              <text class="tag-chip rating">⭐ {{item.rating}}</text>
+          </swiper-item>
+        </block>
+      </swiper>
+
+      <!-- 仿原生右下角暗色胶囊分页指示器 -->
+      <view class="banner-indicator-pill">
+        <view class="indicator-dot {{bannerCurrent === 0 ? 'active' : ''}}"></view>
+        <view class="indicator-dot {{bannerCurrent === 1 ? 'active' : ''}}"></view>
+        <view class="indicator-dot {{bannerCurrent === 2 ? 'active' : ''}}"></view>
+      </view>
+    </view>
+
+    <!-- 4. 金刚区 5 大分类导航 (独立浅彩圆角方块，完全与 UI 图 1:1) -->
+    <view class="category-section">
+      <view class="category-grid">
+        <block wx:for="{{categories}}" wx:key="id">
+          <view class="category-item" bindtap="goToCategory" data-type="{{item.id}}" hover-class="btn-hover">
+            <view class="category-icon-box {{item.bgClass}}">
+              <image class="category-icon-img" src="{{item.icon}}" mode="aspectFit" />
+            </view>
+            <text class="category-label">{{item.name}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 5. 今日更新广播条 (喇叭 + 最新红标 + 播报文本 + 右箭头) -->
+    <view class="notice-section">
+      <view class="notice-bar" bindtap="onNoticeTap" hover-class="btn-hover">
+        <image class="notice-icon" src="/images/horn.svg" mode="aspectFit" />
+        <text class="notice-badge">最新</text>
+        <text class="notice-text">{{noticeText}}</text>
+        <text class="notice-arrow">></text>
+      </view>
+    </view>
+
+    <!-- 6. 热门飙升榜 (横滑卡片区) -->
+    <view class="section-wrap">
+      <!-- 头部：火焰图标 + 热门飙升榜 + 查看更多 -->
+      <view class="section-head">
+        <view class="section-title-left">
+          <image class="section-fire-icon" src="/images/flame.svg" mode="aspectFit" />
+          <text class="section-title-text">热门飙升榜</text>
+        </view>
+        <view class="section-more-link" bindtap="goToHot" hover-class="btn-hover">
+          查看更多 >
+        </view>
+      </view>
+
+      <!-- 横滑卡片列表 -->
+      <scroll-view class="hot-scroll-view" scroll-x="true" enable-flex="true" show-scrollbar="false">
+        <block wx:for="{{topPicks}}" wx:key="id">
+          <view class="hot-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
+            <!-- 头部：图标与 TOP 角标 -->
+            <view class="hot-card-header">
+              <view class="hot-card-icon-box" style="background-color: {{item.iconBg}};">
+                <image class="hot-card-icon-img" src="{{item.icon}}" mode="aspectFit" />
+              </view>
+              <view class="hot-card-badge" wx:if="{{item.badge}}">{{item.badge}}</view>
+            </view>
+
+            <view class="hot-card-title">{{item.title}}</view>
+            <view class="hot-card-desc">{{item.desc}}</view>
+
+            <!-- 底部：人数与获取 -->
+            <view class="hot-card-footer">
+              <text class="hot-card-downloads">{{item.downloads}}</text>
+              <text class="hot-card-get-btn" catchtap="openGetResource" data-item="{{item}}" hover-class="btn-hover">获取</text>
             </view>
           </view>
-          <button class="feed-btn" catchtap="goToDetail" data-id="{{item.id}}">立即获取</button>
+        </block>
+      </scroll-view>
+    </view>
+
+    <!-- 7. 综合精选 Tabs 与资源 Feed 列表 -->
+    <view class="feed-section">
+      <!-- Tabs 切换头 -->
+      <view class="tabs-header-wrap">
+        <view class="tabs-nav-list">
+          <block wx:for="{{tabs}}" wx:key="id">
+            <view 
+              class="tab-item {{activeTab === item.id ? 'active' : ''}}" 
+              bindtap="onTabChange" 
+              data-id="{{item.id}}" 
+              data-name="{{item.name}}"
+            >
+              <text class="tab-text">{{item.name}}</text>
+              <view class="tab-indicator" wx:if="{{activeTab === item.id}}"></view>
+            </view>
+          </block>
         </view>
-      </block>
+        <text class="tabs-total-count">共 {{totalCount}} 资源</text>
+      </view>
+
+      <!-- 5 款精选卡片 Feed 列表 (与 UI 图完全对齐) -->
+      <view class="feed-card-list">
+        <block wx:for="{{feedList}}" wx:key="id">
+          <view class="feed-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
+            <!-- 左侧分类图标 -->
+            <view class="feed-icon-wrap">
+              <image class="feed-icon-img" src="{{item.icon}}" mode="aspectFit" />
+            </view>
+
+            <!-- 中间内容区 -->
+            <view class="feed-body-wrap">
+              <!-- 标签行 -->
+              <view class="feed-tags-row">
+                <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
+                  <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
+                </block>
+              </view>
+
+              <!-- 资源标题 (单行省略) -->
+              <view class="feed-title-text">{{item.title}}</view>
+
+              <!-- 评分与元数据 -->
+              <view class="feed-meta-row">
+                <text class="feed-rating-star">☆ {{item.rating}}</text>
+                <text class="feed-meta-dot">·</text>
+                <text class="feed-meta-size">{{item.size}}</text>
+                <text class="feed-meta-dot">·</text>
+                <text class="feed-meta-source">{{item.source}}</text>
+              </view>
+            </view>
+
+            <!-- 右侧深蓝胶囊获取按钮 -->
+            <view class="feed-get-btn" catchtap="openGetResource" data-item="{{item}}" hover-class="btn-hover">
+              获取
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 8. 原生交互：极速获取转存 / 复制链接弹窗 -->
+  <view class="resource-modal-mask" wx:if="{{showModal}}" bindtap="closeModal">
+    <view class="resource-modal-sheet" catchtap="true">
+      <view class="modal-drag-bar"></view>
+      <view class="modal-header">
+        <view class="modal-title-box">
+          <text class="modal-badge">绿色免安装</text>
+          <view class="modal-title">{{selectedResource.title}}</view>
+        </view>
+        <view class="modal-close" bindtap="closeModal">×</view>
+      </view>
+
+      <view class="modal-info-box">
+        <view class="modal-info-row">
+          <text class="info-label">文件大小</text>
+          <text class="info-val">{{selectedResource.size}}</text>
+        </view>
+        <view class="modal-info-row">
+          <text class="info-label">资源评分</text>
+          <text class="info-val" style="color: #d97706; font-weight: bold;">⭐ {{selectedResource.rating}} 高分</text>
+        </view>
+        <view class="modal-info-row">
+          <text class="info-label">转存网盘</text>
+          <text class="info-val">{{selectedResource.source}}</text>
+        </view>
+        <view class="modal-info-row">
+          <text class="info-label">网盘链接</text>
+          <text class="info-val link-text">{{selectedResource.link}}</text>
+        </view>
+        <view class="modal-info-row">
+          <text class="info-label">提取密码</text>
+          <text class="info-val code-text">{{selectedResource.code || 'geek'}}</text>
+        </view>
+      </view>
+
+      <view class="modal-actions">
+        <button class="modal-copy-btn" bindtap="copyResourceLink" hover-class="btn-hover">
+          一键复制网盘链接与提取码
+        </button>
+        <view class="modal-detail-link" bindtap="goToDetail" data-id="{{selectedResource.id}}">
+          查看完整版本说明与更新日志 ➔
+        </view>
+      </view>
     </view>
   </view>
+
 </view>

@@ -71,12 +71,12 @@
     </view>
     <view class="menu-item">
       <text class="menu-icon">ℹ️</text>
-      <text class="menu-title">关于极客资源盒 v2.0</text>
+      <text class="menu-title">关于枫的藏宝阁 v2.0</text>
       <text class="menu-arrow">➔</text>
     </view>
   </view>
 
   <view class="version-footer">
-    <text>极客资源盒 · 原生微信小程序版</text>
+    <text>枫的藏宝阁 · 原生微信小程序版</text>
   </view>
 </view>

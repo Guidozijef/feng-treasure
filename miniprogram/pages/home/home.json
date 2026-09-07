@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "极客资源盒",
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "枫的藏宝阁",
   "enablePullDownRefresh": true
 }

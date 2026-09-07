@@ -60,7 +60,7 @@
 }
 
 .level-badge {
-  font-size: 20rpx;
+  font-size: 22rpx;
   background: #f1f5f9;
   color: #475569;
   padding: 4rpx 14rpx;
@@ -74,15 +74,15 @@
 }
 
 .uid-text {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #94a3b8;
   font-family: monospace;
   margin-right: 12rpx;
 }
 
 .copy-btn {
-  font-size: 20rpx;
-  color: #0052d9;
+  font-size: 24rpx;
+  color: #3B82F6;
 }
 
 .privilege-bar {
@@ -91,7 +91,7 @@
 }
 
 .privilege-tip {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #64748b;
 }
 
@@ -113,14 +113,14 @@
 }
 
 .stat-num {
-  font-size: 34rpx;
+  font-size: 36rpx;
   font-weight: bold;
   color: #0f172a;
   margin-bottom: 4rpx;
 }
 
 .stat-label {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #64748b;
 }
 
@@ -137,23 +137,23 @@
 }
 
 .vip-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
   color: #fef08a;
   margin-bottom: 6rpx;
 }
 
 .vip-sub {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #94a3b8;
 }
 
 .vip-btn {
   background: #fef08a;
   color: #854d0e;
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: bold;
-  padding: 8rpx 20rpx;
+  padding: 8rpx 22rpx;
   border-radius: 20rpx;
 }
 
@@ -177,24 +177,24 @@
 }
 
 .menu-icon {
-  font-size: 32rpx;
+  font-size: 34rpx;
   margin-right: 20rpx;
 }
 
 .menu-title {
   flex: 1;
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #1e293b;
 }
 
 .menu-arrow {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #cbd5e1;
 }
 
 .version-footer {
   text-align: center;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #94a3b8;
   padding-bottom: 40rpx;
 }

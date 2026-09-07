@@ -8,32 +8,40 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0052d9",
-    "navigationBarTitleText": "极客资源盒",
-    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "枫的藏宝阁",
+    "navigationBarTextStyle": "black",
     "backgroundColor": "#f8f9ff"
   },
   "tabBar": {
-    "color": "#64748b",
-    "selectedColor": "#0052d9",
+    "color": "#94a3b8",
+    "selectedColor": "#3B82F6",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/hot/hot",
-        "text": "热门"
+        "text": "首页",
+        "iconPath": "images/tabbar/home.png",
+        "selectedIconPath": "images/tabbar/home-active.png"
       },
       {
         "pagePath": "pages/category/category",
-        "text": "分类"
+        "text": "分类",
+        "iconPath": "images/tabbar/category.png",
+        "selectedIconPath": "images/tabbar/category-active.png"
+      },
+      {
+        "pagePath": "pages/hot/hot",
+        "text": "热门",
+        "iconPath": "images/tabbar/hot.png",
+        "selectedIconPath": "images/tabbar/hot-active.png"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "images/tabbar/profile.png",
+        "selectedIconPath": "images/tabbar/profile-active.png"
       }
     ]
   },

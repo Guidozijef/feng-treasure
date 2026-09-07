@@ -44,7 +44,7 @@ Page({
 
   copyLink() {
     const { panUrl, pwd } = this.data.resource;
-    const text = `【极客资源盒】下载链接：${panUrl} 提取码：${pwd}`;
+    const text = `【枫的藏宝阁】下载链接：${panUrl} 提取码：${pwd}`;
     copyToClipboard(text, '网盘直链与密码已复制！');
   },
 

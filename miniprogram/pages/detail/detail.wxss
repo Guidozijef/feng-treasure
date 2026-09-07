@@ -39,8 +39,8 @@
 .hero-version-pill {
   display: inline-block;
   background: #eff6ff;
-  color: #0052d9;
-  font-size: 22rpx;
+  color: #3B82F6;
+  font-size: 24rpx;
   font-weight: bold;
   padding: 4rpx 16rpx;
   border-radius: 20rpx;
@@ -48,7 +48,7 @@
 }
 
 .safe-badge {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #16a34a;
 }
 
@@ -67,14 +67,14 @@
 }
 
 .meta-val {
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: bold;
   color: #1e293b;
   margin-bottom: 4rpx;
 }
 
 .meta-lbl {
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #94a3b8;
 }
 
@@ -104,14 +104,14 @@
 }
 
 .ready-text {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #1e40af;
   font-weight: 500;
 }
 
 .ready-btn {
-  font-size: 22rpx;
-  color: #0052d9;
+  font-size: 24rpx;
+  color: #3B82F6;
   font-weight: bold;
 }
 
@@ -128,14 +128,14 @@
 .tab-btn {
   flex: 1;
   text-align: center;
-  padding: 12rpx 0;
-  font-size: 26rpx;
+  padding: 14rpx 0;
+  font-size: 28rpx;
   color: #64748b;
   border-radius: 12rpx;
 }
 
 .tab-btn.active {
-  background: #0052d9;
+  background: #3B82F6;
   color: #ffffff;
   font-weight: bold;
 }
@@ -150,7 +150,7 @@
 }
 
 .feature-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
   color: #1e293b;
   margin-bottom: 12rpx;
@@ -161,14 +161,14 @@
 }
 
 .feature-p {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #475569;
   line-height: 1.6;
   margin-bottom: 10rpx;
 }
 
 .screenshot-tip {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #94a3b8;
   background: #f8fafc;
   padding: 20rpx;
@@ -186,14 +186,14 @@
 }
 
 .disclaimer-title {
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: bold;
   color: #64748b;
   margin-bottom: 6rpx;
 }
 
 .disclaimer-text {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #94a3b8;
   line-height: 1.5;
 }
@@ -236,19 +236,19 @@
 }
 
 .action-lbl {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #64748b;
 }
 
 .get-resource-btn {
   flex: 1;
-  background: #0052d9;
+  background: #3B82F6;
   color: #ffffff;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
-  height: 80rpx;
-  line-height: 80rpx;
-  border-radius: 40rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 42rpx;
 }
 
 /* 弹层 */
@@ -292,13 +292,13 @@
 }
 
 .modal-title {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: bold;
   color: #0f172a;
 }
 
 .modal-close {
-  font-size: 32rpx;
+  font-size: 36rpx;
   color: #94a3b8;
 }
 
@@ -324,7 +324,7 @@
 }
 
 .status-text {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #15803d;
   font-weight: 500;
 }
@@ -338,14 +338,14 @@
 }
 
 .link-label {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #64748b;
   margin-bottom: 8rpx;
 }
 
 .link-url {
-  font-size: 24rpx;
-  color: #0052d9;
+  font-size: 26rpx;
+  color: #3B82F6;
   word-break: break-all;
 }
 
@@ -366,21 +366,21 @@
 }
 
 .pwd-label {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: #64748b;
 }
 
 .pwd-val {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
-  color: #0052d9;
+  color: #3B82F6;
   margin-left: 12rpx;
 }
 
 .pwd-copy-btn {
   background: #eff6ff;
-  color: #0052d9;
-  font-size: 22rpx;
+  color: #3B82F6;
+  font-size: 24rpx;
   font-weight: bold;
   padding: 6rpx 20rpx;
   border-radius: 12rpx;
@@ -390,18 +390,18 @@
 }
 
 .copy-all-btn {
-  background: #0052d9;
+  background: #3B82F6;
   color: #ffffff;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
-  height: 84rpx;
-  line-height: 84rpx;
-  border-radius: 42rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 44rpx;
   margin-bottom: 20rpx;
 }
 
 .modal-tip {
   text-align: center;
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #94a3b8;
 }
