@@ -134,7 +134,7 @@
             <!-- 底部：人数与获取 -->
             <view class="hot-card-footer">
               <text class="hot-card-downloads">{{item.downloads}}</text>
-              <text class="hot-card-get-btn" catchtap="openGetResource" data-item="{{item}}" hover-class="btn-hover">获取</text>
+              <text class="hot-card-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">获取</text>
             </view>
           </view>
         </block>
@@ -193,7 +193,7 @@
             </view>
 
             <!-- 右侧深蓝胶囊获取按钮 -->
-            <view class="feed-get-btn" catchtap="openGetResource" data-item="{{item}}" hover-class="btn-hover">
+            <view class="feed-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
               获取
             </view>
           </view>

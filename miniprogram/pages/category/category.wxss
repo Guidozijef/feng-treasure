@@ -123,8 +123,11 @@
   border-radius: 10rpx;
   text-align: center;
   font-size: 24rpx;
-  padding: 10rpx 0;
+  padding: 10rpx 6rpx;
   color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag-cell.active {
@@ -150,6 +153,7 @@
 
 .sort-item {
   color: #64748b;
+  white-space: nowrap;
 }
 
 .sort-item.active {
@@ -160,6 +164,7 @@
 .total-count {
   color: #94a3b8;
   font-size: 24rpx;
+  white-space: nowrap;
 }
 
 /* 资源列表 */
@@ -175,12 +180,20 @@
   border-radius: 20rpx;
   padding: 22rpx;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .res-icon {
-  font-size: 52rpx;
-  margin-right: 18rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 22rpx;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
 .res-info {
@@ -199,6 +212,12 @@
   font-size: 29rpx;
   font-weight: bold;
   color: #1e293b;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10rpx;
 }
 
 .res-badge {
@@ -207,6 +226,8 @@
   background: #eff6ff;
   padding: 2rpx 10rpx;
   border-radius: 6rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .res-desc {
@@ -217,31 +238,42 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .res-meta-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10rpx;
 }
 
 .res-tags {
   display: flex;
-  gap: 10rpx;
+  align-items: center;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .pill {
   font-size: 22rpx;
   background: #f1f5f9;
   color: #475569;
-  padding: 4rpx 12rpx;
+  padding: 4rpx 10rpx;
   border-radius: 6rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.25;
 }
 
 .pill.star {
   color: #d97706;
   font-weight: bold;
   background: #fefce8;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .res-get-btn {
@@ -249,8 +281,10 @@
   color: #ffffff;
   font-size: 26rpx;
   font-weight: bold;
-  padding: 8rpx 24rpx;
+  padding: 8rpx 22rpx;
   border-radius: 24rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .footer-tip {

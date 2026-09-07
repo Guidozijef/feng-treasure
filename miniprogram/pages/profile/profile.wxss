@@ -1,200 +1,712 @@
 /* pages/profile/profile.wxss */
-.profile-container {
-  padding: 24rpx;
+.profile-page {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* 用户卡片 */
-.user-card {
+/* 1. 自定义顶部导航栏 (适配状态栏并与微信原生胶囊水平对齐) */
+.custom-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: #ffffff;
-  border-radius: 24rpx;
-  border: 1rpx solid #e2e8f0;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.02);
+  z-index: 1000;
+  box-shadow: 0 1rpx 0 rgba(0, 0, 0, 0.05);
 }
 
-.user-main {
+.nav-content {
   display: flex;
   align-items: center;
+  padding-left: 28rpx;
+  box-sizing: border-box;
+}
+
+.nav-title-box {
+  display: flex;
+  align-items: center;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5rpx;
+}
+
+.nav-badge-pro {
+  font-size: 22rpx;
+  font-weight: 800;
+  color: #0f5bd8;
+  background: #e0ecff;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  margin-left: 12rpx;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 页面内容区 */
+.profile-body {
+  padding: 20rpx 28rpx;
+  padding-bottom: 60rpx;
+}
+
+/* 2. 用户身份特权卡片 */
+.user-id-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  border: 1rpx solid #eef2f6;
+  padding: 28rpx;
   margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.025);
+}
+
+.user-top-row {
+  display: flex;
+  align-items: center;
 }
 
 .avatar-wrap {
   position: relative;
-  margin-right: 24rpx;
+  width: 108rpx;
+  height: 108rpx;
+  margin-right: 22rpx;
+  flex-shrink: 0;
 }
 
-.avatar-box {
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50rpx;
-  background: #eff6ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 52rpx;
+.avatar-img {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 50%;
+  border: 2rpx solid #e2e8f0;
+  box-sizing: border-box;
 }
 
-.online-badge {
+.avatar-verified-badge {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 20rpx;
-  height: 20rpx;
-  background: #10b981;
+  width: 26rpx;
+  height: 26rpx;
+  background: #0f5bd8;
   border-radius: 50%;
   border: 4rpx solid #ffffff;
 }
 
-.nick-row {
+.user-meta-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.name-svip-row {
   display: flex;
   align-items: center;
   margin-bottom: 8rpx;
 }
 
-.nick-text {
+.user-nickname {
   font-size: 32rpx;
-  font-weight: bold;
+  font-weight: 800;
   color: #0f172a;
-  margin-right: 12rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280rpx;
 }
 
-.level-badge {
-  font-size: 22rpx;
-  background: #f1f5f9;
-  color: #475569;
+.svip-badge {
+  background-color: #F59E0B;
   padding: 4rpx 14rpx;
-  border-radius: 20rpx;
-  border: 1rpx solid #e2e8f0;
+  border-radius: 16rpx;
+  margin-left: 14rpx;
+  box-shadow: 0 2rpx 8rpx rgba(234, 88, 12, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.svip-flash-icon {
+  width: 25rpx;
+  height: 25rpx;
+  display: block;
+  flex-shrink: 0;
+}
+
+.svip-text {
+  font-size: 22rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5rpx;
+  line-height: 1;
 }
 
 .uid-row {
+  display: inline-flex;
+}
+
+.uid-capsule {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  gap: 8rpx;
+}
+
+.uid-label {
+  font-size: 22rpx;
+  color: #64748b;
+  font-family: monospace;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+}
+
+.copy-icon {
+  width: 22rpx;
+  height: 22rpx;
+  opacity: 0.7;
+  flex-shrink: 0;
+  display: block;
+}
+
+.settings-btn {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.settings-icon {
+  width: 36rpx;
+  height: 36rpx;
+  display: block;
+}
+
+.user-bottom-row {
+  border-top: 1rpx solid #f1f5f9;
+  margin-top: 24rpx;
+  padding-top: 18rpx;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-.uid-text {
-  font-size: 24rpx;
-  color: #94a3b8;
-  font-family: monospace;
+.privilege-status-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  margin-right: 16rpx;
+}
+
+.green-status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background: #10b981;
+  border-radius: 50%;
   margin-right: 12rpx;
+  flex-shrink: 0;
 }
 
-.copy-btn {
-  font-size: 24rpx;
-  color: #3B82F6;
-}
-
-.privilege-bar {
-  border-top: 1rpx solid #f1f5f9;
-  padding-top: 16rpx;
-}
-
-.privilege-tip {
+.privilege-status-text {
   font-size: 24rpx;
   color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* 统计卡片 */
-.stat-card {
+.privilege-detail-link {
   display: flex;
-  background: #ffffff;
-  border-radius: 20rpx;
-  border: 1rpx solid #e2e8f0;
-  padding: 24rpx 10rpx;
-  margin-bottom: 24rpx;
-  text-align: center;
+  align-items: center;
+  gap: 4rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.stat-item {
+.link-text {
+  font-size: 24rpx;
+  color: #0f5bd8;
+  font-weight: 600;
+}
+
+.link-arrow {
+  font-size: 24rpx;
+  color: #0f5bd8;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+/* 3. 数据资产四格统计卡片 */
+.stats-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #ffffff;
+  border-radius: 24rpx;
+  border: 1rpx solid #eef2f6;
+  padding: 26rpx 10rpx;
+  margin-bottom: 22rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.02);
+}
+
+.stat-col {
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.stat-num {
+.stat-number {
   font-size: 36rpx;
-  font-weight: bold;
+  font-weight: 800;
   color: #0f172a;
   margin-bottom: 4rpx;
+  line-height: 1.2;
 }
 
-.stat-label {
+.num-blue {
+  color: #0f5bd8;
+}
+
+.num-gold {
+  color: #d97706;
+}
+
+.num-with-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.unread-blue-dot {
+  position: absolute;
+  top: -4rpx;
+  right: -14rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background: #0f5bd8;
+  border-radius: 50%;
+}
+
+.stat-title {
   font-size: 24rpx;
   color: #64748b;
+  white-space: nowrap;
 }
 
-/* VIP Banner */
-.vip-banner {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border-radius: 20rpx;
-  padding: 26rpx;
+/* 4. 极客黑卡 SVIP 尊享卡片 */
+.black-vip-card {
+  background-color: #141c2c;
+  border-radius: 32rpx;
+  padding: 34rpx 28rpx 30rpx;
   color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12rpx 32rpx rgba(15, 23, 42, 0.25);
+  margin-bottom: 24rpx;
+}
+
+.vip-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vip-brand-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.vip-gold-box {
+  width: 76rpx;
+  height: 76rpx;
+  background: linear-gradient(135deg, #ffc53d 0%, #f59e0b 100%);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18rpx;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 14rpx rgba(245, 158, 11, 0.35);
+}
+
+.vip-medal-icon {
+  width: 50rpx;
+  height: 50rpx;
+  display: block;
+}
+
+.vip-brand-name {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  margin-right: 14rpx;
+}
+
+.vip-honor-pill {
+  background: rgba(255, 190, 26, 0.14);
+  border: 1.5rpx solid rgba(255, 190, 26, 0.45);
+  color: #ffbe1a;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 4rpx 14rpx;
+  border-radius: 10rpx;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.vip-renew-btn {
+  display:flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffbe1a 0%, #f59e0b 100%);
+  color: #111827;
+  border-radius: 999rpx;
+  padding: 12rpx 14rpx;
+  gap: 6rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 6rpx 16rpx rgba(245, 158, 11, 0.35);
+}
+
+.renew-text {
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+.renew-arrow {
+  font-family: monospace;
+  font-size: 25rpx;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1;
+}
+
+.vip-desc-text {
+  font-size: 25rpx;
+  color: #cbd5e1;
+  margin-top: 22rpx;
+  margin-bottom: 24rpx;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.2rpx;
+}
+
+.vip-divider {
+  height: 1rpx;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 24rpx;
+}
+
+.vip-features-row {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.vip-feature-item {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1rpx solid rgba(245, 158, 11, 0.32);
+  border-radius: 20rpx;
+  padding: 12rpx 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  white-space: nowrap;
+}
+
+.vip-feature-svg {
+  width: 28rpx;
+  height: 28rpx;
+  display: block;
+  flex-shrink: 0;
+}
+
+.feature-label {
+  font-size: 23rpx;
+  color: #f8fafc;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.2rpx;
+}
+
+/* 5. 资源与资产管理 (4 项工具) */
+.asset-tools-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  border: 1rpx solid #eef2f6;
+  padding: 26rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.02);
+}
+
+.card-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24rpx;
 }
 
-.vip-title {
+.header-title {
   font-size: 30rpx;
-  font-weight: bold;
-  color: #fef08a;
-  margin-bottom: 6rpx;
+  font-weight: 800;
+  color: #0f172a;
 }
 
-.vip-sub {
+.header-sub {
   font-size: 24rpx;
   color: #94a3b8;
 }
 
-.vip-btn {
-  background: #fef08a;
-  color: #854d0e;
-  font-size: 24rpx;
-  font-weight: bold;
-  padding: 8rpx 22rpx;
-  border-radius: 20rpx;
-}
-
-/* 菜单列表 */
-.menu-card {
-  background: #ffffff;
-  border-radius: 20rpx;
-  border: 1rpx solid #e2e8f0;
-  margin-bottom: 40rpx;
-}
-
-.menu-item {
+.tools-grid {
   display: flex;
   align-items: center;
-  padding: 28rpx 24rpx;
-  border-bottom: 1rpx solid #f1f5f9;
+  justify-content: space-around;
 }
 
-.menu-item:last-child {
+.tool-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.tool-icon-wrap {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.02);
+}
+
+.tool-icon-img {
+  width: 44rpx;
+  height: 44rpx;
+  display: block;
+}
+
+.tool-label {
+  font-size: 24rpx;
+  color: #334155;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* 6 & 7. 任务中心与生态区域 */
+.section-group {
+  margin-bottom: 24rpx;
+}
+
+.section-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.section-heading {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.daily-reward-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  background: #fef3c7;
+  color: #d97706;
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.reward-star {
+  font-size: 20rpx;
+}
+
+.reward-text {
+  line-height: 1;
+}
+
+.list-card-box {
+  background: #ffffff;
+  border-radius: 28rpx;
+  border: 1rpx solid #eef2f6;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.02);
+}
+
+.mb-60 {
+  margin-bottom: 60rpx;
+}
+
+.list-item-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 26rpx;
+  border-bottom: 1rpx solid #f8fafc;
+}
+
+.list-item-row.no-border {
   border-bottom: none;
 }
 
-.menu-icon {
-  font-size: 34rpx;
+.item-icon-box {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
-.menu-title {
+.bg-blue {
+  background: #eff6ff;
+}
+
+.bg-amber {
+  background: #fffbeb;
+}
+
+.bg-purple {
+  background: #f5f3ff;
+}
+
+.bg-green {
+  background: #ecfdf5;
+}
+
+.bg-slate {
+  background: #f1f5f9;
+}
+
+.bg-indigo {
+  background: #eef2ff;
+}
+
+.item-svg-icon {
+  width: 36rpx;
+  height: 36rpx;
+  display: block;
+}
+
+.item-content-wrap {
   flex: 1;
+  min-width: 0;
+  margin-right: 16rpx;
+}
+
+.item-main-title {
   font-size: 28rpx;
-  color: #1e293b;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4rpx;
 }
 
-.menu-arrow {
+.item-sub-desc {
+  font-size: 22rpx;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-right-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.item-badge {
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  white-space: nowrap;
+}
+
+.badge-blue {
+  background: #eff6ff;
+  color: #0f5bd8;
+}
+
+.badge-amber {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-green-text {
   font-size: 24rpx;
-  color: #cbd5e1;
+  color: #059669;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.version-footer {
-  text-align: center;
+.badge-green-pill {
+  background: #dcfce7;
+  color: #059669;
+  border-radius: 20rpx;
+  padding: 4rpx 16rpx;
+}
+
+.item-gray-label {
   font-size: 24rpx;
   color: #94a3b8;
-  padding-bottom: 40rpx;
+  white-space: nowrap;
+}
+
+.item-chevron {
+  font-family: monospace;
+  font-size: 26rpx;
+  color: #94a3b8;
+  font-weight: 800;
+}
+
+/* 交互触碰反馈 */
+.btn-hover {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.card-hover {
+  background-color: #f8fafc;
 }

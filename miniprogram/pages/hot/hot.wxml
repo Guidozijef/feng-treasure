@@ -1,121 +1,247 @@
 <!-- pages/hot/hot.wxml -->
-<view class="container">
-  <!-- 顶部主维度 Tab 切换 -->
-  <view class="tab-bar-wrap">
-    <view class="tab-item {{activeTab === 'soar' ? 'active' : ''}}" bindtap="setTab" data-tab="soar">总榜·飙升</view>
-    <view class="tab-item {{activeTab === 'week' ? 'active' : ''}}" bindtap="setTab" data-tab="week">本周热门</view>
-    <view class="tab-item {{activeTab === 'new' ? 'active' : ''}}" bindtap="setTab" data-tab="new">今日新上</view>
-    <view class="tab-item {{activeTab === 'rating' ? 'active' : ''}}" bindtap="setTab" data-tab="rating">评分最高</view>
-  </view>
+<view class="page-container">
 
-  <!-- 二级分类药丸标签 -->
-  <scroll-view class="pill-scroll" scroll-x="true" enable-flex="true">
-    <view class="pill-item {{activeCategory === 'all' ? 'active' : ''}}" bindtap="setCategory" data-cat="all">全部品类</view>
-    <view class="pill-item {{activeCategory === 'pc' ? 'active' : ''}}" bindtap="setCategory" data-cat="pc">💻 电脑应用</view>
-    <view class="pill-item {{activeCategory === 'tools' ? 'active' : ''}}" bindtap="setCategory" data-cat="tools">⚡ 实用工具</view>
-    <view class="pill-item {{activeCategory === 'study' ? 'active' : ''}}" bindtap="setCategory" data-cat="study">🎓 学霸考研</view>
-    <view class="pill-item {{activeCategory === 'dev' ? 'active' : ''}}" bindtap="setCategory" data-cat="dev">⚙️ 源码组件</view>
-  </scroll-view>
-
-  <!-- 榜单更新指标卡片 -->
-  <view class="index-card">
-    <view class="index-header">
-      <view class="index-title">
-        <text class="dot-pulse"></text>
-        <text class="index-title-text">极客风云榜 · 全网热度指数</text>
+  <!-- 1. 自定义顶部导航栏 (适配各设备状态栏与微信胶囊对齐) -->
+  <view class="custom-nav-bar" style="padding-top: {{statusBarHeight}}px; height: {{statusBarHeight + navBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuButtonRight}}px;">
+      <view class="nav-brand">
+        <image class="nav-logo" src="/images/logo.svg" mode="aspectFit" />
+        <text class="nav-title">热门风云榜</text>
+        <view class="nav-badge">实时TOP</view>
       </view>
-      <text class="index-rule">计算规则</text>
     </view>
-    <view class="index-desc">根据真实下载次数、收藏增长率与转存热度实时动态排序，每小时准点结算。</view>
   </view>
 
-  <!-- TOP 1 冠亚季军 领跑区 -->
-  <view class="section-title-wrap">
-    <text class="crown-icon">👑</text>
-    <text class="section-title">三甲领跑榜</text>
-  </view>
+  <!-- 导航栏占位块 -->
+  <view class="nav-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-  <!-- 冠军卡片 (TOP 1) -->
-  <view class="top1-card" bindtap="goToDetail" data-id="picgo" hover-class="btn-hover">
-    <view class="top1-crown">TOP 1 冠军</view>
-    <view class="top1-body">
-      <view class="top1-icon">🖼️</view>
-      <view class="top1-info">
-        <view class="top1-title">PicGo 图床利器</view>
-        <view class="top1-sub">免安装绿色版 · 开发者必装</view>
-        <view class="top1-meta">
-          <text class="heat-tag">🔥 98.6w 热度</text>
-          <text class="rate-tag">⭐ 4.9 高分</text>
+  <!-- 主体内容滚动区 -->
+  <view class="content-body">
+
+    <!-- 2. 主维度 Tabs 药丸切换 (总榜·飙升、本周热门、今日新上、评分最高) -->
+    <view class="main-tabs-wrap">
+      <block wx:for="{{tabs}}" wx:key="id">
+        <view 
+          class="main-tab-item {{activeTab === item.id ? 'active' : ''}}" 
+          bindtap="setTab" 
+          data-tab="{{item.id}}"
+          hover-class="btn-hover"
+        >
+          <text wx:if="{{item.hasIcon}}" class="tab-flash-icon">⚡</text>
+          <text class="tab-text">{{item.name}}</text>
         </view>
-      </view>
-      <view class="top1-btn">高速获取</view>
-    </view>
-  </view>
-
-  <!-- TOP 2 & TOP 3 双列网格 -->
-  <view class="top23-grid">
-    <!-- TOP 2 -->
-    <view class="top23-card" bindtap="goToDetail" data-id="typora" hover-class="btn-hover">
-      <view class="top23-badge badge-silver">TOP 2</view>
-      <view class="top23-icon">📝</view>
-      <view class="top23-name">Typora 经典版</view>
-      <view class="top23-desc">v0.11.18 离线免安装</view>
-      <view class="top23-footer">
-        <text class="top23-heat">89.2w</text>
-        <view class="top23-btn">获取</view>
-      </view>
+      </block>
     </view>
 
-    <!-- TOP 3 -->
-    <view class="top23-card" bindtap="goToDetail" data-id="docker" hover-class="btn-hover">
-      <view class="top23-badge badge-bronze">TOP 3</view>
-      <view class="top23-icon">🐳</view>
-      <view class="top23-name">Docker Desktop</view>
-      <view class="top23-desc">v4.28 调优纯净版</view>
-      <view class="top23-footer">
-        <text class="top23-heat">87.5w</text>
-        <view class="top23-btn">获取</view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 上升最快榜单 (04 - 08) -->
-  <view class="section-title-wrap mt-20">
-    <text class="section-title">上升最快热度榜单</text>
-  </view>
-
-  <view class="rank-list">
-    <block wx:for="{{rankList}}" wx:key="id">
-      <view class="rank-item" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
-        <view class="rank-num">{{item.rank}}</view>
-        <view class="rank-icon-box" style="background-color: {{item.iconBg}};">
-          {{item.icon}}
-        </view>
-        <view class="rank-content">
-          <view class="rank-title-row">
-            <text class="rank-title">{{item.title}}</text>
-            <text class="rank-version">{{item.version}}</text>
+    <!-- 3. 二级细分类目 (细分：全部类目、电脑应用、实用工具、学霸考研、开源源码) -->
+    <!-- <view class="sub-category-bar">
+      <text class="sub-label">细分：</text>
+      <scroll-view class="sub-scroll" scroll-x="true" enable-flex="true" show-scrollbar="false">
+        <block wx:for="{{subCategories}}" wx:key="id">
+          <view 
+            class="sub-pill-item {{activeCategory === item.id ? 'active' : ''}}" 
+            bindtap="setCategory" 
+            data-cat="{{item.id}}"
+          >
+            {{item.name}}
           </view>
-          <view class="rank-meta-row">
-            <text class="rank-tag">{{item.tag}}</text>
-            <text class="rank-change {{item.changeType}}">{{item.change}}</text>
-            <text class="rank-heat">🔥 {{item.heat}}</text>
-          </view>
+        </block>
+      </scroll-view>
+    </view> -->
+
+    <!-- 4. 极客风云榜 · 全网指数指标卡片 -->
+    <view class="index-metric-card" bindtap="onIndexRuleTap" hover-class="card-hover">
+      <view class="metric-icon-box">
+        <image class="metric-icon" src="/images/trend.svg" mode="aspectFit" />
+      </view>
+      <view class="metric-info">
+        <view class="metric-title-row">
+          <text class="metric-title">极客风云榜 · 全网指数</text>
+          <text class="metric-badge">每小时更新</text>
         </view>
-        <view class="rank-actions">
-          <view class="fav-icon" catchtap="toggleFav" data-id="{{item.id}}">
-            <text class="heart {{item.isFav ? 'fav' : ''}}">{{item.isFav ? '❤️' : '🤍'}}</text>
-          </view>
-          <view class="rank-get-btn">获取</view>
+        <view class="metric-desc">基于极客社群真实下载、好评度及解压率综合加权</view>
+      </view>
+      <view class="metric-help-btn">?</view>
+    </view>
+
+    <!-- 5. 三甲领跑榜 · 本周精选 区域 -->
+    <view class="section-header-row">
+      <text class="section-title">三甲领跑榜 · 本周精选</text>
+      <text class="section-more" bindtap="onHallOfFameTap" hover-class="btn-hover">历史名人堂 ></text>
+    </view>
+
+    <!-- TOP 1 冠军榜首 (PicGo 全功能图床神器) -->
+    <view class="top1-card" bindtap="goToDetail" data-id="picgo" hover-class="card-hover">
+      <!-- 顶部绶带与热度 -->
+      <view class="top1-header-row">
+        <view class="top1-crown-badge">
+          <text class="crown-icon">👑</text>
+          <text class="crown-text">{{top1.rankBadge}}</text>
+        </view>
+        <view class="top1-heat">
+          <image class="heat-icon" src="/images/flame.svg" mode="aspectFit" />
+          <text class="heat-text">{{top1.heat}}</text>
         </view>
       </view>
-    </block>
+
+      <!-- 中间应用核心信息 -->
+      <view class="top1-main-body">
+        <view class="picgo-icon-box">
+          <image class="picgo-cloud-icon" src="/images/cloud.svg" mode="aspectFit" />
+          <text class="picgo-icon-label">PICGO</text>
+        </view>
+        <view class="top1-info-content">
+          <view class="top1-title-row">
+            <text class="top1-title">{{top1.title}}</text>
+            <text class="top1-ver">{{top1.version}}</text>
+          </view>
+          <view class="top1-tag-row">
+            <text class="tag-green-pill">{{top1.tag}}</text>
+          </view>
+          <view class="top1-desc-text">{{top1.desc}}</view>
+        </view>
+      </view>
+
+      <!-- 底部细分界线与获取操作 -->
+      <view class="top1-footer-row">
+        <view class="top1-meta-data">
+          <text class="meta-star">★ {{top1.rating}}</text>
+          <text class="meta-dot">·</text>
+          <text class="meta-size">{{top1.size}}</text>
+        </view>
+        <view class="top1-action-btn" catchtap="goToDetail" data-id="picgo" hover-class="btn-hover">
+          <text class="btn-download-icon">📥</text>
+          <text class="btn-action-text">高速获取</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- TOP 2 & TOP 3 双列并排 -->
+    <view class="top23-grid-row">
+      <!-- TOP 2 Typora -->
+      <view class="top23-card" bindtap="goToDetail" data-id="typora" hover-class="card-hover">
+        <view class="top23-top-row">
+          <view class="top2-pill">
+            <text class="medal-icon">🥈</text>
+            <text class="badge-text">{{top2.rankBadge}}</text>
+          </view>
+          <view class="top23-heat">
+            <image class="heat-icon-sm" src="/images/flame.svg" mode="aspectFit" />
+            <text class="heat-text-sm">{{top2.heat}}</text>
+          </view>
+        </view>
+
+        <image class="top23-app-icon" src="{{top2.icon}}" mode="aspectFit" />
+        <view class="top23-title">{{top2.title}}</view>
+        <view class="top23-sub">{{top2.sub}}</view>
+        <view class="top23-desc">{{top2.desc}}</view>
+
+        <view class="top23-bottom-row">
+          <text class="tag-green-sm">{{top2.tag}}</text>
+          <view class="top23-get-btn" catchtap="goToDetail" data-id="typora" hover-class="btn-hover">获取</view>
+        </view>
+      </view>
+
+      <!-- TOP 3 Docker -->
+      <view class="top23-card" bindtap="goToDetail" data-id="docker" hover-class="card-hover">
+        <view class="top23-top-row">
+          <view class="top3-pill">
+            <text class="medal-icon">🥉</text>
+            <text class="badge-text">{{top3.rankBadge}}</text>
+          </view>
+          <view class="top23-heat">
+            <image class="heat-icon-sm" src="/images/flame.svg" mode="aspectFit" />
+            <text class="heat-text-sm">{{top3.heat}}</text>
+          </view>
+        </view>
+
+        <image class="top23-app-icon" src="{{top3.icon}}" mode="aspectFit" />
+        <view class="top23-title">{{top3.title}}</view>
+        <view class="top23-sub">{{top3.sub}}</view>
+        <view class="top23-desc">{{top3.desc}}</view>
+
+        <view class="top23-bottom-row">
+          <text class="tag-blue-sm">{{top3.tag}}</text>
+          <view class="top23-get-btn" catchtap="goToDetail" data-id="docker" hover-class="btn-hover">获取</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 6. 上升最快热度榜单 (4 - 10) -->
+    <view class="section-header-row mt-32">
+      <view class="section-title-with-icon">
+        <image class="title-list-icon" src="/images/rank_list.svg" mode="aspectFit" />
+        <text class="section-title">上升最快热度榜单 (4 - 10)</text>
+      </view>
+      <text class="section-sync-tip">防失效双盘同步</text>
+    </view>
+
+    <!-- 榜单列表 (04 - 08) -->
+    <view class="rank-list-wrap">
+      <block wx:for="{{rankList}}" wx:key="id">
+        <view class="rank-item-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
+          <view class="rank-num-label">{{item.rank}}</view>
+          <image class="rank-app-icon" src="{{item.icon}}" mode="aspectFit" />
+          <view class="rank-item-content">
+            <view class="rank-title-row">
+              <text class="rank-item-title">{{item.title}}</text>
+              <text class="rank-feature-tag {{item.tagClass}}">{{item.tag}}</text>
+            </view>
+            <view class="rank-meta-row">
+              <text class="meta-star-sm">★ {{item.rating}}</text>
+              <text class="meta-dot">·</text>
+              <text class="meta-heat-sm">{{item.heat}}</text>
+              <text class="meta-dot">·</text>
+              <text class="meta-size-sm">{{item.size}}</text>
+            </view>
+          </view>
+          <view class="rank-action-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">获取</view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 7. 底部极客心愿单卡片 (没找到心仪的极客资源？向开发者库提交安心愿单...) -->
+    <view class="bottom-wish-card">
+      <view class="wish-plane-circle">
+        <image class="wish-plane-icon" src="/images/send_plane.svg" mode="aspectFit" />
+      </view>
+      <view class="wish-content">
+        <view class="wish-title">没找到心仪的极客资源？</view>
+        <view class="wish-sub">向开发者库提交安心愿单，通过后 24 小时急速上线并推送</view>
+      </view>
+      <view class="wish-action-btn" bindtap="onWishTap" hover-class="btn-hover">立即求资源</view>
+    </view>
+
   </view>
 
-  <!-- 极客心愿单提示卡片 -->
-  <view class="wish-card">
-    <view class="wish-title">🎯 找不到心仪的冷门神器？</view>
-    <view class="wish-sub">在心愿单提交资源名称或链接，技术管理员 24 小时内帮您找寻原版绿色包。</view>
-    <button class="wish-btn" hover-class="btn-hover">提交求资源诉求</button>
+  <!-- 8. 资源获取极客弹窗 (一键复制链接与提取码) -->
+  <view class="modal-mask {{showModal ? 'show' : ''}}" bindtap="closeModal">
+    <view class="modal-card" catchtap="true">
+      <view class="modal-header">
+        <text class="modal-title">获取纯净资源</text>
+        <view class="modal-close" bindtap="closeModal">✕</view>
+      </view>
+      <view class="modal-body">
+        <view class="modal-res-name">{{selectedResource.title || selectedResource.fullTitle}}</view>
+        <view class="modal-res-info">
+          <text class="modal-tag">{{selectedResource.source || '极速云盘/直链'}}</text>
+          <text wx:if="{{selectedResource.size}}" class="modal-tag">{{selectedResource.size}}</text>
+        </view>
+        <view class="modal-link-box">
+          <view class="link-label">下载直链：</view>
+          <view class="link-val">{{selectedResource.link || 'https://pan.quark.cn/s/feng-treasure'}}</view>
+          <view class="link-code" wx:if="{{selectedResource.code}}">
+            <text class="code-label">提取码：</text>
+            <text class="code-val">{{selectedResource.code}}</text>
+          </view>
+        </view>
+        <view class="modal-tip">💡 链接已通过官方安全检测，解压密码若有默认均为：feng</view>
+      </view>
+      <view class="modal-footer">
+        <view class="modal-btn cancel" bindtap="closeModal">关闭</view>
+        <view class="modal-btn confirm" bindtap="copyResourceLink" hover-class="btn-hover">一键复制直链与提取码</view>
+      </view>
+    </view>
   </view>
+
 </view>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Ribbon Tails -->
+  <path d="M10 20L8 28.5L16 24.5L24 28.5L22 20" fill="#111827"/>
+  <!-- Circular Medal Outer -->
+  <circle cx="16" cy="13" r="8.5" fill="#111827"/>
+  <!-- Inner Cutout Circle (Exposing gold box color) -->
+  <circle cx="16" cy="13" r="6.6" stroke="#ffbe1a" stroke-width="1.2"/>
+  <!-- Center Star (Exposing gold box color) -->
+  <path d="M16 9.2L17.2 11.8L20 12.1L17.8 14L18.5 16.8L16 15.3L13.5 16.8L14.2 14L12 12.1L14.8 11.8Z" fill="#ffbe1a"/>
+</svg>

@@ -75,7 +75,7 @@
                   <text class="pill">{{item.size}}</text>
                   <text class="pill star">⭐ {{item.rating}}</text>
                 </view>
-                <view class="res-get-btn">获取</view>
+                <view class="res-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">获取</view>
               </view>
             </view>
           </view>
@@ -107,9 +107,9 @@
         <view class="filter-label">文件体积区间</view>
         <view class="filter-chips">
           <view class="chip active">不限体积</view>
-          <view class="chip">&lt; 10 MB (轻量)</view>
+          <view class="chip">10 MB 以下 (轻量)</view>
           <view class="chip">10 - 100 MB</view>
-          <view class="chip">&gt; 1 GB (大包)</view>
+          <view class="chip">1 GB 以上 (大包)</view>
         </view>
       </view>
     </view>

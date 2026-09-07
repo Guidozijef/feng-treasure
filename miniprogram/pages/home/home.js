@@ -287,12 +287,12 @@ Page({
     showToast(`已切换至「${e.currentTarget.dataset.name}」`);
   },
 
-  // 点击「获取」按钮弹出原生下载提取弹窗
+  // 点击「获取」按钮均先进入详情页面
   openGetResource(e) {
     const item = e.currentTarget.dataset.item;
-    this.setData({
-      selectedResource: item,
-      showModal: true
+    const id = (item && item.id) ? item.id : 'picgo';
+    wx.navigateTo({
+      url: `/pages/detail/detail?id=${id}`
     });
   },
 

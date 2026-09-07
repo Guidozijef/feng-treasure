@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none">
+  <!-- Ribbon Tails -->
+  <path d="M12 24L9 32L18 28L27 32L24 24" fill="#131926"/>
+  <!-- Circular Medal -->
+  <circle cx="18" cy="15" r="9" fill="#131926"/>
+  <!-- Inner Circle Line -->
+  <circle cx="18" cy="15" r="7.2" stroke="#ffc83b" stroke-width="1.2"/>
+  <!-- Center 5-point Star -->
+  <path d="M18 10.5L19.5 13.8L23 14.2L20.4 16.5L21.2 20L18 18.2L14.8 20L15.6 16.5L13 14.2L16.5 13.8L18 10.5Z" fill="#ffc83b"/>
+</svg>

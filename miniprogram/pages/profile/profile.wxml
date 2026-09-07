@@ -1,82 +1,281 @@
 <!-- pages/profile/profile.wxml -->
-<view class="profile-container">
-  <!-- 用户卡片 -->
-  <view class="user-card">
-    <view class="user-main">
-      <view class="avatar-wrap">
-        <view class="avatar-box">🧑‍💻</view>
-        <view class="online-badge"></view>
-      </view>
-      <view class="user-info">
-        <view class="nick-row">
-          <text class="nick-text">{{userInfo.nickName}}</text>
-          <text class="level-badge">{{userInfo.level}}</text>
-        </view>
-        <view class="uid-row" bindtap="copyUID">
-          <text class="uid-text">UID: {{userInfo.uid}}</text>
-          <text class="copy-btn">复制</text>
-        </view>
+<view class="profile-page">
+
+  <!-- 1. 自定义顶部导航栏 (适配状态栏与胶囊对齐) -->
+  <view class="custom-nav-bar" style="padding-top: {{statusBarHeight}}px; height: {{statusBarHeight + navBarHeight}}px;">
+    <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuButtonRight}}px;">
+      <view class="nav-title-box">
+        <text class="nav-title">个人中心</text>
+        <view class="nav-badge-pro">PRO</view>
       </view>
     </view>
-    <view class="privilege-bar">
-      <text class="privilege-tip">💡 每日可享受 2 次基础免解压高速获取权益</text>
-    </view>
   </view>
 
-  <!-- 数据统计四格 -->
-  <view class="stat-card">
-    <view class="stat-item">
-      <text class="stat-num">{{userInfo.downloadCount}}</text>
-      <text class="stat-label">已获取</text>
-    </view>
-    <view class="stat-item">
-      <text class="stat-num">{{userInfo.favCount}}</text>
-      <text class="stat-label">我的收藏</text>
-    </view>
-    <view class="stat-item">
-      <text class="stat-num">{{userInfo.ticketCount}}</text>
-      <text class="stat-label">求档工单</text>
-    </view>
-    <view class="stat-item">
-      <text class="stat-num">{{userInfo.points}}</text>
-      <text class="stat-label">极客积分</text>
-    </view>
-  </view>
+  <!-- 导航栏占位 -->
+  <view class="nav-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-  <!-- 专属直链加速卡 Banner -->
-  <view class="vip-banner">
-    <view class="vip-left">
-      <view class="vip-title">⚡ 极客高速直链加速卡</view>
-      <view class="vip-sub">免网盘客户端直接浏览器提取 · 满速不限流</view>
-    </view>
-    <view class="vip-btn">去了解 ➔</view>
-  </view>
+  <!-- 主体可滚动区域 -->
+  <view class="profile-body">
 
-  <!-- 功能菜单列表 -->
-  <view class="menu-card">
-    <view class="menu-item" bindtap="viewHistory">
-      <text class="menu-icon">📂</text>
-      <text class="menu-title">离线资源转存与下载记录</text>
-      <text class="menu-arrow">➔</text>
-    </view>
-    <view class="menu-item" bindtap="contactAdmin">
-      <text class="menu-icon">💬</text>
-      <text class="menu-title">资源报错纠错与求资源工单</text>
-      <text class="menu-arrow">➔</text>
-    </view>
-    <view class="menu-item" bindtap="clearCache">
-      <text class="menu-icon">🧹</text>
-      <text class="menu-title">清理本地缓存</text>
-      <text class="menu-arrow">➔</text>
-    </view>
-    <view class="menu-item">
-      <text class="menu-icon">ℹ️</text>
-      <text class="menu-title">关于枫的藏宝阁 v2.0</text>
-      <text class="menu-arrow">➔</text>
-    </view>
-  </view>
+    <!-- 2. 用户身份特权卡片 -->
+    <view class="user-id-card">
+      <view class="user-top-row">
+        <!-- 头像与在线认证角标 -->
+        <view class="avatar-wrap">
+          <image class="avatar-img" src="{{userInfo.avatar}}" mode="aspectFill" />
+          <view class="avatar-verified-badge"></view>
+        </view>
 
-  <view class="version-footer">
-    <text>枫的藏宝阁 · 原生微信小程序版</text>
+        <!-- 昵称、SVIP标签与UID -->
+        <view class="user-meta-wrap">
+          <view class="name-svip-row">
+            <text class="user-nickname">{{userInfo.nickName}}</text>
+            <view class="svip-badge">
+              <image class="svip-flash-icon" src="/images/icon_flash_white.svg" mode="aspectFit" />
+              <text class="svip-text">SVIP</text>
+            </view>
+          </view>
+          <view class="uid-row" bindtap="copyUID" hover-class="btn-hover">
+            <view class="uid-capsule">
+              <text class="uid-label">UID: {{userInfo.uid}}</text>
+              <image class="copy-icon" src="/images/icon_copy.svg" mode="aspectFit" />
+            </view>
+          </view>
+        </view>
+
+        <!-- 右侧设置按钮 -->
+        <view class="settings-btn" bindtap="openSettings" hover-class="btn-hover">
+          <image class="settings-icon" src="/images/icon_gear.svg" mode="aspectFit" />
+        </view>
+      </view>
+
+      <!-- 底部特权说明状态与明细链接 -->
+      <view class="user-bottom-row">
+        <view class="privilege-status-left">
+          <view class="green-status-dot"></view>
+          <text class="privilege-status-text">{{userInfo.privilegeStatus}}</text>
+        </view>
+        <view class="privilege-detail-link" bindtap="openPrivilegeDetails" hover-class="btn-hover">
+          <text class="link-text">权益明细</text>
+          <text class="link-arrow">></text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 3. 数据资产四格统计卡片 -->
+    <view class="stats-card">
+      <view class="stat-col" bindtap="onToolTap" data-id="history" hover-class="btn-hover">
+        <text class="stat-number">{{userInfo.downloadCount}}</text>
+        <text class="stat-title">已获取</text>
+      </view>
+      <view class="stat-col" bindtap="onToolTap" data-id="fav" hover-class="btn-hover">
+        <text class="stat-number">{{userInfo.favCount}}</text>
+        <text class="stat-title">我的收藏</text>
+      </view>
+      <view class="stat-col has-badge" bindtap="onToolTap" data-id="ticket" hover-class="btn-hover">
+        <view class="num-with-dot">
+          <text class="stat-number num-blue">{{userInfo.ticketCount}}</text>
+          <view wx:if="{{userInfo.ticketHasNew}}" class="unread-blue-dot"></view>
+        </view>
+        <text class="stat-title">求资源工单</text>
+      </view>
+      <view class="stat-col" bindtap="onDailyTaskTap" hover-class="btn-hover">
+        <text class="stat-number num-gold">{{userInfo.points}}</text>
+        <text class="stat-title">极客云豆</text>
+      </view>
+    </view>
+
+    <!-- 4. 极客黑卡 SVIP 尊享卡片 -->
+    <view class="black-vip-card">
+      <view class="vip-top-row">
+        <view class="vip-brand-left">
+          <view class="vip-gold-box">
+            <image class="vip-medal-icon" src="/images/vip_badge_icon.svg" mode="aspectFit" />
+          </view>
+          <text class="vip-brand-name">极客黑卡 SVIP</text>
+          <view class="vip-honor-pill">尊享特权</view>
+        </view>
+        <view class="vip-renew-btn" bindtap="onRenewVip" hover-class="btn-hover">
+          <text class="renew-text">立即续费</text>
+          <text class="renew-arrow">></text>
+        </view>
+      </view>
+
+      <view class="vip-desc-text">享受无限制高速直链通道 · 失效资源 10 分钟极速补档</view>
+
+      <!-- 细线分割 -->
+      <view class="vip-divider"></view>
+
+      <!-- 底部三大权益胶囊 -->
+      <view class="vip-features-row">
+        <view class="vip-feature-item">
+          <image class="vip-feature-svg" src="/images/vip_feature_lightning.svg" mode="aspectFit" />
+          <text class="feature-label">免等待直连</text>
+        </view>
+        <view class="vip-feature-item">
+          <image class="vip-feature-svg" src="/images/vip_feature_verify.svg" mode="aspectFit" />
+          <text class="feature-label">官方正版校验</text>
+        </view>
+        <view class="vip-feature-item">
+          <image class="vip-feature-svg" src="/images/vip_feature_support.svg" mode="aspectFit" />
+          <text class="feature-label">专人极速补档</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 5. 资源与资产管理 (4 项工具) -->
+    <view class="asset-tools-card">
+      <view class="card-header-row">
+        <text class="header-title">资源与资产管理</text>
+        <text class="header-sub">4 项工具</text>
+      </view>
+      <view class="tools-grid">
+        <block wx:for="{{assetTools}}" wx:key="id">
+          <view class="tool-item" bindtap="onToolTap" data-id="{{item.id}}" hover-class="btn-hover">
+            <view class="tool-icon-wrap" style="background-color: {{item.bg}};">
+              <image class="tool-icon-img" src="{{item.icon}}" mode="aspectFit" />
+            </view>
+            <text class="tool-label">{{item.title}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 6. 极客特权与任务中心 -->
+    <view class="section-group">
+      <view class="section-header-wrap">
+        <text class="section-heading">极客特权与任务中心</text>
+        <view class="daily-reward-pill" bindtap="onDailyTaskTap" hover-class="btn-hover">
+          <text class="reward-star">⭐</text>
+          <text class="reward-text">每日做任务领云豆</text>
+        </view>
+      </view>
+
+      <view class="list-card-box">
+        <!-- 任务项 1: 下载箱 -->
+        <view class="list-item-row" bindtap="onDownloadBoxTap" hover-class="card-hover">
+          <view class="item-icon-box bg-blue">
+            <image class="item-svg-icon" src="/images/task_download.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">我的资源下载箱 / 复制历史</view>
+            <view class="item-sub-desc">查看最近提取的资源链接及提取码</view>
+          </view>
+          <view class="item-right-wrap">
+            <view class="item-badge badge-blue">已存 18 项</view>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 任务项 2: 失效纠错 -->
+        <view class="list-item-row" bindtap="onFeedbackProgressTap" hover-class="card-hover">
+          <view class="item-icon-box bg-amber">
+            <image class="item-svg-icon" src="/images/task_repair.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">资源失效纠错 / 补档进度</view>
+            <view class="item-sub-desc">反馈失效资源，专人极速补档</view>
+          </view>
+          <view class="item-right-wrap">
+            <view class="item-badge badge-amber">1条处理中</view>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 任务项 3: 推送提醒 -->
+        <view class="list-item-row" bindtap="onPushNoticeTap" hover-class="card-hover">
+          <view class="item-icon-box bg-purple">
+            <image class="item-svg-icon" src="/images/task_bell.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">资源更新推送提醒</view>
+            <view class="item-sub-desc">已开启3个关注工具的版本变动推送</view>
+          </view>
+          <view class="item-right-wrap">
+            <text class="status-green-text">已开启</text>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 任务项 4: 打卡签到 -->
+        <view class="list-item-row no-border" bindtap="onCheckInTap" hover-class="card-hover">
+          <view class="item-icon-box bg-green">
+            <image class="item-svg-icon" src="/images/task_calendar.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">每日打卡签到</view>
+            <view class="item-sub-desc">连续签到3天，领取云豆兑换特权</view>
+          </view>
+          <view class="item-right-wrap">
+            <view class="item-badge badge-green-pill">✓ 今日已领 +10</view>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 7. 极客生态与支持 -->
+    <view class="section-group">
+      <view class="section-header-wrap">
+        <text class="section-heading">极客生态与支持</text>
+      </view>
+
+      <view class="list-card-box mb-60">
+        <!-- 生态 1: 社群 -->
+        <view class="list-item-row" bindtap="onCommunityTap" hover-class="card-hover">
+          <view class="item-icon-box bg-blue">
+            <image class="item-svg-icon" src="/images/eco_group.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">官方极客交流社群</view>
+          </view>
+          <view class="item-right-wrap">
+            <text class="item-gray-label">扫码加入 3 群</text>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 生态 2: 免责声明 -->
+        <view class="list-item-row" bindtap="onDisclaimerTap" hover-class="card-hover">
+          <view class="item-icon-box bg-blue">
+            <image class="item-svg-icon" src="/images/eco_shield.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">免责声明与侵权下架通道</view>
+          </view>
+          <view class="item-right-wrap">
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 生态 3: 客服 -->
+        <view class="list-item-row" bindtap="onCustomerServiceTap" hover-class="card-hover">
+          <view class="item-icon-box bg-blue">
+            <image class="item-svg-icon" src="/images/eco_service.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">人工在线客服 / 意见反馈</view>
+          </view>
+          <view class="item-right-wrap">
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+
+        <!-- 生态 4: 关于 -->
+        <view class="list-item-row no-border" bindtap="onAboutTap" hover-class="card-hover">
+          <view class="item-icon-box bg-blue">
+            <image class="item-svg-icon" src="/images/eco_info.svg" mode="aspectFit" />
+          </view>
+          <view class="item-content-wrap">
+            <view class="item-main-title">关于枫的藏宝阁</view>
+          </view>
+          <view class="item-right-wrap">
+            <text class="item-gray-label">v2.4.0 纯净版</text>
+            <text class="item-chevron">></text>
+          </view>
+        </view>
+      </view>
+    </view>
+
   </view>
 </view>
