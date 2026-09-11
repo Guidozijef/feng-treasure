@@ -201,7 +201,7 @@
     </view>
 
     <!-- 7. 底部极客心愿单卡片 (没找到心仪的极客资源？向开发者库提交安心愿单...) -->
-    <view class="bottom-wish-card">
+    <view class="bottom-wish-card" bindtap="onWishTap" hover-class="card-hover">
       <view class="wish-plane-circle">
         <image class="wish-plane-icon" src="/images/send_plane.svg" mode="aspectFit" />
       </view>
@@ -209,7 +209,7 @@
         <view class="wish-title">没找到心仪的极客资源？</view>
         <view class="wish-sub">向开发者库提交安心愿单，通过后 24 小时急速上线并推送</view>
       </view>
-      <view class="wish-action-btn" bindtap="onWishTap" hover-class="btn-hover">立即求资源</view>
+      <view class="wish-action-btn" hover-class="btn-hover">立即求资源</view>
     </view>
 
   </view>

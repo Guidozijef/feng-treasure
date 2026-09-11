@@ -1,0 +1,713 @@
+/* 求资源工单页面样式 */
+page {
+  background-color: #f8fafd;
+  color: #0f172a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.request-page-container {
+  padding: 16rpx 24rpx 60rpx;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* 1. 顶部双 Tab 切换栏 */
+.top-tabs-container {
+  display: flex;
+  background: #eef2f8;
+  border-radius: 999rpx;
+  padding: 6rpx;
+  margin-bottom: 22rpx;
+  border: 1rpx solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tab-pill-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 16rpx 0;
+  border-radius: 999rpx;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab-pill-active {
+  background: #ffffff;
+  box-shadow: 0 4rpx 14rpx rgba(15, 23, 42, 0.08);
+}
+
+.tab-pill-icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.tab-pill-text {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.tab-pill-active .tab-pill-text {
+  color: #0263e0;
+  font-weight: 800;
+}
+
+.unread-dot {
+  width: 12rpx;
+  height: 12rpx;
+  background: #0263e0;
+  border-radius: 50%;
+  position: absolute;
+  top: 18rpx;
+  right: 36rpx;
+}
+
+/* 2. 24小时寻档承诺横幅 */
+.promise-banner-card {
+  background: linear-gradient(135deg, #f0f4ff 0%, #eef6ff 100%);
+  border: 1.5rpx solid #dbeafe;
+  border-radius: 24rpx;
+  padding: 24rpx 22rpx;
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 22rpx;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4rpx 14rpx rgba(2, 99, 224, 0.03);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.promise-left-lamp {
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 16rpx;
+  background: #e0eaff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lamp-bulb-svg {
+  width: 36rpx;
+  height: 36rpx;
+}
+
+.promise-info-wrap {
+  flex: 1;
+  min-width: 0;
+  z-index: 1;
+}
+
+.promise-desc-text {
+  font-size: 23rpx;
+  color: #334155;
+  line-height: 1.55;
+}
+
+.highlight-blue {
+  color: #0263e0;
+  font-weight: 800;
+}
+
+.svip-speed-pill {
+  display: inline-block;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  margin-top: 10rpx;
+  border: 1rpx solid #fde68a;
+  line-height: 1.3;
+}
+
+.watermark-search-icon {
+  position: absolute;
+  right: 10rpx;
+  bottom: -10rpx;
+  font-size: 100rpx;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* 3. 表单主白色卡片 */
+.form-main-card {
+  background: #ffffff;
+  border-radius: 26rpx;
+  border: 1rpx solid #eef2f6;
+  padding: 26rpx 22rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(15, 23, 42, 0.02);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-field-group {
+  margin-bottom: 28rpx;
+}
+
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.field-title-left {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.field-title {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.required-star {
+  color: #ef4444;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.field-sub-hint {
+  font-size: 21rpx;
+  color: #94a3b8;
+}
+
+.field-sub-optional {
+  font-size: 22rpx;
+  color: #94a3b8;
+  font-weight: normal;
+}
+
+.char-count-text {
+  font-size: 21rpx;
+  color: #94a3b8;
+}
+
+.input-box-wrap {
+  background: #f8fafd;
+  border: 1rpx solid #eef2f8;
+  border-radius: 18rpx;
+  padding: 18rpx 20rpx;
+}
+
+.form-text-input {
+  width: 100%;
+  font-size: 26rpx;
+  color: #0f172a;
+}
+
+.input-placeholder {
+  color: #94a3b8;
+  font-size: 24rpx;
+}
+
+/* 4. 资源分类 2x3 网格 */
+.category-grid-box {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cat-card-item {
+  background: #f8fafd;
+  border: 1.5rpx solid #eef2f8;
+  border-radius: 18rpx;
+  padding: 18rpx 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  transition: all 0.2s ease;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.cat-card-active {
+  background: #eff6ff;
+  border-color: #0263e0;
+}
+
+.cat-card-icon {
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+}
+
+.cat-card-name {
+  font-size: 24rpx;
+  color: #334155;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-card-active .cat-card-name {
+  color: #0263e0;
+  font-weight: 800;
+}
+
+/* 5. 希望获取的平台/格式 */
+.platform-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.plat-pill {
+  background: #f1f5f9;
+  border: 1.5rpx solid transparent;
+  border-radius: 999rpx;
+  padding: 12rpx 26rpx;
+  font-size: 24rpx;
+  color: #475569;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.plat-pill-active {
+  background: #0263e0;
+  border-color: #0263e0;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.plat-check-icon {
+  font-size: 20rpx;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* 6. 详细描述多行文本框 */
+.desc-textarea-wrap {
+  background: #f8fafd;
+  border: 1rpx solid #eef2f8;
+  border-radius: 18rpx;
+  padding: 18rpx 20rpx;
+}
+
+.desc-textarea {
+  width: 100%;
+  height: 150rpx;
+  font-size: 25rpx;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+/* 7. 参考截图上传 */
+.screenshot-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.upload-dash-box {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 18rpx;
+  border: 2rpx dashed #94a3b8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  background: #f8fafd;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.upload-pic-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.upload-dash-title {
+  font-size: 22rpx;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.upload-dash-sub {
+  font-size: 19rpx;
+  color: #94a3b8;
+}
+
+.screenshot-right-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.screenshot-tip-text {
+  font-size: 22rpx;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.preview-thumb-list {
+  display: flex;
+  gap: 12rpx;
+}
+
+.thumb-box {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  position: relative;
+  border: 1rpx solid #e2e8f0;
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+}
+
+.thumb-delete-cross {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  width: 32rpx;
+  height: 32rpx;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 8. SVIP 极速寻档加速 Switch 卡片 */
+.svip-speed-switch-card {
+  background: #fffbeb;
+  border: 1.5rpx solid #fef3c7;
+  border-radius: 22rpx;
+  padding: 22rpx 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.svip-switch-left {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.lightning-box-gold {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 16rpx;
+  background: #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bolt-symbol {
+  font-size: 30rpx;
+  color: #b45309;
+}
+
+.svip-switch-text-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.svip-switch-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.svip-switch-title {
+  font-size: 26rpx;
+  font-weight: 800;
+  color: #78350f;
+}
+
+.svip-gold-tag {
+  background: #1e293b;
+  color: #ffd770;
+  font-size: 18rpx;
+  font-weight: 800;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  line-height: 1.2;
+}
+
+.svip-switch-sub {
+  font-size: 21rpx;
+  color: #92400e;
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 9. 提交求档需求按钮 */
+.submit-demand-action {
+  margin-top: 10rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submit-demand-btn {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  background: linear-gradient(135deg, #0263e0 0%, #0850c4 100%);
+  color: #ffffff;
+  font-size: 27rpx;
+  font-weight: 800;
+  border-radius: 999rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10rpx;
+  white-space: nowrap !important;
+  box-shadow: 0 8rpx 24rpx rgba(2, 99, 224, 0.28);
+  border: none;
+  margin: 0 !important;
+  padding: 0 16rpx !important;
+}
+
+.submit-demand-btn::after {
+  display: none;
+}
+
+.plane-icon {
+  font-size: 24rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.btn-text {
+  white-space: nowrap;
+  font-size: 27rpx;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* 10. 最近工单进度 */
+.recent-tickets-section {
+  margin-top: 24rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.recent-tickets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding: 0 4rpx;
+}
+
+.tickets-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.trend-icon-svg {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.tickets-heading-title {
+  font-size: 29rpx;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.view-all-link {
+  font-size: 24rpx;
+  color: #0263e0;
+  font-weight: 600;
+}
+
+.tickets-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ticket-card-box {
+  background: #ffffff;
+  border: 1rpx solid #eef2f6;
+  border-radius: 22rpx;
+  padding: 22rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(15, 23, 42, 0.02);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ticket-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.ticket-id-time {
+  font-size: 21rpx;
+  color: #94a3b8;
+}
+
+.ticket-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 2rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.status-done {
+  background: #dcfce7;
+  color: #059669;
+}
+
+.status-pending {
+  background: #ffedd5;
+  color: #d97706;
+}
+
+.ticket-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.ticket-body-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.ticket-res-title {
+  font-size: 27rpx;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticket-res-sub {
+  font-size: 21rpx;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticket-category-tag {
+  font-size: 20rpx;
+  color: #94a3b8;
+  margin-top: 6rpx;
+}
+
+.ticket-body-right {
+  flex-shrink: 0;
+}
+
+.ticket-btn-primary {
+  background: #0263e0;
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+  padding: 10rpx 24rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  white-space: nowrap;
+  box-shadow: 0 4rpx 10rpx rgba(2, 99, 224, 0.25);
+}
+
+.btn-arrow {
+  font-size: 24rpx;
+}
+
+.ticket-btn-outline {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 23rpx;
+  font-weight: 600;
+  padding: 10rpx 24rpx;
+  border-radius: 999rpx;
+  white-space: nowrap;
+}
+
+/* 历史列表 */
+.history-list-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+/* 11. 底部官方背书 */
+.footer-endorse-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  margin-top: 36rpx;
+  color: #94a3b8;
+  font-size: 21rpx;
+}
+
+.endorse-shield-icon {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+/* 触控反馈 */
+.btn-hover {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.card-tap-hover {
+  opacity: 0.92;
+}

@@ -242,6 +242,20 @@
         </view>
       </view>
 
+      <!-- 生态 3: 求资源入口 -->
+      <view class="list-item-row" bindtap="onRequestResourceTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_request.svg" mode="aspectFit" />
+        </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">求资源 / 愿望清单征集</view>
+        </view>
+        <view class="item-right-wrap">
+          <text class="item-gray-label">全网搜罗上架</text>
+          <text class="item-chevron">></text>
+        </view>
+      </view>
+
       <!-- 生态 2: 免责声明 -->
       <view class="list-item-row" bindtap="onDisclaimerTap" hover-class="card-hover">
         <view class="item-icon-box bg-blue">

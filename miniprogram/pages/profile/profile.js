@@ -107,7 +107,9 @@ Page({
     } else if (id === 'fav') {
       showToast('已同步 126 项我的云端收藏');
     } else if (id === 'ticket') {
-      showToast('您有 2 项求资源工单处理中');
+      wx.navigateTo({
+        url: '/pages/request/request'
+      });
     } else if (id === 'redeem') {
       wx.showModal({
         title: '兑换极客特权',
@@ -163,6 +165,12 @@ Page({
   onFeedbackTap() {
     wx.navigateTo({
       url: '/pages/feedback/feedback'
+    });
+  },
+
+  onRequestResourceTap() {
+    wx.navigateTo({
+      url: '/pages/request/request'
     });
   },
 

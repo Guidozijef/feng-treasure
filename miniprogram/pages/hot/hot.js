@@ -223,17 +223,8 @@ Page({
   },
 
   onWishTap() {
-    wx.showModal({
-      title: '提交心愿单',
-      editable: true,
-      placeholderText: '请输入您寻找的软件、源码或学习资料名称...',
-      confirmText: '立即提交',
-      confirmColor: '#3B82F6',
-      success: (res) => {
-        if (res.confirm && res.content) {
-          showToast('心愿单已登记！24h 内极速上线', 'success');
-        }
-      }
+    wx.navigateTo({
+      url: '/pages/request/request'
     });
   },
 

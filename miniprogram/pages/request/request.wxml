@@ -1,0 +1,310 @@
+<!-- 求资源工单页面 (1:1 像素级还原) -->
+<view class="request-page-container">
+
+  <!-- 1. 顶部双 Tab 切换栏 -->
+  <view class="top-tabs-container">
+    <view 
+      class="tab-pill-item {{activeTab === 'submit' ? 'tab-pill-active' : ''}}" 
+      bindtap="onSwitchTab" 
+      data-tab="submit"
+      hover-class="card-tap-hover"
+    >
+      <image class="tab-pill-icon" src="/images/icon_tab_flash.svg" mode="aspectFit" />
+      <text class="tab-pill-text">提交求档工单</text>
+    </view>
+    <view 
+      class="tab-pill-item {{activeTab === 'history' ? 'tab-pill-active' : ''}}" 
+      bindtap="onSwitchTab" 
+      data-tab="history"
+      hover-class="card-tap-hover"
+    >
+      <image class="tab-pill-icon" src="/images/icon_clock_history.svg" mode="aspectFit" />
+      <text class="tab-pill-text">我的求档记录 ({{myTickets.length}})</text>
+      <view class="unread-dot"></view>
+    </view>
+  </view>
+
+  <!-- =============================== -->
+  <!-- TAB 1: 提交求档工单表单视图 -->
+  <!-- =============================== -->
+  <block wx:if="{{activeTab === 'submit'}}">
+    
+    <!-- 2. 24小时寻档承诺横幅 -->
+    <view class="promise-banner-card">
+      <view class="promise-left-lamp">
+        <image class="lamp-bulb-svg" src="/images/icon_lamp_bulb.svg" mode="aspectFit" />
+      </view>
+      <view class="promise-info-wrap">
+        <view class="promise-desc-text">
+          找不到心仪的工具或资料？提交工单后，极客团队专人在 <text class="highlight-blue">24小时内</text> 全网寻档并为您上传通知！
+        </view>
+        <view class="svip-speed-pill">
+          SVIP 10分钟急速
+        </view>
+      </view>
+      <!-- 右侧背景半透明放大镜水印 -->
+      <view class="watermark-search-icon">🔍</view>
+    </view>
+
+    <!-- 表单主白色卡片 -->
+    <view class="form-main-card">
+      
+      <!-- 3. 资源名称 (必填) -->
+      <view class="form-field-group">
+        <view class="field-label-row">
+          <view class="field-title-left">
+            <text class="field-title">资源名称</text>
+            <text class="required-star">*</text>
+          </view>
+          <text class="field-sub-hint">支持软件/系统/源码库</text>
+        </view>
+        <view class="input-box-wrap">
+          <input 
+            class="form-text-input" 
+            placeholder="例如：Navicat 16 最新版 / 某开源系统源码" 
+            placeholder-class="input-placeholder"
+            value="{{resourceName}}"
+            bindinput="onResourceNameInput"
+          />
+        </view>
+      </view>
+
+      <!-- 4. 资源分类 (必填单选) -->
+      <view class="form-field-group">
+        <view class="field-label-row">
+          <view class="field-title-left">
+            <text class="field-title">资源分类</text>
+            <text class="required-star">*</text>
+          </view>
+        </view>
+        <view class="category-grid-box">
+          <block wx:for="{{categories}}" wx:key="id">
+            <view 
+              class="cat-card-item {{selectedCatId === item.id ? 'cat-card-active' : ''}}"
+              bindtap="onSelectCategory"
+              data-id="{{item.id}}"
+              hover-class="card-tap-hover"
+            >
+              <image class="cat-card-icon" src="{{item.icon}}" mode="aspectFit" />
+              <text class="cat-card-name">{{item.name}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 5. 希望获取的平台/格式 (多选) -->
+      <view class="form-field-group">
+        <view class="field-label-row">
+          <view class="field-title-left">
+            <text class="field-title">希望获取的平台/格式</text>
+          </view>
+        </view>
+        <view class="platform-pills-row">
+          <block wx:for="{{platforms}}" wx:key="id">
+            <view 
+              class="plat-pill {{item.selected ? 'plat-pill-active' : ''}}"
+              bindtap="onTogglePlatform"
+              data-id="{{item.id}}"
+              hover-class="card-tap-hover"
+            >
+              <text>{{item.name}}</text>
+              <text wx:if="{{item.selected}}" class="plat-check-icon">✓</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 6. 详细描述 / 官方链接 / 需求说明 -->
+      <view class="form-field-group">
+        <view class="field-label-row">
+          <view class="field-title-left">
+            <text class="field-title">详细描述 / 官方链接 / 需求说明</text>
+          </view>
+          <text class="char-count-text">{{detailDesc.length}} / 300</text>
+        </view>
+        <view class="desc-textarea-wrap">
+          <textarea 
+            class="desc-textarea" 
+            placeholder="提供官网地址、版本号、或具体功能要求，能帮我们更快找到精准版本..."
+            placeholder-class="input-placeholder"
+            maxlength="300"
+            value="{{detailDesc}}"
+            bindinput="onDetailDescInput"
+          />
+        </view>
+      </view>
+
+      <!-- 7. 参考截图 / 报错说明 (选填) -->
+      <view class="form-field-group">
+        <view class="field-label-row">
+          <view class="field-title-left">
+            <text class="field-title">参考截图 / 报错说明</text>
+            <text class="field-sub-optional">(选填)</text>
+          </view>
+        </view>
+        <view class="screenshot-upload-row">
+          <!-- 上传虚线框 -->
+          <view 
+            class="upload-dash-box" 
+            bindtap="onChooseScreenshot"
+            hover-class="card-tap-hover"
+          >
+            <image class="upload-pic-icon" src="/images/icon_upload_add.svg" mode="aspectFit" />
+            <text class="upload-dash-title">添加截图</text>
+            <text class="upload-dash-sub">最多3张</text>
+          </view>
+
+          <!-- 图片展示或右侧说明文案 -->
+          <view class="screenshot-right-content">
+            <block wx:if="{{screenshots.length > 0}}">
+              <view class="preview-thumb-list">
+                <block wx:for="{{screenshots}}" wx:key="*this">
+                  <view class="thumb-box">
+                    <image class="thumb-img" src="{{item}}" mode="aspectFill" bindtap="onPreviewImage" data-src="{{item}}" />
+                    <view class="thumb-delete-cross" catchtap="onDeleteImage" data-index="{{index}}">✕</view>
+                  </view>
+                </block>
+              </view>
+            </block>
+            <block wx:else>
+              <view class="screenshot-tip-text">
+                支持上传应用报错信息、软件官网截图或目录结构以助定位。
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+
+      <!-- 8. 开启 SVIP 极速寻档加速 (Switch 开关) -->
+      <view class="svip-speed-switch-card">
+        <view class="svip-switch-left">
+          <view class="lightning-box-gold">
+            <text class="bolt-symbol">⚡</text>
+          </view>
+          <view class="svip-switch-text-wrap">
+            <view class="svip-switch-title-row">
+              <text class="svip-switch-title">开启 SVIP 极速寻档加速</text>
+              <view class="svip-gold-tag">VIP</view>
+            </view>
+            <view class="svip-switch-sub">专人特派通道，预计 10~30 分钟内极速响应处理</view>
+          </view>
+        </view>
+        <view class="svip-switch-right">
+          <switch 
+            color="#0263e0" 
+            checked="{{isSvipSpeedEnabled}}" 
+            bindchange="onSvipSpeedChange" 
+          />
+        </view>
+      </view>
+
+      <!-- 9. 提交求档需求按钮 -->
+      <view class="submit-demand-action">
+        <button 
+          class="submit-demand-btn" 
+          bindtap="onSubmitDemand"
+          hover-class="btn-hover"
+          style="width: 100% !important; white-space: nowrap !important; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;"
+        >
+          <text class="plane-icon">➤</text>
+          <text class="btn-text">提交求档需求 (今日还可提交 {{remainSubmitTimes}} 次)</text>
+        </button>
+      </view>
+
+    </view>
+
+    <!-- 10. 最近工单进度卡片 -->
+    <view class="recent-tickets-section">
+      <view class="recent-tickets-header">
+        <view class="tickets-header-left">
+          <image class="trend-icon-svg" src="/images/trend.svg" mode="aspectFit" />
+          <text class="tickets-heading-title">最近工单进度</text>
+        </view>
+        <view class="view-all-link" bindtap="onViewAllTickets" hover-class="btn-hover">
+          <text>查看全部 ></text>
+        </view>
+      </view>
+
+      <view class="tickets-cards-list">
+        <block wx:for="{{recentTickets}}" wx:key="id">
+          <view class="ticket-card-box">
+            <view class="ticket-card-top">
+              <text class="ticket-id-time">单号 #{{item.orderNo}} · {{item.time}}</text>
+              <view class="ticket-status-pill {{item.statusClass}}">
+                <text class="status-symbol">{{item.statusIcon}}</text>
+                <text class="status-text">{{item.statusText}}</text>
+              </view>
+            </view>
+
+            <view class="ticket-card-body">
+              <view class="ticket-body-left">
+                <view class="ticket-res-title">{{item.title}}</view>
+                <view class="ticket-res-sub">{{item.subDesc}}</view>
+              </view>
+              <view class="ticket-body-right">
+                <block wx:if="{{item.status === 'done'}}">
+                  <view class="ticket-btn-primary" bindtap="onGoToResourceDetail" data-id="{{item.targetResId}}" hover-class="btn-hover">
+                    <text>去获取</text>
+                    <text class="btn-arrow">→</text>
+                  </view>
+                </block>
+                <block wx:else>
+                  <view class="ticket-btn-outline" bindtap="onUrgeTicket" data-id="{{item.id}}" hover-class="btn-hover">
+                    催促进度
+                  </view>
+                </block>
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- =============================== -->
+  <!-- TAB 2: 我的求档记录完整列表视图 -->
+  <!-- =============================== -->
+  <block wx:if="{{activeTab === 'history'}}">
+    <view class="history-list-section">
+      <block wx:for="{{myTickets}}" wx:key="id">
+        <view class="ticket-card-box history-card-item">
+          <view class="ticket-card-top">
+            <text class="ticket-id-time">工单号 #{{item.orderNo}} · {{item.time}}</text>
+            <view class="ticket-status-pill {{item.statusClass}}">
+              <text class="status-symbol">{{item.statusIcon}}</text>
+              <text class="status-text">{{item.statusText}}</text>
+            </view>
+          </view>
+          <view class="ticket-card-body">
+            <view class="ticket-body-left">
+              <view class="ticket-res-title">{{item.title}}</view>
+              <view class="ticket-res-sub">{{item.subDesc}}</view>
+              <view class="ticket-category-tag">分类：{{item.category}} · 平台：{{item.platforms}}</view>
+            </view>
+            <view class="ticket-body-right">
+              <block wx:if="{{item.status === 'done'}}">
+                <view class="ticket-btn-primary" bindtap="onGoToResourceDetail" data-id="{{item.targetResId}}" hover-class="btn-hover">
+                  <text>去获取</text>
+                  <text class="btn-arrow">→</text>
+                </view>
+              </block>
+              <block wx:else>
+                <view class="ticket-btn-outline" bindtap="onUrgeTicket" data-id="{{item.id}}" hover-class="btn-hover">
+                  催促进度
+                </view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </block>
+
+  <!-- 11. 底部官方数字资产保障背书 -->
+  <view class="footer-endorse-box">
+    <image class="endorse-shield-icon" src="/images/icon_safe_shield.svg" mode="aspectFit" />
+    <text class="endorse-text">枫的藏宝阁 · 官方数字资产保障与人工审查体系</text>
+  </view>
+
+</view>

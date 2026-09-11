@@ -53,8 +53,13 @@ view, text, image, navigator, input, button {
   overflow: hidden;
 }
 
-/* 按钮点击触感反馈 */
+/* 按钮与卡片点击触感反馈 */
 .btn-hover {
   opacity: 0.85;
   transform: scale(0.98);
+}
+
+.card-hover {
+  opacity: 0.92;
+  transform: scale(0.99);
 }
