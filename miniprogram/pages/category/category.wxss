@@ -46,7 +46,7 @@
 
 /* 左侧边栏 (防止小屏机型挤压与文本换行) */
 .cat-sidebar {
-  width: 178rpx;
+  width: 150rpx;
   flex-shrink: 0;
   box-sizing: border-box;
   background: #f8fafc;
