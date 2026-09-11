@@ -1,0 +1,224 @@
+<!-- 会员中心 (1:1 像素级还原) -->
+<view class="vip-page-container">
+  
+  <!-- 1. 顶部副标题栏 -->
+  <view class="vip-sub-bar">
+    <view class="sub-bar-left">
+      <text class="sub-bar-brand">极客资源盒 SVIP 旗舰特权</text>
+    </view>
+    <view class="sub-bar-right" bindtap="openOrderHistory" hover-class="btn-hover">
+      <text class="order-history-text">购买记录</text>
+    </view>
+  </view>
+
+  <!-- 2. 黑金旗舰卡片 (VIP Hero Banner) -->
+  <view class="vip-hero-card">
+    <view class="hero-top-row">
+      <text class="hero-main-title">极客黑卡 SVIP · 算力与资源完全解禁</text>
+    </view>
+    <view class="hero-desc-text">
+      开通即享全站优质源码、商业组件及工具直链高速下载，无每日次数上限
+    </view>
+    <!-- 底部三大权益胶囊 -->
+    <view class="hero-capsules-row">
+      <view class="hero-capsule">
+        <text class="capsule-icon">⚡</text>
+        <text class="capsule-text">即时生效</text>
+      </view>
+      <view class="capsule-divider"></view>
+      <view class="hero-capsule">
+        <text class="capsule-icon">☁️</text>
+        <text class="capsule-text">千兆直连CDN</text>
+      </view>
+      <view class="capsule-divider"></view>
+      <view class="hero-capsule">
+        <text class="capsule-icon">🛡️</text>
+        <text class="capsule-text">官方质保</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 3. 精选特惠套餐区域 -->
+  <view class="plans-section">
+    <view class="section-title-row">
+      <view class="section-title-left">
+        <view class="title-indicator-dot"></view>
+        <text class="section-bold-title">精选特惠套餐</text>
+      </view>
+      <view class="section-title-right">
+        <text class="safe-pay-sub">随时退订 · 安全支付</text>
+      </view>
+    </view>
+
+    <!-- 套餐 3 联选择卡片 -->
+    <view class="plans-grid">
+      <block wx:for="{{plans}}" wx:key="id">
+        <view 
+          class="plan-card {{selectedPlanId === item.id ? 'plan-card-active' : ''}}" 
+          bindtap="onSelectPlan" 
+          data-id="{{item.id}}"
+          hover-class="card-tap-hover"
+        >
+          <!-- 顶部特色角标 -->
+          <view class="plan-top-badge {{item.badgeType}}">
+            <text class="badge-text">{{item.badge}}</text>
+          </view>
+
+          <!-- 套餐名称 -->
+          <view class="plan-name {{selectedPlanId === item.id ? 'active-name' : ''}}">
+            {{item.name}}
+          </view>
+
+          <!-- 价格行 -->
+          <view class="plan-price-row">
+            <text class="currency-symbol">¥</text>
+            <text class="price-value">{{item.price}}</text>
+            <text wx:if="{{item.unit}}" class="price-unit">{{item.unit}}</text>
+          </view>
+
+          <!-- 原价划线 -->
+          <view class="original-price">
+            ¥{{item.originalPrice}}
+          </view>
+
+          <!-- 每日折合说明 -->
+          <view class="per-day-text {{selectedPlanId === item.id ? 'active-per-day' : ''}}">
+            {{item.perDay}}
+          </view>
+
+          <!-- 突出权益小标签 -->
+          <view class="extra-benefit-text {{item.benefitType}}">
+            {{item.extraBenefit}}
+          </view>
+
+          <!-- 选中右下角蓝色打勾角标 -->
+          <view wx:if="{{selectedPlanId === item.id}}" class="plan-checked-corner">
+            <view class="corner-triangle"></view>
+            <text class="corner-check-icon">✓</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 4. 限时加赠提示 Banner -->
+  <view class="bonus-banner">
+    <view class="bonus-left">
+      <image class="bonus-gift-icon" src="/images/vip_gift_box.svg" mode="aspectFit" />
+      <text class="bonus-text">
+        <text class="bonus-highlight">限时加赠：</text>年度黑卡立赠 600 云豆，免看广告直连下载
+      </text>
+    </view>
+    <view class="bonus-right-tag">
+      <text class="bonus-tag-text">今日特惠</text>
+    </view>
+  </view>
+
+  <!-- 5. 黑卡会员 8 大极客特权 -->
+  <view class="privileges-section">
+    <view class="privileges-header-row">
+      <view class="priv-header-left">
+        <text class="priv-main-heading">黑卡会员 8 大极客特权</text>
+        <text class="priv-sub-desc">专为开发者、资源重度玩家量身定制的高效矩阵</text>
+      </view>
+      <view class="priv-header-right" bindtap="openPrivilegeCompare" hover-class="btn-hover">
+        <text class="priv-compare-link">特权对比 ></text>
+      </view>
+    </view>
+
+    <!-- 8 项特权 2x4 网格 -->
+    <view class="privileges-grid">
+      <block wx:for="{{privileges}}" wx:key="id">
+        <view class="priv-item-card" hover-class="card-tap-hover">
+          <view class="priv-icon-box" style="background-color: {{item.bgColor}};">
+            <image class="priv-icon-img" src="{{item.icon}}" mode="aspectFit" />
+          </view>
+          <view class="priv-text-info">
+            <view class="priv-item-title">{{item.title}}</view>
+            <view class="priv-item-desc">{{item.desc}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 6. 用户协议勾选栏 -->
+  <view class="agreement-bar">
+    <view class="checkbox-wrap" bindtap="toggleAgreement">
+      <view class="custom-checkbox {{isAgreed ? 'checkbox-checked' : ''}}">
+        <text wx:if="{{isAgreed}}" class="checkbox-check-icon">✓</text>
+      </view>
+    </view>
+    <view class="agreement-text-wrap">
+      <text class="text-regular">我已阅读并同意</text>
+      <text class="text-link" bindtap="openServiceProtocol">《极客会员服务协议》</text>
+      <text class="text-regular">与</text>
+      <text class="text-link" bindtap="openAutoRenewProtocol">《自动续费规则与退订须知》</text>
+      <text class="text-regular">。购买后特权自动绑定当前微信 UID。</text>
+    </view>
+  </view>
+
+  <!-- 7. 常见问题与答疑 (手风琴 Accordion) -->
+  <view class="faq-section">
+    <view class="faq-title-heading">常见问题与答疑</view>
+    <view class="faq-list">
+      <block wx:for="{{faqs}}" wx:key="id">
+        <view class="faq-item-card">
+          <view class="faq-header-row" bindtap="toggleFaq" data-id="{{item.id}}">
+            <text class="faq-question-text">{{item.q}}</text>
+            <view class="faq-arrow-wrap {{item.isOpen ? 'arrow-open' : ''}}">
+              <text class="faq-arrow">∨</text>
+            </view>
+          </view>
+          <view class="faq-answer-wrap" wx:if="{{item.isOpen}}">
+            <text class="faq-answer-text">{{item.a}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 8. 底部信任背书安全说明 -->
+  <view class="footer-trust-section">
+    <view class="trust-badge-row">
+      <image class="trust-shield-icon" src="/images/icon_safe_shield.svg" mode="aspectFit" />
+      <text class="trust-text">微信支付安全认证 · 数据加密传输 · 人工急速客服</text>
+    </view>
+    <view class="copyright-row">
+      <text>极客资源盒版权所有 · 粤ICP备202391024号-1</text>
+    </view>
+    <view class="statement-row">
+      <text>虚拟数字资产一经开通充值即时绑定账号</text>
+    </view>
+  </view>
+
+  <!-- 垫高底部，防止吸底支付栏遮挡内容 -->
+  <view class="bottom-placeholder"></view>
+
+  <!-- 9. 固定吸底支付操作栏 (Fixed Bottom Bar) -->
+  <view class="fixed-bottom-bar">
+    <view class="bottom-left-info">
+      <view class="price-top-row">
+        <text class="total-label">合计</text>
+        <text class="total-currency">¥</text>
+        <text class="total-price-num">{{currentPlan.price}}</text>
+        <view class="discount-pill">已优惠 ¥{{currentPlan.discount}}</view>
+      </view>
+      <view class="wechat-safe-tip">
+        <text class="tip-check-green">✔</text>
+        <text class="tip-text">微信快捷支付 · 即刻生效</text>
+      </view>
+    </view>
+    <view class="bottom-right-action">
+      <button 
+        class="open-vip-btn" 
+        bindtap="onPaySubmit" 
+        hover-class="btn-hover"
+      >
+        <text>立即开通 {{currentPlan.shortName}}</text>
+        <text class="btn-arrow-icon">→</text>
+      </button>
+    </view>
+  </view>
+
+</view>

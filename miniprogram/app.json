@@ -4,7 +4,9 @@
     "pages/hot/hot",
     "pages/category/category",
     "pages/detail/detail",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/vip/vip",
+    "pages/feedback/feedback"
   ],
   "window": {
     "backgroundTextStyle": "light",

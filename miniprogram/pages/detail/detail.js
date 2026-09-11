@@ -162,11 +162,17 @@ Page({
   },
 
   onReportTap() {
-    wx.showActionSheet({
-      itemList: ['链接已失效', '文件损坏/无法解压', '版本不符/报毒问题', '其他异常'],
-      success: (res) => {
-        showToast('感谢反馈，已提交维护人员极速补档');
-      }
+    const { resource } = this.data;
+    wx.navigateTo({
+      url: `/pages/feedback/feedback?id=${resource.id}&title=${encodeURIComponent(resource.title)}&category=${encodeURIComponent(resource.category || '开发工具')}&icon=${encodeURIComponent(resource.icon || '')}`
+    });
+  },
+
+  goToFeedback() {
+    this.setData({ showDownloadModal: false });
+    const { resource } = this.data;
+    wx.navigateTo({
+      url: `/pages/feedback/feedback?id=${resource.id}&title=${encodeURIComponent(resource.title)}&category=${encodeURIComponent(resource.category || '开发工具')}&icon=${encodeURIComponent(resource.icon || '')}`
     });
   },
 

@@ -520,7 +520,237 @@
   white-space: nowrap;
 }
 
-/* 6 & 7. 任务中心与生态区域 */
+/* 6. 每日任务 & 福利中心 (1:1 像素级还原) */
+.daily-task-welfare-card {
+  background: #ffffff;
+  border-radius: 28rpx;
+  border: 1rpx solid #eef2f6;
+  padding: 30rpx 24rpx 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(15, 23, 42, 0.025);
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22rpx;
+}
+
+.task-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.task-header-check-icon {
+  width: 38rpx;
+  height: 38rpx;
+  display: block;
+  flex-shrink: 0;
+}
+
+.task-main-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5rpx;
+}
+
+.task-rule-btn {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.rule-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #0263e0;
+}
+
+.rule-question-icon {
+  width: 26rpx;
+  height: 26rpx;
+  display: block;
+  flex-shrink: 0;
+}
+
+.header-sub-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.2rpx;
+}
+
+.task-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.task-item-box {
+  background: #f8fafd;
+  border: 1rpx solid #eef2f8;
+  border-radius: 22rpx;
+  padding: 22rpx 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.task-left-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.task-icon-box {
+  width: 82rpx;
+  height: 82rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18rpx;
+  flex-shrink: 0;
+}
+
+.box-blue {
+  background: #e0eaff;
+}
+
+.box-green {
+  background: #d1fae5;
+}
+
+.task-sub-icon {
+  width: 42rpx;
+  height: 42rpx;
+  display: block;
+}
+
+.task-text-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.task-item-name {
+  font-size: 29rpx;
+  font-weight: 800;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.task-bean-badge {
+  font-size: 21rpx;
+  font-weight: 700;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.3;
+}
+
+.badge-orange {
+  background: #ffedd5;
+  color: #d97706;
+}
+
+.badge-green {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.task-item-desc {
+  font-size: 23rpx;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.task-action-wrap {
+  flex-shrink: 0;
+  width: 144rpx;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task-btn-solid {
+  width: 144rpx !important;
+  min-width: 144rpx !important;
+  height: 56rpx !important;
+  line-height: 56rpx !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #0263e0;
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  text-align: center;
+  border: none;
+  white-space: nowrap;
+  box-shadow: 0 4rpx 10rpx rgba(2, 99, 224, 0.2);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-btn-solid::after {
+  display: none;
+}
+
+.task-btn-solid.btn-disabled {
+  background: #cbd5e1;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.task-btn-outline {
+  width: 144rpx !important;
+  min-width: 144rpx !important;
+  height: 56rpx !important;
+  line-height: 52rpx !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #ffffff;
+  color: #0263e0;
+  border: 2rpx solid #0263e0;
+  font-size: 25rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  text-align: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-btn-outline::after {
+  display: none;
+}
+
+/* 7. 极客生态与支持 */
+.eco-card-header {
+  padding: 30rpx 26rpx 22rpx;
+  margin-bottom: 0;
+  border-bottom: 1rpx solid #f8fafc;
+}
+
 .section-group {
   margin-bottom: 24rpx;
 }
@@ -536,28 +766,6 @@
   font-size: 30rpx;
   font-weight: 800;
   color: #0f172a;
-}
-
-.daily-reward-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6rpx;
-  background: #fef3c7;
-  color: #d97706;
-  padding: 6rpx 18rpx;
-  border-radius: 20rpx;
-  font-size: 22rpx;
-  font-weight: 600;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.reward-star {
-  font-size: 20rpx;
-}
-
-.reward-text {
-  line-height: 1;
 }
 
 .list-card-box {

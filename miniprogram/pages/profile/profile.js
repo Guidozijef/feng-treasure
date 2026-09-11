@@ -30,7 +30,7 @@ Page({
     ],
 
     // 任务打卡状态
-    hasCheckedIn: true
+    isCheckIn: false
   },
 
   onLoad() {
@@ -89,22 +89,14 @@ Page({
   },
 
   openPrivilegeDetails() {
-    wx.showModal({
-      title: '极客 SVIP 专属特权',
-      content: '1. 全网直链满速不限流下载\n2. 每日无限次直链解析\n3. 失效资源 10 分钟极速专人补档\n4. 独家 VIP 开发者绿色工具包首发获取',
-      showCancel: false,
-      confirmText: '我知道了',
-      confirmColor: '#0f5bd8'
+    wx.navigateTo({
+      url: '/pages/vip/vip'
     });
   },
 
   onRenewVip() {
-    wx.showModal({
-      title: '黑卡 SVIP 续期特惠',
-      content: '您的黑卡 SVIP 属于永久尊享有效状态，无需续费即可终身享有全部高级权益！',
-      showCancel: false,
-      confirmText: '太棒了',
-      confirmColor: '#d97706'
+    wx.navigateTo({
+      url: '/pages/vip/vip'
     });
   },
 
@@ -132,30 +124,26 @@ Page({
     }
   },
 
-  onDailyTaskTap() {
-    showToast('做任务领云豆：今日任务已完成 3/4');
-  },
-
-  onDownloadBoxTap() {
-    showToast('下载箱中包含 18 个有效网盘直链及密钥');
-  },
-
-  onFeedbackProgressTap() {
+  // 每日任务 & 福利中心交互
+  onTaskRuleTap() {
     wx.showModal({
-      title: '工单处理进度',
-      content: '【工单 #89302】WindTerm 备用源补充申请已在处理中，预计 20 分钟内完成上架。',
+      title: '每日任务与福利规则',
+      content: '1. 每日极客打卡：每日签到可获得 5 极客云豆，连续签到享周末双倍福利；\n2. 邀请好友助力：每成功邀请 1 位好友，立即获赠 50 云豆及 1 天体验黑卡；\n3. 云豆可用于兑换直链极速通道、独家绿色工具包与专属加速。',
       showCancel: false,
-      confirmText: '查看详情',
-      confirmColor: '#0f5bd8'
+      confirmText: '我知道了',
+      confirmColor: '#0263e0'
     });
   },
 
-  onPushNoticeTap() {
-    showToast('推送提醒已生效，可在微信消息中接收变动');
-  },
-
-  onCheckInTap() {
-    showToast('今日签到已领 +10 云豆，连续签到 3 天！', 'success');
+  onDailyCheckIn() {
+    if (this.data.isCheckIn) {
+      showToast('今日已完成签到打卡');
+      return;
+    }
+    this.setData({
+      isCheckIn: true
+    });
+    showToast('打卡成功！+5 云豆已到账', 'success');
   },
 
   onCommunityTap() {
@@ -169,6 +157,12 @@ Page({
           copyToClipboard('feng-helper', '管理员微信号已复制');
         }
       }
+    });
+  },
+
+  onFeedbackTap() {
+    wx.navigateTo({
+      url: '/pages/feedback/feedback'
     });
   },
 

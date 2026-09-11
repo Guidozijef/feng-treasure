@@ -303,6 +303,10 @@
       <!-- 4. 底部辅助提示说明 -->
       <view class="modal-bottom-tips">
         <text class="tip-line">点击即可复制完整网盘下载链接与提取码，粘贴至浏览器或网盘App即可打开保存下载。</text>
+        <view class="report-invalid-link" bindtap="goToFeedback" hover-class="btn-hover">
+          <text>链接失效或提取码错误？</text>
+          <text class="report-link-highlight">点击报错补档 ></text>
+        </view>
       </view>
     </view>
   </view>

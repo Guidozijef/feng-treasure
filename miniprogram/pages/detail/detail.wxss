@@ -1038,6 +1038,21 @@
   display: block;
 }
 
+.report-invalid-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin-top: 14rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.report-link-highlight {
+  color: #0263e0;
+  font-weight: 700;
+}
+
 /* 按钮点击态通用类 */
 .btn-hover {
   opacity: 0.82;

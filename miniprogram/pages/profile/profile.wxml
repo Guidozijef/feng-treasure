@@ -125,9 +125,12 @@
 
     <!-- 5. 资源与资产管理 (4 项工具) -->
     <view class="asset-tools-card">
-      <view class="card-header-row">
-        <text class="header-title">资源与资产管理</text>
-        <text class="header-sub">4 项工具</text>
+      <view class="task-card-header">
+        <view class="task-title-group">
+          <image class="task-header-check-icon" src="/images/title_icon_asset.svg" mode="aspectFit" />
+          <text class="task-main-title">资源与资产管理</text>
+        </view>
+        <view class="header-sub-text">4 项工具</view>
       </view>
       <view class="tools-grid">
         <block wx:for="{{assetTools}}" wx:key="id">
@@ -141,138 +144,141 @@
       </view>
     </view>
 
-    <!-- 6. 极客特权与任务中心 -->
-    <view class="section-group">
-      <view class="section-header-wrap">
-        <text class="section-heading">极客特权与任务中心</text>
-        <view class="daily-reward-pill" bindtap="onDailyTaskTap" hover-class="btn-hover">
-          <text class="reward-star">⭐</text>
-          <text class="reward-text">每日做任务领云豆</text>
+    <!-- 6. 每日任务 & 福利中心 (1:1 像素级还原) -->
+    <view class="daily-task-welfare-card">
+      <!-- 顶部标题栏 -->
+      <view class="task-card-header">
+        <view class="task-title-group">
+          <image class="task-header-check-icon" src="/images/task_title_check.svg" mode="aspectFit" />
+          <text class="task-main-title">每日任务 & 福利中心</text>
+        </view>
+        <view class="task-rule-btn" bindtap="onTaskRuleTap" hover-class="btn-hover">
+          <text class="rule-text">规则说明</text>
+          <image class="rule-question-icon" src="/images/icon_question_blue.svg" mode="aspectFit" />
         </view>
       </view>
 
-      <view class="list-card-box">
-        <!-- 任务项 1: 下载箱 -->
-        <view class="list-item-row" bindtap="onDownloadBoxTap" hover-class="card-hover">
-          <view class="item-icon-box bg-blue">
-            <image class="item-svg-icon" src="/images/task_download.svg" mode="aspectFit" />
+      <!-- 任务列表容器 -->
+      <view class="task-items-list">
+        <!-- 任务 1: 每日极客打卡 -->
+        <view class="task-item-box">
+          <view class="task-left-info">
+            <view class="task-icon-box box-blue">
+              <image class="task-sub-icon" src="/images/task_checkin_calendar.svg" mode="aspectFit" />
+            </view>
+            <view class="task-text-group">
+              <view class="task-name-row">
+                <text class="task-item-name">每日极客打卡</text>
+                <view class="task-bean-badge badge-orange">+5 云豆</view>
+              </view>
+              <view class="task-item-desc">{{isCheckIn ? '今日已签到 · 连续签到享周末双倍' : '今日未签到 · 连续签到享周末双倍'}}</view>
+            </view>
           </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">我的资源下载箱 / 复制历史</view>
-            <view class="item-sub-desc">查看最近提取的资源链接及提取码</view>
-          </view>
-          <view class="item-right-wrap">
-            <view class="item-badge badge-blue">已存 18 项</view>
-            <text class="item-chevron">></text>
-          </view>
-        </view>
-
-        <!-- 任务项 2: 失效纠错 -->
-        <view class="list-item-row" bindtap="onFeedbackProgressTap" hover-class="card-hover">
-          <view class="item-icon-box bg-amber">
-            <image class="item-svg-icon" src="/images/task_repair.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">资源失效纠错 / 补档进度</view>
-            <view class="item-sub-desc">反馈失效资源，专人极速补档</view>
-          </view>
-          <view class="item-right-wrap">
-            <view class="item-badge badge-amber">1条处理中</view>
-            <text class="item-chevron">></text>
+          <view class="task-action-wrap">
+            <view class="task-btn-solid {{isCheckIn ? 'btn-disabled' : ''}}" bindtap="onDailyCheckIn" hover-class="btn-hover">
+              {{isCheckIn ? '已打卡' : '立即打卡'}}
+            </view>
           </view>
         </view>
 
-        <!-- 任务项 3: 推送提醒 -->
-        <view class="list-item-row" bindtap="onPushNoticeTap" hover-class="card-hover">
-          <view class="item-icon-box bg-purple">
-            <image class="item-svg-icon" src="/images/task_bell.svg" mode="aspectFit" />
+        <!-- 任务 2: 邀请好友助力 -->
+        <view class="task-item-box">
+          <view class="task-left-info">
+            <view class="task-icon-box box-green">
+              <image class="task-sub-icon" src="/images/task_invite_user.svg" mode="aspectFit" />
+            </view>
+            <view class="task-text-group">
+              <view class="task-name-row">
+                <text class="task-item-name">邀请好友助力</text>
+                <view class="task-bean-badge badge-green">+50 云豆</view>
+              </view>
+              <view class="task-item-desc">成功邀请 1 人还可领 1 天体验黑卡</view>
+            </view>
           </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">资源更新推送提醒</view>
-            <view class="item-sub-desc">已开启3个关注工具的版本变动推送</view>
-          </view>
-          <view class="item-right-wrap">
-            <text class="status-green-text">已开启</text>
-            <text class="item-chevron">></text>
-          </view>
-        </view>
-
-        <!-- 任务项 4: 打卡签到 -->
-        <view class="list-item-row no-border" bindtap="onCheckInTap" hover-class="card-hover">
-          <view class="item-icon-box bg-green">
-            <image class="item-svg-icon" src="/images/task_calendar.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">每日打卡签到</view>
-            <view class="item-sub-desc">连续签到3天，领取云豆兑换特权</view>
-          </view>
-          <view class="item-right-wrap">
-            <view class="item-badge badge-green-pill">✓ 今日已领 +10</view>
-            <text class="item-chevron">></text>
+          <view class="task-action-wrap">
+            <button class="task-btn-outline" open-type="share" hover-class="btn-hover" style="width: 144rpx !important; min-width: 144rpx !important; height: 56rpx !important; line-height: 52rpx !important; padding: 0 !important; margin: 0 !important;">
+              去邀请
+            </button>
           </view>
         </view>
       </view>
     </view>
 
     <!-- 7. 极客生态与支持 -->
-    <view class="section-group">
-      <view class="section-header-wrap">
-        <text class="section-heading">极客生态与支持</text>
+    <view class="list-card-box mb-60">
+      <view class="task-card-header eco-card-header">
+        <view class="task-title-group">
+          <image class="task-header-check-icon" src="/images/title_icon_eco.svg" mode="aspectFit" />
+          <text class="task-main-title">生态与支持</text>
+        </view>
+        <view class="header-sub-text">官方自营保障</view>
       </view>
 
-      <view class="list-card-box mb-60">
-        <!-- 生态 1: 社群 -->
-        <view class="list-item-row" bindtap="onCommunityTap" hover-class="card-hover">
-          <view class="item-icon-box bg-blue">
-            <image class="item-svg-icon" src="/images/eco_group.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">官方极客交流社群</view>
-          </view>
-          <view class="item-right-wrap">
-            <text class="item-gray-label">扫码加入 3 群</text>
-            <text class="item-chevron">></text>
-          </view>
+      <!-- 生态 1: 社群 -->
+      <view class="list-item-row" bindtap="onCommunityTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_group.svg" mode="aspectFit" />
         </view>
-
-        <!-- 生态 2: 免责声明 -->
-        <view class="list-item-row" bindtap="onDisclaimerTap" hover-class="card-hover">
-          <view class="item-icon-box bg-blue">
-            <image class="item-svg-icon" src="/images/eco_shield.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">免责声明与侵权下架通道</view>
-          </view>
-          <view class="item-right-wrap">
-            <text class="item-chevron">></text>
-          </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">官方极客交流社群</view>
         </view>
-
-        <!-- 生态 3: 客服 -->
-        <view class="list-item-row" bindtap="onCustomerServiceTap" hover-class="card-hover">
-          <view class="item-icon-box bg-blue">
-            <image class="item-svg-icon" src="/images/eco_service.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">人工在线客服 / 意见反馈</view>
-          </view>
-          <view class="item-right-wrap">
-            <text class="item-chevron">></text>
-          </view>
+        <view class="item-right-wrap">
+          <text class="item-gray-label">扫码加入 3 群</text>
+          <text class="item-chevron">></text>
         </view>
+      </view>
 
-        <!-- 生态 4: 关于 -->
-        <view class="list-item-row no-border" bindtap="onAboutTap" hover-class="card-hover">
-          <view class="item-icon-box bg-blue">
-            <image class="item-svg-icon" src="/images/eco_info.svg" mode="aspectFit" />
-          </view>
-          <view class="item-content-wrap">
-            <view class="item-main-title">关于枫的藏宝阁</view>
-          </view>
-          <view class="item-right-wrap">
-            <text class="item-gray-label">v2.4.0 纯净版</text>
-            <text class="item-chevron">></text>
-          </view>
+      <!-- 生态 2: 资源失效反馈/建议 -->
+      <view class="list-item-row" bindtap="onFeedbackTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_feedback.svg" mode="aspectFit" />
+        </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">资源失效反馈/建议</view>
+        </view>
+        <view class="item-right-wrap">
+          <text class="item-gray-label">专人极速补档</text>
+          <text class="item-chevron">></text>
+        </view>
+      </view>
+
+      <!-- 生态 2: 免责声明 -->
+      <view class="list-item-row" bindtap="onDisclaimerTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_shield.svg" mode="aspectFit" />
+        </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">免责声明与侵权下架通道</view>
+        </view>
+        <view class="item-right-wrap">
+          <text class="item-chevron">></text>
+        </view>
+      </view>
+
+      <!-- 生态 3: 客服 -->
+      <view class="list-item-row" bindtap="onCustomerServiceTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_service.svg" mode="aspectFit" />
+        </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">人工在线客服 / 意见反馈</view>
+        </view>
+        <view class="item-right-wrap">
+          <text class="item-chevron">></text>
+        </view>
+      </view>
+
+      <!-- 生态 4: 关于 -->
+      <view class="list-item-row no-border" bindtap="onAboutTap" hover-class="card-hover">
+        <view class="item-icon-box bg-blue">
+          <image class="item-svg-icon" src="/images/eco_info.svg" mode="aspectFit" />
+        </view>
+        <view class="item-content-wrap">
+          <view class="item-main-title">关于枫的藏宝阁</view>
+        </view>
+        <view class="item-right-wrap">
+          <text class="item-gray-label">v2.4.0 纯净版</text>
+          <text class="item-chevron">></text>
         </view>
       </view>
     </view>

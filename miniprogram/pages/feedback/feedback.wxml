@@ -1,0 +1,390 @@
+<!-- 链接失效反馈页面 (1:1 像素级还原) -->
+<view class="feedback-page-container">
+
+  <!-- 1. 顶部副栏 -->
+  <view class="fb-sub-header">
+    <view class="fb-main-title">链接失效反馈</view>
+    <view class="fb-sub-title">枫的藏宝阁 · 极速补档服务</view>
+  </view>
+
+  <!-- 2. 12小时补档承诺卡片 -->
+  <view class="promise-card">
+    <view class="promise-left-icon-box">
+      <image class="promise-shield-icon" src="/images/icon_safe_shield.svg" mode="aspectFit" />
+    </view>
+    <view class="promise-content-wrap">
+      <view class="promise-title-row">
+        <text class="promise-title">12小时补档承诺</text>
+        <view class="promise-badge">全天候响应</view>
+      </view>
+      <view class="promise-desc">
+        收到反馈后，技术团队将在 12 小时内自动检测并完成专人补档，补档结果将通过服务通知实时推送告知！
+      </view>
+    </view>
+  </view>
+
+  <!-- 3. 待反馈资源对象卡片 -->
+  <view class="section-card target-resource-card">
+    <view class="card-header-row">
+      <view class="card-header-left">
+        <view class="header-icon-box">
+          <image class="header-asset-icon" src="/images/title_icon_asset.svg" mode="aspectFit" />
+        </view>
+        <text class="card-heading-title">待反馈资源对象</text>
+      </view>
+      <view class="card-header-action" bindtap="openResourceDrawer" hover-class="btn-hover">
+        <text class="action-text">更换反馈对象</text>
+        <image class="action-exchange-icon" src="/images/icon_exchange_blue.svg" mode="aspectFit" />
+      </view>
+    </view>
+
+    <!-- 当前选中的资源展示卡片 -->
+    <view class="current-resource-box">
+      <view class="resource-logo-box">
+        <image class="resource-logo-img" src="{{currentResource.icon}}" mode="aspectFit" />
+      </view>
+      <view class="resource-meta-wrap">
+        <view class="resource-name-text">{{currentResource.title}}</view>
+        <view class="resource-tags-row">
+          <view class="res-tag tag-blue">{{currentResource.category}}</view>
+          <view class="res-tag tag-red">原链接已失效</view>
+          <text class="res-id-text">ID: {{currentResource.id}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 4. 失效问题类型 (单选) -->
+  <view class="section-card">
+    <view class="card-header-row">
+      <view class="card-header-left">
+        <text class="required-star">*</text>
+        <text class="card-heading-title">失效问题类型</text>
+      </view>
+      <text class="choice-mode-tag">单选</text>
+    </view>
+
+    <view class="issue-types-grid">
+      <block wx:for="{{issueTypes}}" wx:key="id">
+        <view 
+          class="issue-type-item {{selectedIssueType === item.id ? 'issue-item-active' : ''}}"
+          bindtap="onSelectIssueType"
+          data-id="{{item.id}}"
+          hover-class="card-tap-hover"
+        >
+          <text class="issue-item-name">{{item.name}}</text>
+          <!-- 选中显示蓝色圆圈对勾，未选中显示浅灰空心圆圈 -->
+          <view class="radio-indicator {{selectedIssueType === item.id ? 'radio-checked' : ''}}">
+            <text wx:if="{{selectedIssueType === item.id}}" class="radio-check-symbol">✓</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 5. 具体失效渠道 (可选多个) -->
+  <view class="section-card">
+    <view class="card-header-row">
+      <view class="card-header-left">
+        <text class="required-star">*</text>
+        <text class="card-heading-title">具体失效渠道</text>
+      </view>
+      <text class="choice-mode-tag">可选多个</text>
+    </view>
+
+    <view class="channels-wrap">
+      <block wx:for="{{channels}}" wx:key="id">
+        <view 
+          class="channel-pill {{item.selected ? 'channel-pill-active' : ''}}"
+          bindtap="onToggleChannel"
+          data-id="{{item.id}}"
+          hover-class="card-tap-hover"
+        >
+          <image 
+            class="channel-icon-svg" 
+            src="{{item.iconType === 'link' ? '/images/icon_link_chain.svg' : '/images/icon_cloud_drive.svg'}}" 
+            mode="aspectFit" 
+          />
+          <text class="channel-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 6. 问题详情补充描述 -->
+  <view class="section-card">
+    <view class="card-header-row">
+      <text class="card-heading-title">问题详情补充描述</text>
+      <text class="choice-mode-tag">选填</text>
+    </view>
+
+    <view class="detail-textarea-box">
+      <textarea 
+        class="detail-textarea"
+        placeholder="请简要描述具体报错提示，例如：提示‘页面不存在’、解压提示‘密码不正确’等，便于技术精准排查..."
+        placeholder-class="textarea-placeholder"
+        maxlength="200"
+        value="{{detailText}}"
+        bindinput="onDetailInput"
+      />
+      <view class="word-counter">{{detailText.length}}/200</view>
+    </view>
+  </view>
+
+  <!-- 7. 失效报错截图 -->
+  <view class="section-card">
+    <view class="card-header-row">
+      <view class="card-header-left flex-column">
+        <text class="card-heading-title">失效报错截图</text>
+        <text class="card-sub-hint">提供截图可使技术人员补档效率提升 70%</text>
+      </view>
+      <text class="choice-mode-tag">最多3张</text>
+    </view>
+
+    <view class="screenshot-grid">
+      <!-- 已上传的图片列表 -->
+      <block wx:for="{{screenshotList}}" wx:key="*this">
+        <view class="screenshot-thumb-box">
+          <image 
+            class="screenshot-img" 
+            src="{{item}}" 
+            mode="aspectFill" 
+            bindtap="onPreviewImage" 
+            data-src="{{item}}" 
+          />
+          <view class="screenshot-delete-btn" catchtap="onDeleteImage" data-index="{{index}}">
+            <text class="delete-cross-symbol">✕</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 添加图片虚线按钮 (未满3张时显示) -->
+      <view 
+        wx:if="{{screenshotList.length < 3}}" 
+        class="screenshot-add-box" 
+        bindtap="onChooseImage"
+        hover-class="card-tap-hover"
+      >
+        <image class="upload-add-svg" src="/images/icon_upload_add.svg" mode="aspectFit" />
+        <text class="upload-add-text">添加截图</text>
+      </view>
+
+      <!-- 空占位槽 (保持视觉3列对齐) -->
+      <view wx:if="{{screenshotList.length === 0}}" class="screenshot-empty-slot"></view>
+    </view>
+  </view>
+
+  <!-- 8. SVIP 专人极速补档通道 -->
+  <view class="vip-channel-banner" bindtap="onVipChannelTap" hover-class="card-tap-hover">
+    <view class="vip-channel-left">
+      <view class="vip-lightning-box">
+        <text class="vip-bolt-icon">⚡</text>
+      </view>
+      <view class="vip-channel-info">
+        <view class="vip-channel-title-row">
+          <text class="vip-channel-heading">SVIP 专人极速补档通道</text>
+          <view class="vip-active-pill">生效中</view>
+        </view>
+        <view class="vip-channel-desc">尊享专人 10~30 分钟内优先响应，并推送专属直链</view>
+      </view>
+    </view>
+    <view class="vip-channel-arrow">></view>
+  </view>
+
+  <!-- 9. 微信服务通知提醒 -->
+  <view class="section-card notice-switch-card">
+    <view class="notice-left-info">
+      <view class="notice-bell-box">
+        <image class="notice-bell-svg" src="/images/icon_notice_bell.svg" mode="aspectFit" />
+      </view>
+      <view class="notice-text-wrap">
+        <view class="notice-main-title">微信服务通知提醒</view>
+        <view class="notice-sub-desc">补档成功后由「服务号」即时下发软件通知</view>
+      </view>
+    </view>
+    <view class="notice-switch-wrap">
+      <switch 
+        color="#0263e0" 
+        checked="{{noticeEnabled}}" 
+        bindchange="onNoticeSwitchChange" 
+      />
+    </view>
+  </view>
+
+  <!-- 10. 立即提交失效反馈按钮 -->
+  <view class="submit-action-section">
+    <button 
+      class="submit-feedback-btn" 
+      bindtap="onSubmitFeedback"
+      hover-class="btn-hover"
+      style="width: 100% !important; white-space: nowrap !important; display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: center !important;"
+    >
+      <text class="submit-plane-icon">➤</text>
+      <text class="submit-btn-text">立即提交失效反馈</text>
+    </button>
+    <view class="submit-limit-tip">
+      <text class="limit-check-icon">✔</text>
+      <text class="limit-tip-text">今日还可提交 {{remainSubmitCount}} 次 · 共同守护藏宝阁资源生态</text>
+    </view>
+  </view>
+
+  <!-- 11. 我的近期反馈进展 (实时同步) -->
+  <view class="recent-progress-section">
+    <view class="recent-header-row">
+      <view class="recent-header-left">
+        <image class="recent-clock-icon" src="/images/icon_clock_history.svg" mode="aspectFit" />
+        <text class="recent-heading-title">我的近期反馈进展 ({{recentProgressList.length}})</text>
+      </view>
+      <text class="sync-status-tag">实时同步</text>
+    </view>
+
+    <view class="progress-cards-list">
+      <block wx:for="{{recentProgressList}}" wx:key="id">
+        <view class="progress-card-item">
+          <view class="progress-item-left">
+            <view class="progress-res-title">{{item.title}}</view>
+            <view class="progress-status-row">
+              <view class="status-pill {{item.statusType === 'success' ? 'pill-green' : 'pill-orange'}}">
+                <text class="status-dot">●</text>
+                <text class="status-text">{{item.statusText}}</text>
+              </view>
+              <text class="status-time-text">{{item.time}}</text>
+            </view>
+          </view>
+          <view class="progress-item-action">
+            <view 
+              wx:if="{{item.statusType === 'success'}}" 
+              class="action-btn-blue" 
+              bindtap="onViewNewToken" 
+              data-item="{{item}}"
+              hover-class="btn-hover"
+            >
+              查看新口令
+            </view>
+            <view 
+              wx:else 
+              class="action-btn-gray" 
+              bindtap="onUrgeProgress" 
+              data-item="{{item}}"
+              hover-class="btn-hover"
+            >
+              催一下
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+</view>
+
+<!-- ============================================== -->
+<!-- 切换待反馈资源对象 ActionSheet 抽屉弹窗 (图 2) -->
+<!-- ============================================== -->
+<view class="drawer-mask {{isDrawerOpen ? 'drawer-mask-show' : ''}}" bindtap="closeResourceDrawer">
+  <view class="resource-drawer {{isDrawerOpen ? 'resource-drawer-show' : ''}}" catchtap="preventDeduce">
+    <!-- 顶部拖动小条 -->
+    <view class="drawer-handle-bar"></view>
+
+    <!-- 弹窗标题栏 -->
+    <view class="drawer-header-row">
+      <view class="drawer-title-group">
+        <image class="drawer-grid-icon" src="/images/icon_grid_title.svg" mode="aspectFit" />
+        <text class="drawer-main-title">选择需要反馈的资源</text>
+      </view>
+      <view class="drawer-close-btn" bindtap="closeResourceDrawer" hover-class="btn-hover">
+        <text class="close-cross-icon">✕</text>
+      </view>
+    </view>
+
+    <!-- 搜索框 -->
+    <view class="drawer-search-wrap">
+      <view class="search-input-box">
+        <text class="search-glass-icon">🔍</text>
+        <input 
+          class="search-input" 
+          placeholder="搜索我的获取历史或收藏资源..." 
+          placeholder-class="search-placeholder"
+          value="{{drawerSearchKeyword}}"
+          bindinput="onDrawerSearchInput"
+        />
+        <text wx:if="{{drawerSearchKeyword}}" class="search-clear-icon" bindtap="clearDrawerSearch">⨂</text>
+      </view>
+    </view>
+
+    <!-- Tab 切换栏 -->
+    <view class="drawer-tabs-row">
+      <view 
+        class="drawer-tab-item {{drawerActiveTab === 'recent' ? 'tab-item-active' : ''}}"
+        bindtap="onSwitchDrawerTab"
+        data-tab="recent"
+      >
+        近期获取 48
+      </view>
+      <view 
+        class="drawer-tab-item {{drawerActiveTab === 'fav' ? 'tab-item-active' : ''}}"
+        bindtap="onSwitchDrawerTab"
+        data-tab="fav"
+      >
+        我的收藏 126
+      </view>
+      <view 
+        class="drawer-tab-item {{drawerActiveTab === 'all' ? 'tab-item-active' : ''}}"
+        bindtap="onSwitchDrawerTab"
+        data-tab="all"
+      >
+        全站资源检索
+      </view>
+    </view>
+
+    <!-- 资源列表滚动容器 -->
+    <scroll-view class="drawer-resource-list" scroll-y="true">
+      <block wx:for="{{filteredDrawerResources}}" wx:key="id">
+        <view 
+          class="drawer-res-item {{drawerSelectedResource.id === item.id ? 'drawer-item-selected' : ''}}"
+          bindtap="onSelectDrawerResource"
+          data-item="{{item}}"
+          hover-class="card-tap-hover"
+        >
+          <view class="drawer-item-left">
+            <view class="drawer-item-logo-box">
+              <image class="drawer-item-logo" src="{{item.icon}}" mode="aspectFit" />
+            </view>
+            <view class="drawer-item-info">
+              <view class="drawer-item-title">{{item.title}}</view>
+              <view class="drawer-item-sub-row">
+                <view class="drawer-cat-badge">{{item.category}}</view>
+                <text class="drawer-id-time">ID: {{item.id}} · {{item.getTime}}</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 右侧状态：已选显示打勾圆圈，未选显示小胶囊“选择” -->
+          <view class="drawer-item-right">
+            <view wx:if="{{drawerSelectedResource.id === item.id}}" class="drawer-checked-circle">
+              <text class="drawer-check-icon">✓</text>
+            </view>
+            <view wx:else class="drawer-choose-btn">
+              选择
+            </view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <!-- 抽屉底部固定操作栏 -->
+    <view class="drawer-footer-bar">
+      <view class="footer-target-info">
+        <view class="target-sub-label">当前选定待反馈资源：</view>
+        <view class="target-res-name">{{drawerSelectedResource.title}}</view>
+      </view>
+      <view class="footer-action-wrap">
+        <button class="confirm-change-btn" bindtap="onConfirmResourceChange" hover-class="btn-hover">
+          <text class="btn-check-icon">✔</text>
+          <text>确认更换</text>
+        </button>
+      </view>
+    </view>
+
+  </view>
+</view>
