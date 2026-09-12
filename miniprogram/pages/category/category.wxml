@@ -1,121 +1,341 @@
-<!-- pages/category/category.wxml -->
-<view class="category-page">
-  <!-- 顶部搜索与筛选 -->
-  <view class="cat-top-bar">
-    <view class="cat-search-box">
-      <icon type="search" size="14" color="#94a3b8" />
-      <input class="cat-search-input" placeholder="搜索 12,000+ 精选资源..." />
-    </view>
-    <view class="cat-filter-btn" bindtap="toggleDrawer">
-      <text class="filter-icon">⚙️ 筛选</text>
+<!-- 分类页面 (资源库 1:1 像素级还原) -->
+<view class="category-page-container">
+
+  <!-- 1. 自定义顶部导航栏 (资源库 ●) -->
+  <view class="custom-nav-bar" style="height: {{statusBarHeight + navBarHeight}}px;">
+    <view class="nav-status-spacer" style="height: {{statusBarHeight}}px;"></view>
+    <view class="nav-content-row" style="height: {{navBarHeight}}px;">
+      <!-- 左侧返回按钮 (标准 < 箭头，切回首页 Tab) -->
+      <view class="nav-back-action" bindtap="onBackTap" hover-class="btn-hover">
+        <image class="nav-back-icon" src="/images/icon_back_chevron.svg" mode="aspectFit" />
+      </view>
+
+      <!-- 居中标题与科技蓝圆点 -->
+      <view class="nav-center-title">
+        <text class="title-main-text">资源库</text>
+        <text class="title-blue-dot">●</text>
+      </view>
+
+      <!-- 右侧占位 (避开微信胶囊) -->
+      <view class="nav-capsule-spacer" style="width: {{menuButtonRight}}px;"></view>
     </view>
   </view>
 
-  <!-- 左右分栏布局 -->
-  <view class="cat-main">
-    <!-- 左侧纵向导航 -->
-    <scroll-view class="cat-sidebar" scroll-y="true">
-      <view class="nav-item {{activeNav === 'pc' ? 'active' : ''}}" bindtap="switchNav" data-nav="pc">
-        <text class="nav-icon">💻</text>
-        <text class="nav-text">电脑应用</text>
-      </view>
-      <view class="nav-item {{activeNav === 'study' ? 'active' : ''}}" bindtap="switchNav" data-nav="study">
-        <text class="nav-icon">📚</text>
-        <text class="nav-text">学习资料</text>
-      </view>
-      <view class="nav-item {{activeNav === 'tools' ? 'active' : ''}}" bindtap="switchNav" data-nav="tools">
-        <text class="nav-icon">⚡</text>
-        <text class="nav-text">效率利器</text>
-      </view>
-      <view class="nav-item {{activeNav === 'dev' ? 'active' : ''}}" bindtap="switchNav" data-nav="dev">
-        <text class="nav-icon">⚙️</text>
-        <text class="nav-text">源码开发</text>
-      </view>
-    </scroll-view>
+  <!-- 占位垫高区 -->
+  <view class="nav-bar-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-    <!-- 右侧内容列表 -->
-    <scroll-view class="cat-content" scroll-y="true">
-      <!-- 细分场景标签 -->
-      <view class="sub-scene-card">
-        <view class="sub-scene-title">细分场景标签</view>
-        <view class="sub-scene-grid">
-          <view class="tag-cell active">Mac 专区</view>
-          <view class="tag-cell">Windows常用</view>
-          <view class="tag-cell">装机必备</view>
-          <view class="tag-cell">开源神器</view>
-          <view class="tag-cell">浏览器插件</view>
-          <view class="tag-cell">便携绿色</view>
-        </view>
-      </view>
+  <!-- 2. 顶部搜索栏与高级筛选按钮 -->
+  <view class="cat-top-search-row">
+    <view class="cat-search-capsule" bindtap="onGoToSearch" hover-class="card-hover">
+      <image class="search-glass-icon" src="/images/search.svg" mode="aspectFit" />
+      <text class="search-placeholder-txt">搜索 12,000+ 精选资源...</text>
+      <text class="search-clear-cross">✕</text>
+    </view>
+    <view class="cat-filter-slider-btn" bindtap="toggleDrawer" hover-class="btn-hover">
+      <image class="filter-slider-svg" src="/images/icon_filter_blue.svg" mode="aspectFit" />
+    </view>
+  </view>
 
-      <!-- 排序状态栏 -->
-      <view class="sort-bar">
-        <view class="sort-options">
-          <text class="sort-item {{activeSort === 'comprehensive' ? 'active' : ''}}" bindtap="setSort" data-sort="comprehensive">综合排序</text>
-          <text class="sort-item {{activeSort === 'downloads' ? 'active' : ''}}" bindtap="setSort" data-sort="downloads">下载最多</text>
-          <text class="sort-item {{activeSort === 'rating' ? 'active' : ''}}" bindtap="setSort" data-sort="rating">评分优先</text>
-        </view>
-        <text class="total-count">共 428 款</text>
-      </view>
-
-      <!-- 资源卡片列表 -->
-      <view class="resource-list">
-        <block wx:for="{{items}}" wx:key="id">
-          <view class="res-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
-            <view class="res-icon">{{item.icon}}</view>
-            <view class="res-info">
-              <view class="res-title-row">
-                <text class="res-title">{{item.title}}</text>
-                <text class="res-badge">{{item.version}}</text>
-              </view>
-              <view class="res-desc">{{item.desc}}</view>
-              <view class="res-meta-row">
-                <view class="res-tags">
-                  <text class="pill">{{item.platform}}</text>
-                  <text class="pill">{{item.size}}</text>
-                  <text class="pill star">⭐ {{item.rating}}</text>
-                </view>
-                <view class="res-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">获取</view>
-              </view>
-            </view>
+  <!-- 3. 横向快速标签滚动栏 -->
+  <view class="quick-tags-section">
+    <scroll-view class="quick-tags-scroll" scroll-x="true">
+      <view class="quick-tags-inner">
+        <block wx:for="{{quickTags}}" wx:key="id">
+          <view 
+            class="quick-tag-pill {{item.active ? 'tag-pill-active' : ''}}" 
+            bindtap="onToggleQuickTag" 
+            data-id="{{item.id}}"
+            hover-class="card-tap-hover"
+          >
+            <text wx:if="{{item.hasDot}}" class="tag-orange-dot">●</text>
+            <text class="tag-name-text">{{item.name}}</text>
+            <text wx:if="{{item.hasArrow}}" class="tag-arrow-down">⌵</text>
           </view>
         </block>
+        <view class="quick-tags-tail-spacer"></view>
       </view>
-
-      <view class="footer-tip">已加载该分类全部资源 · 极客纯净收录</view>
     </scroll-view>
   </view>
 
-  <!-- 侧边多维高级筛选抽屉 -->
+  <!-- 4. 主体左右分栏布局 -->
+  <view class="cat-body-main">
+
+    <!-- 左侧纵向分类导航 (8 大分类) -->
+    <view class="cat-sidebar-wrapper">
+      <scroll-view class="cat-sidebar-scroll" scroll-y="true">
+        <block wx:for="{{categories}}" wx:key="id">
+          <view 
+            class="sidebar-item {{activeNav === item.id ? 'sidebar-item-active' : ''}}" 
+            bindtap="switchNav" 
+            data-nav="{{item.id}}"
+            hover-class="card-tap-hover"
+          >
+            <!-- 左侧高亮指示条 -->
+            <view wx:if="{{activeNav === item.id}}" class="active-indicator-bar"></view>
+
+            <!-- 图标与右上角 HOT 徽章 -->
+            <view class="sidebar-icon-wrap">
+              <image class="sidebar-svg-icon" src="{{item.icon}}" mode="aspectFit" />
+              <view wx:if="{{item.hasHot}}" class="hot-badge">HOT</view>
+            </view>
+
+            <!-- 分类名称 -->
+            <text class="sidebar-label">{{item.name}}</text>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+
+    <!-- 右侧内容主列表 -->
+    <view class="cat-content-wrapper">
+      <scroll-view class="cat-content-scroll" scroll-y="true">
+        
+        <!-- 细分场景卡片 -->
+        <view class="sub-scene-card">
+          <view class="scene-header-row">
+            <view class="scene-header-left">
+              <view class="scene-blue-bar"></view>
+              <text class="scene-title-text">细分场景</text>
+            </view>
+            <view class="scene-header-right" bindtap="onAllTagsTap" hover-class="btn-hover">
+              <text class="all-tags-text">全部标签 ></text>
+            </view>
+          </view>
+
+          <!-- 2 行 x 3 列场景网格 -->
+          <view class="scene-tags-grid">
+            <block wx:for="{{subScenes}}" wx:key="id">
+              <view 
+                class="scene-cell-item {{item.active ? 'scene-cell-active' : ''}}"
+                bindtap="onSwitchScene"
+                data-id="{{item.id}}"
+                hover-class="btn-hover"
+              >
+                <text class="scene-cell-name">{{item.name}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <!-- 排序与数量统计栏 -->
+        <view class="cat-sort-bar-row">
+          <view class="sort-tabs-left">
+            <view 
+              class="sort-btn {{activeSort === 'comprehensive' ? 'sort-btn-active' : ''}}" 
+              bindtap="setSort" 
+              data-sort="comprehensive"
+              hover-class="btn-hover"
+            >
+              <text>综合排序</text>
+              <text class="sort-arrow">▾</text>
+            </view>
+            <view 
+              class="sort-btn {{activeSort === 'downloads' ? 'sort-btn-active' : ''}}" 
+              bindtap="setSort" 
+              data-sort="downloads"
+              hover-class="btn-hover"
+            >
+              <text>下载最多</text>
+            </view>
+            <view 
+              class="sort-btn {{activeSort === 'rating' ? 'sort-btn-active' : ''}}" 
+              bindtap="setSort" 
+              data-sort="rating"
+              hover-class="btn-hover"
+            >
+              <text>按评分</text>
+            </view>
+          </view>
+          <view class="count-text-right">
+            共 {{totalCount}} 款
+          </view>
+        </view>
+
+        <!-- 资源卡片列表 (1:1 还原 5 款精选卡片) -->
+        <view class="cat-resource-list">
+          <block wx:for="{{items}}" wx:key="id">
+            <view class="res-card-box" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
+              
+              <!-- 左侧图标盒子 -->
+              <view class="res-card-left" style="background-color: {{item.iconBg}};">
+                <image class="res-card-icon" src="{{item.icon}}" mode="aspectFit" />
+              </view>
+
+              <!-- 中间内容区 -->
+              <view class="res-card-center">
+                <!-- 标题与版本/状态徽章 -->
+                <view class="res-card-top-row">
+                  <text class="res-card-title">{{item.title}}</text>
+                  <view class="res-badge {{item.badgeClass}}">{{item.badge}}</view>
+                </view>
+
+                <!-- 描述 -->
+                <view class="res-card-desc">{{item.desc}}</view>
+
+                <!-- 底部元信息标签 -->
+                <view class="res-card-meta-row">
+                  <text class="meta-pill pill-blue">{{item.platform}}</text>
+                  <text class="meta-pill pill-gray">{{item.size}}</text>
+                  <text class="meta-star">⭐ {{item.rating}}</text>
+                </view>
+              </view>
+
+              <!-- 右侧操作按钮 -->
+              <view class="res-card-right">
+                <view class="res-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
+                  获取
+                </view>
+              </view>
+
+            </view>
+          </block>
+        </view>
+
+        <!-- 底部说明与求资源快捷通道 -->
+        <view class="cat-footer-wrap">
+          <view class="footer-hint-text">已加载全部该分类资源 · 找不到请提需求反馈</view>
+          <view class="footer-request-link" bindtap="onRequestResourceTap" hover-class="btn-hover">
+            <text class="rect-icon">□</text>
+            <text class="link-label">求资源 / 纠错通道</text>
+          </view>
+        </view>
+
+      </scroll-view>
+    </view>
+
+  </view>
+
+  <!-- 5. 多维高级筛选半屏抽屉 (Bottom Sheet 动效，彻底远离顶部胶囊遮挡) -->
   <view class="drawer-mask {{showDrawer ? 'show' : ''}}" bindtap="closeDrawer"></view>
   <view class="drawer-panel {{showDrawer ? 'show' : ''}}">
+    <!-- 顶部居中手柄灰色条 -->
+    <view class="drawer-handle-bar"></view>
+
+    <!-- 头部标题行 -->
     <view class="drawer-header">
-      <text class="drawer-title">多维高级筛选</text>
-      <text class="drawer-close" bindtap="closeDrawer">✕</text>
+      <view class="drawer-title-group">
+        <image class="drawer-filter-icon" src="/images/icon_filter_blue.svg" mode="aspectFit" />
+        <text class="drawer-title">多维高级筛选</text>
+        <text class="drawer-badge-tag">精准匹配</text>
+      </view>
+      <view class="drawer-close-box" bindtap="closeDrawer" hover-class="btn-hover">
+        <text class="drawer-close-x">✕</text>
+      </view>
     </view>
-    <view class="drawer-body">
+
+    <!-- 筛选主体滚动区 -->
+    <scroll-view class="drawer-body" scroll-y="true">
+      <!-- 维度 1: 适用操作系统 -->
       <view class="filter-section">
-        <view class="filter-label">适用操作系统 (多选)</view>
+        <view class="filter-label">适用操作系统 (支持多选)</view>
         <view class="filter-chips">
-          <view class="chip active">Windows 10/11</view>
-          <view class="chip active">macOS (Apple M)</view>
-          <view class="chip">网页版 / Chrome</view>
+          <view 
+            class="chip {{drawerFilter.systems.indexOf('win') > -1 ? 'active' : ''}}" 
+            bindtap="onToggleDrawerSystem" 
+            data-val="win"
+          >
+            Windows 10/11
+          </view>
+          <view 
+            class="chip {{drawerFilter.systems.indexOf('mac') > -1 ? 'active' : ''}}" 
+            bindtap="onToggleDrawerSystem" 
+            data-val="mac"
+          >
+            macOS (Apple M芯片)
+          </view>
+          <view 
+            class="chip {{drawerFilter.systems.indexOf('web') > -1 ? 'active' : ''}}" 
+            bindtap="onToggleDrawerSystem" 
+            data-val="web"
+          >
+            网页版 / Chrome扩展
+          </view>
+          <view 
+            class="chip {{drawerFilter.systems.indexOf('linux') > -1 ? 'active' : ''}}" 
+            bindtap="onToggleDrawerSystem" 
+            data-val="linux"
+          >
+            Linux / 终端环境
+          </view>
         </view>
       </view>
 
+      <!-- 维度 2: 文件体积区间 -->
       <view class="filter-section">
         <view class="filter-label">文件体积区间</view>
         <view class="filter-chips">
-          <view class="chip active">不限体积</view>
-          <view class="chip">10 MB 以下 (轻量)</view>
-          <view class="chip">10 - 100 MB</view>
-          <view class="chip">1 GB 以上 (大包)</view>
+          <view 
+            class="chip {{drawerFilter.size === 'all' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="all"
+          >
+            不限体积
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'small' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="small"
+          >
+            &lt; 10 MB (极速轻量)
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'medium' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="medium"
+          >
+            10 - 100 MB (常规工具)
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'large' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="large"
+          >
+            &gt; 1 GB (离线大包)
+          </view>
         </view>
       </view>
-    </view>
+
+      <!-- 维度 3: 授权与特性 -->
+      <view class="filter-section">
+        <view class="filter-label">版本授权与特性 (多选)</view>
+        <view class="filter-chips">
+          <view 
+            class="chip {{drawerFilter.license === 'all' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerLicense" 
+            data-val="all"
+          >
+            全部特性
+          </view>
+          <view 
+            class="chip {{drawerFilter.license === 'green' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerLicense" 
+            data-val="green"
+          >
+            绿色免安装
+          </view>
+          <view 
+            class="chip {{drawerFilter.license === 'free' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerLicense" 
+            data-val="free"
+          >
+            开源免费
+          </view>
+          <view 
+            class="chip {{drawerFilter.license === 'vip' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerLicense" 
+            data-val="vip"
+          >
+            精校稳定版
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 底部固定操作栏 -->
     <view class="drawer-footer">
-      <button class="drawer-reset-btn" bindtap="closeDrawer">重置</button>
-      <button class="drawer-confirm-btn" bindtap="applyFilter">查看筛选结果 (168款)</button>
+      <button class="drawer-reset-btn" bindtap="onResetDrawer" hover-class="btn-hover">重置条件</button>
+      <button class="drawer-confirm-btn" bindtap="applyFilter" hover-class="btn-hover">查看筛选结果 ({{drawerResultCount}}款)</button>
     </view>
   </view>
+
 </view>

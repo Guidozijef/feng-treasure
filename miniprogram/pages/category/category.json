@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "资源分类库",
-  "enablePullDownRefresh": false
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": false,
+  "backgroundColor": "#ffffff"
 }

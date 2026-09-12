@@ -1,0 +1,146 @@
+<!-- 搜索中心页面 (1:1 像素级还原) -->
+<view class="search-page-container">
+
+  <!-- 1. 顶部搜索栏 -->
+  <view class="search-top-header">
+    <view class="search-capsule-box">
+      <image class="search-glass-icon" src="/images/search.svg" mode="aspectFit" />
+      <input 
+        class="search-text-input" 
+        value="{{searchKeyword}}" 
+        placeholder="搜索 12,000+ 精选资源..." 
+        placeholder-class="search-input-placeholder"
+        bindinput="onSearchInput" 
+        bindconfirm="onSearchConfirm" 
+      />
+      <view wx:if="{{searchKeyword}}" class="clear-circle-btn" bindtap="onClearInput">
+        <text class="clear-cross">✕</text>
+      </view>
+    </view>
+    <view class="search-action-btn" bindtap="onSearchConfirm" hover-class="btn-hover">
+      搜索
+    </view>
+  </view>
+
+  <!-- 2. 排序筛选栏与资源计数 -->
+  <view class="filter-bar-row">
+    <view class="sort-tabs-group">
+      <view 
+        class="sort-pill-item {{sortType === 'composite' ? 'sort-pill-active' : ''}}" 
+        bindtap="onSwitchSort" 
+        data-sort="composite"
+        hover-class="card-tap-hover"
+      >
+        综合
+      </view>
+      <view 
+        class="sort-pill-item {{sortType === 'latest' ? 'sort-pill-active' : ''}}" 
+        bindtap="onSwitchSort" 
+        data-sort="latest"
+        hover-class="card-tap-hover"
+      >
+        最新发布
+      </view>
+      <view 
+        class="sort-pill-item {{sortType === 'download' ? 'sort-pill-active' : ''}}" 
+        bindtap="onSwitchSort" 
+        data-sort="download"
+        hover-class="card-tap-hover"
+      >
+        下载最多
+      </view>
+    </view>
+    <view class="result-count-label">
+      共找到 <text class="highlight-count">{{totalCount}}</text> 个资源
+    </view>
+  </view>
+
+  <!-- 3. 资源列表 -->
+  <view class="resource-list-container">
+    <block wx:if="{{filteredList.length > 0}}">
+      <block wx:for="{{filteredList}}" wx:key="id">
+        <view class="resource-card-item" bindtap="onResourceTap" data-id="{{item.id}}" hover-class="card-hover">
+          <!-- 左侧图标 -->
+          <view class="res-icon-box" style="background-color: {{item.iconBg}};">
+            <image class="res-svg-img" src="{{item.icon}}" mode="aspectFit" />
+          </view>
+
+          <!-- 中间主体信息 -->
+          <view class="res-info-center">
+            <!-- 标题 + 版本徽章 -->
+            <view class="res-title-row">
+              <text class="res-title-text">{{item.shortTitle || item.title}}</text>
+              <view wx:if="{{item.version}}" class="res-version-badge {{item.versionClass}}">
+                {{item.version}}
+              </view>
+            </view>
+
+            <!-- 特色标签组 -->
+            <view class="res-tags-row">
+              <block wx:for="{{item.tags}}" wx:key="text" wx:for-item="tag">
+                <text class="res-tag-pill {{tag.type}}">{{tag.text}}</text>
+              </block>
+            </view>
+
+            <!-- 评分、大小、渠道 -->
+            <view class="res-meta-row">
+              <text class="star-rating">⭐ {{item.rating}}</text>
+              <text class="meta-dot">·</text>
+              <text class="meta-text">{{item.size}}</text>
+              <text class="meta-dot">·</text>
+              <text class="meta-text meta-channel-text">{{item.channels}}</text>
+            </view>
+          </view>
+
+          <!-- 右侧操作按钮 -->
+          <view class="res-action-right">
+            <block wx:if="{{item.btnType === 'solid'}}">
+              <view class="res-btn-solid" catchtap="onResourceTap" data-id="{{item.id}}" hover-class="btn-hover">
+                {{item.btnText}}
+              </view>
+            </block>
+            <block wx:else>
+              <view class="res-btn-outline" catchtap="onResourceTap" data-id="{{item.id}}" hover-class="btn-hover">
+                {{item.btnText}}
+              </view>
+            </block>
+          </view>
+        </view>
+      </block>
+    </block>
+
+    <!-- 空状态提示 -->
+    <block wx:else>
+      <view class="empty-search-state">
+        <view class="empty-search-icon">🔍</view>
+        <view class="empty-main-text">未找到与「{{searchKeyword}}」相关的资源</view>
+        <view class="empty-sub-tip">提交心愿工单，站长通常 24 小时内为您全网寻档上架！</view>
+        <view class="empty-jump-btn" bindtap="onWishBannerTap" hover-class="btn-hover">
+          立即提交求档工单 →
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 4. 底部虚线求资源卡片 -->
+  <view class="bottom-wish-banner" bindtap="onWishBannerTap" hover-class="card-hover">
+    <view class="wish-banner-left">
+      <view class="wish-robot-circle">
+        <image class="bot-helper-icon" src="/images/icon_bot_helper.svg" mode="aspectFit" />
+      </view>
+    </view>
+    <view class="wish-banner-center">
+      <view class="wish-main-q">没有找到想要的资源？</view>
+      <view class="wish-sub-tip">提交心愿工单，站长通常2小时内补充</view>
+    </view>
+    <view class="wish-banner-right">
+      <text class="wish-btn-link">求资源 →</text>
+    </view>
+  </view>
+
+  <!-- 5. 底部版权与背书说明 -->
+  <view class="page-bottom-footer">
+    <text class="footer-text">枫的藏宝阁 · 优质数字资源精选</text>
+  </view>
+
+</view>

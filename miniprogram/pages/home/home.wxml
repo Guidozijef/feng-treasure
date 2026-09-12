@@ -19,17 +19,16 @@
 
     <!-- 2. 搜索栏 (全宽圆角无多余外置按钮，左放大镜右参数调谐滑块) -->
     <view class="search-section">
-      <view class="search-bar-wrap">
+      <view class="search-bar-wrap" bindtap="onSearchTap" hover-class="card-hover">
         <image class="search-icon" src="/images/search.svg" mode="aspectFit" />
         <input 
           class="search-input" 
           placeholder="{{searchPlaceholder}}" 
           placeholder-class="search-placeholder-style"
           value="{{searchKeyword}}"
-          bindinput="onSearchInput"
-          bindconfirm="onSearchConfirm"
+          disabled="{{true}}"
         />
-        <image class="filter-icon" src="/images/filter.svg" mode="aspectFit" bindtap="onFilterTap" hover-class="btn-hover" />
+        <image class="filter-icon" src="/images/filter.svg" mode="aspectFit" catchtap="onFilterTap" hover-class="btn-hover" />
       </view>
     </view>
 

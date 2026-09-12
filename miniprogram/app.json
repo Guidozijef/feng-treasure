@@ -7,7 +7,8 @@
     "pages/profile/profile",
     "pages/vip/vip",
     "pages/feedback/feedback",
-    "pages/request/request"
+    "pages/request/request",
+    "pages/search/search"
   ],
   "window": {
     "backgroundTextStyle": "light",

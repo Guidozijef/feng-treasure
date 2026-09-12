@@ -222,11 +222,16 @@ Page({
 
   onSearchConfirm() {
     const kw = this.data.searchKeyword.trim();
-    if (!kw) {
-      showToast('请输入想寻找的资源关键词');
-      return;
-    }
-    showToast(`正在检索: ${kw}`);
+    wx.navigateTo({
+      url: kw ? `/pages/search/search?keyword=${encodeURIComponent(kw)}` : '/pages/search/search'
+    });
+  },
+
+  onSearchTap() {
+    const kw = this.data.searchKeyword.trim();
+    wx.navigateTo({
+      url: kw ? `/pages/search/search?keyword=${encodeURIComponent(kw)}` : '/pages/search/search'
+    });
   },
 
   onFilterTap() {
