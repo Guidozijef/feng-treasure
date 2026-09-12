@@ -47,32 +47,29 @@
     </view>
   </view>
 
-  <!-- 2. 直链就绪快捷通知 -->
+  <!-- 2. 资源可用性与网盘转存状态提示条 -->
   <view class="ready-bar" bindtap="openDownload" hover-class="btn-hover">
     <view class="ready-left">
       <view class="ready-pulse-wrap">
         <view class="ready-dot"></view>
         <view class="ready-dot-pulse"></view>
       </view>
-      <image class="ready-lightning" src="/images/vip_feature_lightning.svg" mode="aspectFit" />
-      <text class="ready-text">高速直链通道已就绪 · 全程不限速</text>
+      <image class="ready-verify-icon" src="/images/icon_verify_green.svg" mode="aspectFit" />
+      <text class="ready-text">网盘分发链接正常 · 纯净安全已通过真机校验</text>
     </view>
     <view class="ready-btn">
-      <text>选节点</text>
+      <text>去获取</text>
       <text class="ready-arrow">➔</text>
     </view>
   </view>
 
-  <!-- 3. 现代化选项卡 -->
+  <!-- 3. 现代化双选项卡 (移除了更新日志) -->
   <view class="detail-tabs">
     <view class="tab-btn {{activeTab === 'features' ? 'active' : ''}}" bindtap="setTab" data-tab="features">
       <text class="tab-text">功能特性</text>
     </view>
-    <view class="tab-btn {{activeTab === 'logs' ? 'active' : ''}}" bindtap="setTab" data-tab="logs">
-      <text class="tab-text">更新日志</text>
-    </view>
     <view class="tab-btn {{activeTab === 'setup' ? 'active' : ''}}" bindtap="setTab" data-tab="setup">
-      <text class="tab-text">配置说明</text>
+      <text class="tab-text">使用说明</text>
     </view>
   </view>
 
@@ -140,53 +137,30 @@
       <view class="screenshot-tip">原生界面清爽无多余干扰 · 支持系统级暗黑模式自适应</view>
     </block>
 
-    <block wx:if="{{activeTab === 'logs'}}">
-      <view class="section-header">
-        <view class="section-indicator"></view>
-        <text class="section-title">历史版本更新记录</text>
-      </view>
-
-      <view class="timeline-wrap">
-        <view class="timeline-item">
-          <view class="timeline-dot"></view>
-          <view class="timeline-content">
-            <text class="timeline-version">v2.4.0 稳定绿色版</text>
-            <text class="timeline-text">• 修复 macOS 14 偶现的权限弹窗阻断问题；</text>
-            <text class="timeline-text">• 升级内置上传核心引擎，网络超时自动无缝重试；</text>
-            <text class="timeline-text">• 支持自定义全局快捷键触发静默截图上传与水印滤镜。</text>
-          </view>
-        </view>
-
-        <view class="timeline-item">
-          <view class="timeline-dot dot-past"></view>
-          <view class="timeline-content">
-            <text class="timeline-version text-past">v2.3.9 常规维护版</text>
-            <text class="timeline-text">• 优化多图同时批量上传时的队列管理与内存占用；</text>
-            <text class="timeline-text">• 更新 SM.MS 接口鉴权逻辑。</text>
-          </view>
-        </view>
-      </view>
-    </block>
-
     <block wx:if="{{activeTab === 'setup'}}">
       <view class="section-header">
         <view class="section-indicator"></view>
-        <text class="section-title">快速部署与解压说明</text>
+        <text class="section-title">使用说明与运行指南</text>
       </view>
 
       <view class="step-card">
         <view class="step-badge">步骤 1</view>
-        <view class="step-text">下载压缩包后，解压至任意无特殊字符与中文路径的本地磁盘目录；</view>
+        <view class="step-text">点击下方「立即获取资源」按钮复制网盘链接与提取码，转存并下载至本地；</view>
       </view>
 
       <view class="step-card">
         <view class="step-badge">步骤 2</view>
-        <view class="step-text">双击运行 <text class="step-code">PicGo.exe</text> 或 <text class="step-code">PicGo.app</text> 即可直接免安装启动；</view>
+        <view class="step-text">解压压缩包至任意无特殊字符与中文路径的磁盘目录；</view>
       </view>
 
       <view class="step-card">
         <view class="step-badge">步骤 3</view>
-        <view class="step-text">首次使用请进入客户端左侧「图床设置」中配置您对应云平台的 Token 密钥。</view>
+        <view class="step-text">双击运行主程序即可直接免安装启动，所有配置与缓存自动保存在便携目录中。</view>
+      </view>
+
+      <view class="safe-notice-card">
+        <view class="safe-notice-title">💡 常见问题与提示</view>
+        <view class="safe-notice-desc">如遇系统安全管家误报未知发布者，点击「仍要运行」即可正常使用；若发现网盘链接失效，可通过页面底部「报错」提交补档需求。</view>
       </view>
     </block>
   </view>

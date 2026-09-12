@@ -5,7 +5,7 @@
   <view class="custom-nav-bar" style="padding-top: {{statusBarHeight}}px; height: {{statusBarHeight + navBarHeight}}px;">
     <view class="nav-content" style="height: {{navBarHeight}}px; padding-right: {{menuButtonRight}}px;">
       <view class="nav-brand">
-        <image class="nav-logo" src="/images/logo.svg" mode="aspectFit" />
+        <image class="nav-logo" src="/images/logo.png" mode="aspectFit" />
         <text class="nav-title">枫的藏宝阁</text>
       </view>
     </view>
