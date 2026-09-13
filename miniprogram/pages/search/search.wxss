@@ -260,6 +260,11 @@ page {
   color: #ca8a04;
 }
 
+.tag-orange {
+  background: #fefce8;
+  color: #ffd930;
+}
+
 .tag-slate {
   background: #f1f5f9;
   color: #475569;

@@ -78,7 +78,7 @@
             <!-- 特色标签组 -->
             <view class="res-tags-row">
               <block wx:for="{{item.tags}}" wx:key="text" wx:for-item="tag">
-                <text class="res-tag-pill {{tag.type}}">{{tag.text}}</text>
+                <text class="res-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
               </block>
             </view>
 

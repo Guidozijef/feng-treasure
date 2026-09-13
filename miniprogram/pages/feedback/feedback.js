@@ -1,4 +1,5 @@
 const { showToast, copyToClipboard } = require('../../utils/util.js');
+const api = require('../../utils/api.js');
 
 Page({
   data: {
@@ -44,24 +45,8 @@ Page({
     // 今日还可提交次数
     remainSubmitCount: 5,
 
-    // 我的近期反馈进展列表
-    recentProgressList: [
-      {
-        id: 1,
-        title: 'Navicat Premium 16.3 数据库客户端',
-        statusType: 'success',
-        statusText: '已成功补档',
-        time: '今天 11:20',
-        token: '百度网盘提取码：geek2025 | 夸克直链：https://pan.quark.cn/s/navicat16'
-      },
-      {
-        id: 2,
-        title: 'Cursor AI 高级工作流模板',
-        statusType: 'pending',
-        statusText: '专人寻找校验中',
-        time: '昨天 19:40'
-      }
-    ],
+    // 我的近期反馈进展列表 (从 PocketBase resource_reports 动态载入)
+    recentProgressList: [],
 
     // ===================================
     // 切换反馈资源 ActionSheet 抽屉弹窗状态
@@ -69,76 +54,16 @@ Page({
     isDrawerOpen: false,
     drawerActiveTab: 'recent',
     drawerSearchKeyword: '',
-    drawerSelectedResource: {
-      id: '84092',
-      title: 'PicList 图床管理专家 v2.8.2 专业版',
-      category: '开发工具',
-      icon: '/images/detail_picgo.svg'
-    },
+    drawerSelectedResource: null,
 
-    // 抽屉可选的备选资源全集
-    allDrawerResources: [
-      {
-        id: '84092',
-        title: 'PicList 图床管理专家 v2.8.2 专业版',
-        category: '开发工具',
-        icon: '/images/detail_picgo.svg',
-        getTime: '30分钟前获取',
-        isFav: true,
-        isRecent: true
-      },
-      {
-        id: '91042',
-        title: 'Navicat Premium 16.3 数据库客户端',
-        category: '数据库脚本',
-        icon: '/images/hot_docker.svg',
-        getTime: '今天 10:15 获取',
-        isFav: true,
-        isRecent: true
-      },
-      {
-        id: '76521',
-        title: 'Cursor AI 高级工作流提示词模板',
-        category: '人工智能',
-        icon: '/images/hot_typora.svg',
-        getTime: '昨天 18:30 获取',
-        isFav: false,
-        isRecent: true
-      },
-      {
-        id: '65420',
-        title: 'EchoAPI 接口调试轻量级神器',
-        category: 'API工具',
-        icon: '/images/hot_windterm.svg',
-        getTime: '3天前获取',
-        isFav: true,
-        isRecent: true
-      },
-      {
-        id: '55210',
-        title: 'VS Code 极客定制高效插件合集',
-        category: '开发辅助',
-        icon: '/images/hot_vscode.svg',
-        getTime: '5天前获取',
-        isFav: true,
-        isRecent: true
-      },
-      {
-        id: '33410',
-        title: 'Bandizip 纯净专业版无广告',
-        category: '系统工具',
-        icon: '/images/hot_bandizip.svg',
-        getTime: '1周前获取',
-        isFav: false,
-        isRecent: true
-      }
-    ],
+    // 抽屉可选的备选资源全集 (从 PocketBase resources 动态载入)
+    allDrawerResources: [],
 
     // 抽屉当前展示的过滤列表
     filteredDrawerResources: []
   },
 
-  onLoad(options) {
+  async onLoad(options) {
     if (options && options.id && options.title) {
       this.setData({
         currentResource: {
@@ -150,7 +75,32 @@ Page({
       });
     }
 
-    this.filterDrawerList();
+    // 从 PocketBase 加载工单进展历史及可选资源
+    const [historyRes, resList] = await Promise.all([
+      api.getFeedbackHistory(),
+      api.getResources({ limit: 30 })
+    ]);
+
+    const updates = {};
+    if (historyRes && historyRes.code === 0 && Array.isArray(historyRes.data)) {
+      updates.recentProgressList = historyRes.data;
+    }
+    if (resList && resList.code === 0 && Array.isArray(resList.data)) {
+      const drawerList = resList.data.map(item => ({
+        id: item.id,
+        title: item.title,
+        category: item.category || '极客资源',
+        icon: item.icon,
+        getTime: item.publishDate || '最新更新',
+        isFav: true,
+        isRecent: true
+      }));
+      updates.allDrawerResources = drawerList;
+    }
+
+    this.setData(updates, () => {
+      this.filterDrawerList();
+    });
   },
 
   // 选择失效问题类型 (单选)
@@ -267,7 +217,16 @@ Page({
       mask: true
     });
 
-    setTimeout(() => {
+    const selChannels = this.data.channels.filter(c => c.selected).map(c => c.id);
+    api.submitFeedback({
+      resourceId: this.data.currentResource.id,
+      resourceTitle: this.data.currentResource.title,
+      issueType: this.data.selectedIssueType,
+      channels: selChannels,
+      detailText: this.data.detailText,
+      screenshots: this.data.screenshotList,
+      noticeEnabled: this.data.noticeEnabled
+    }).then(() => {
       wx.hideLoading();
 
       const newRecord = {
@@ -292,7 +251,9 @@ Page({
         confirmText: '好的',
         confirmColor: '#0263e0'
       });
-    }, 800);
+    }).catch(() => {
+      wx.hideLoading();
+    });
   },
 
   // 查看新口令

@@ -1,4 +1,5 @@
 const { copyToClipboard, showToast } = require('../../utils/util.js');
+const api = require('../../utils/api.js');
 
 Page({
   data: {
@@ -35,13 +36,25 @@ Page({
 
   onLoad() {
     this.initNavBarLayout();
+    this.loadUserProfile();
   },
 
-  onPullDownRefresh() {
-    setTimeout(() => {
-      wx.stopPullDownRefresh();
-      showToast('个人资产与特权已同步', 'success');
-    }, 600);
+  async onPullDownRefresh() {
+    await this.loadUserProfile();
+    wx.stopPullDownRefresh();
+    showToast('个人资产与特权已同步', 'success');
+  },
+
+  async loadUserProfile() {
+    const res = await api.getUserProfile();
+    if (res && res.code === 0 && res.data) {
+      this.setData({
+        userInfo: {
+          ...this.data.userInfo,
+          ...res.data
+        }
+      });
+    }
   },
 
   // 计算自定义导航栏尺寸
@@ -137,7 +150,7 @@ Page({
     });
   },
 
-  onDailyCheckIn() {
+  async onDailyCheckIn() {
     if (this.data.isCheckIn) {
       showToast('今日已完成签到打卡');
       return;
@@ -146,6 +159,7 @@ Page({
       isCheckIn: true
     });
     showToast('打卡成功！+5 云豆已到账', 'success');
+    api.userCheckin();
   },
 
   onCommunityTap() {

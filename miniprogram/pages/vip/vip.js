@@ -1,4 +1,5 @@
 const { showToast } = require('../../utils/util.js');
+const api = require('../../utils/api.js');
 
 Page({
   data: {
@@ -8,161 +9,40 @@ Page({
     // 协议是否已同意 (默认勾选)
     isAgreed: true,
 
-    // 当前选中的套餐详情
-    currentPlan: {
-      id: 'year',
-      name: '年度黑卡',
-      shortName: '极客黑卡',
-      price: 68,
-      originalPrice: '199',
-      discount: 131,
-      unit: '/年',
-      perDay: '折合 ¥0.18/天',
-      extraBenefit: '送600云豆',
-      badge: '推荐爆款',
-      badgeType: 'badge-orange',
-      benefitType: 'benefit-orange'
-    },
+    // 当前选中的套餐详情 (从数据库动态载入)
+    currentPlan: null,
 
-    // 套餐列表
-    plans: [
-      {
-        id: 'month',
-        name: '连续包月',
-        shortName: '连续包月',
-        price: 9.9,
-        originalPrice: '19.9',
-        discount: 10,
-        unit: '',
-        perDay: '折合 ¥0.33/天',
-        extraBenefit: '可随时取消',
-        badge: '新人首月特惠',
-        badgeType: 'badge-blue',
-        benefitType: 'benefit-cyan'
-      },
-      {
-        id: 'year',
-        name: '年度黑卡',
-        shortName: '极客黑卡',
-        price: 68,
-        originalPrice: '199',
-        discount: 131,
-        unit: '/年',
-        perDay: '折合 ¥0.18/天',
-        extraBenefit: '送600云豆',
-        badge: '推荐爆款',
-        badgeType: 'badge-orange',
-        benefitType: 'benefit-orange'
-      },
-      {
-        id: 'forever',
-        name: '永久黑卡',
-        shortName: '永久黑卡',
-        price: 128,
-        originalPrice: '399',
-        discount: 271,
-        unit: '',
-        perDay: '一次付费终生',
-        extraBenefit: '永久身份徽章',
-        badge: '终身买断',
-        badgeType: 'badge-black',
-        benefitType: 'benefit-gold'
-      }
-    ],
+    // 套餐列表 (从 PocketBase vip_plans 动态载入)
+    plans: [],
 
-    // 黑卡会员 8 大极客特权
-    privileges: [
-      {
-        id: 'ad',
-        title: '全站免广告',
-        desc: '免看激励视频，一键直达高速下载地址',
-        icon: '/images/vip_priv_ad.svg',
-        bgColor: '#eff6ff'
-      },
-      {
-        id: 'copy',
-        title: '无限高速复制',
-        desc: '普通用户日限3次，黑卡享受无限次提取',
-        icon: '/images/vip_priv_copy.svg',
-        bgColor: '#f5f3ff'
-      },
-      {
-        id: 'repo',
-        title: '独家私域资源库',
-        desc: '商业完整源码、内测神器与极客脚本',
-        icon: '/images/vip_priv_repo.svg',
-        bgColor: '#fffbeb'
-      },
-      {
-        id: 'repair',
-        title: '1对1极速补档',
-        desc: '专属工单，链接失效专人在2小时内重传',
-        icon: '/images/vip_priv_repair.svg',
-        bgColor: '#ecfdf5'
-      },
-      {
-        id: 'pwd',
-        title: '解压密码直查',
-        desc: '自动匹配解密，全网网盘提取码免解压',
-        icon: '/images/vip_priv_pwd.svg',
-        bgColor: '#f0f9ff'
-      },
-      {
-        id: 'bean',
-        title: '云豆双倍膨胀',
-        desc: '签到做任务收益200%，积分兑换加倍快',
-        icon: '/images/vip_priv_bean.svg',
-        bgColor: '#fff7ed'
-      },
-      {
-        id: 'group',
-        title: 'VIP专属交流群',
-        desc: '技术大佬闭门交流，群内共享一线开发情报',
-        icon: '/images/vip_priv_group.svg',
-        bgColor: '#faf5ff'
-      },
-      {
-        id: 'early',
-        title: '新资源提前享',
-        desc: '全站每日精选新版本提前7天抢先体验',
-        icon: '/images/vip_priv_early.svg',
-        bgColor: '#fff1f2'
-      }
-    ],
+    // 黑卡会员 8 大极客特权 (从 PocketBase vip_privileges 动态载入)
+    privileges: [],
 
-    // 常见问题与答疑
-    faqs: [
-      {
-        id: 1,
-        q: '购买后多久可以开通生效？',
-        a: '付款成功后系统将在 1-3 秒内自动为您绑定当前微信 UID 并下发全站黑卡 SVIP 权限，无需手动输入任何激活码，刷新即享全套特权。',
-        isOpen: false
-      },
-      {
-        id: 2,
-        q: '更换手机或跨平台可以使用吗？',
-        a: '特权与您的微信账号永久关联绑定，只要在任意设备（iOS、安卓、PC 微信小程序客户端）登录相同的微信账号，即可无缝同步尊贵身份与直链下载特权。',
-        isOpen: false
-      },
-      {
-        id: 3,
-        q: '可以开具发票或企业报销吗？',
-        a: '支持开具正规增值税电子普通发票（项目：技术咨询服务费 / 信息服务费）。支付完成后可在「购买记录」中填写企业开票抬头和税号，系统将在 24 小时内发送至指定邮箱。',
-        isOpen: false
-      },
-      {
-        id: 4,
-        q: '连续包月如何取消自动续费？',
-        a: '微信支付提供极简快捷的管理方式：在微信客户端【我 - 服务 - 钱包 - 支付设置 - 自动续费】中找到「枫的藏宝阁」，随时一键取消签约，取消后本计费周期内的权益依然有效。',
-        isOpen: false
-      }
-    ]
+    // 常见问题与答疑 (从 PocketBase vip_faqs 动态载入)
+    faqs: []
   },
 
-  onLoad(options) {
-    if (options && options.plan) {
-      this.selectPlanById(options.plan);
-    }
+  async onLoad(options) {
+    const [plansRes, privRes, faqsRes] = await Promise.all([
+      api.getVipPlans(),
+      api.getVipPrivileges(),
+      api.getVipFaqs ? api.getVipFaqs() : null
+    ]);
+
+    const plans = (plansRes && plansRes.code === 0 && Array.isArray(plansRes.data)) ? plansRes.data : [];
+    const privileges = (privRes && privRes.code === 0 && Array.isArray(privRes.data)) ? privRes.data : [];
+    const faqs = (faqsRes && faqsRes.code === 0 && Array.isArray(faqsRes.data)) ? faqsRes.data : [];
+
+    const defaultPlanId = (options && options.plan) ? options.plan : 'year';
+    const targetPlan = plans.find(p => p.id === defaultPlanId) || plans[1] || plans[0] || null;
+
+    this.setData({
+      plans,
+      privileges,
+      faqs,
+      selectedPlanId: targetPlan ? targetPlan.id : 'year',
+      currentPlan: targetPlan
+    });
   },
 
   // 切换选中套餐
@@ -258,8 +138,7 @@ Page({
       mask: true
     });
 
-    // 模拟安全微信支付流程
-    setTimeout(() => {
+    api.createVipOrder(currentPlan.id, '8932014').finally(() => {
       wx.hideLoading();
 
       // 存储开通成功的 VIP 状态
@@ -285,6 +164,6 @@ Page({
           });
         }
       });
-    }, 1200);
+    });
   }
 });

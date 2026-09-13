@@ -1,4 +1,5 @@
 const { showToast } = require('../../utils/util.js');
+const api = require('../../utils/api.js');
 
 Page({
   data: {
@@ -41,75 +42,25 @@ Page({
     // 今日剩余提交次数
     remainSubmitTimes: 3,
 
-    // 最近工单进度列表
-    recentTickets: [
-      {
-        id: 101,
-        orderNo: '2024051801',
-        time: '2小时前',
-        status: 'done',
-        statusClass: 'status-done',
-        statusIcon: '✔',
-        statusText: '寻档完成 · 已上架',
-        title: 'DeepSeek 开发者私有化知识库部...',
-        subDesc: '格式：Docker Compose 源码脚本 / macOS + Win',
-        category: '开源源码',
-        platforms: 'macOS, Win',
-        targetResId: 1
-      },
-      {
-        id: 102,
-        orderNo: '2024051608',
-        time: '昨天 16:42',
-        status: 'pending',
-        statusClass: 'status-pending',
-        statusIcon: '↻',
-        statusText: '全网寻档中 · 专人处理',
-        title: 'Final Cut Pro 电影级调色预设包...',
-        subDesc: '极客工程师 @枫木 已接受委托，正在套取校验',
-        category: '设计素材',
-        platforms: 'macOS',
-        targetResId: null
-      }
-    ],
+    // 最近工单进度列表 (从 PocketBase resource_requests 动态载入)
+    recentTickets: [],
 
-    // 我的全部求档记录 (Tab 2)
-    myTickets: [
-      {
-        id: 101,
-        orderNo: '2024051801',
-        time: '2小时前',
-        status: 'done',
-        statusClass: 'status-done',
-        statusIcon: '✔',
-        statusText: '寻档完成 · 已上架',
-        title: 'DeepSeek 开发者私有化知识库部署套件',
-        subDesc: '格式：Docker Compose 源码脚本 / macOS + Win',
-        category: '开源源码',
-        platforms: 'macOS, Windows',
-        targetResId: 1
-      },
-      {
-        id: 102,
-        orderNo: '2024051608',
-        time: '昨天 16:42',
-        status: 'pending',
-        statusClass: 'status-pending',
-        statusIcon: '↻',
-        statusText: '全网寻档中 · 专人处理',
-        title: 'Final Cut Pro 电影级调色预设包 2025版',
-        subDesc: '极客工程师 @枫木 已接受委托，正在套取校验',
-        category: '设计素材',
-        platforms: 'macOS',
-        targetResId: null
-      }
-    ]
+    // 我的全部求档记录 (从 PocketBase resource_requests 动态载入)
+    myTickets: []
   },
 
-  onLoad(options) {
+  async onLoad(options) {
     if (options && options.title) {
       this.setData({
         resourceName: decodeURIComponent(options.title)
+      });
+    }
+
+    const res = await api.getRequestHistory();
+    if (res && res.code === 0 && Array.isArray(res.data)) {
+      this.setData({
+        recentTickets: res.data,
+        myTickets: res.data
       });
     }
   },
@@ -235,12 +186,19 @@ Page({
       mask: true
     });
 
-    setTimeout(() => {
+    api.submitRequest({
+      resourceName: resourceName.trim(),
+      category: currentCat ? currentCat.name : '电脑软件',
+      platforms: selectedPlats,
+      detailDesc: this.data.detailDesc,
+      screenshots: this.data.screenshots,
+      isSvipSpeedEnabled
+    }).then(res => {
       wx.hideLoading();
 
-      const newOrderNo = '2024' + Math.floor(100000 + Math.random() * 900000);
+      const newOrderNo = (res && res.data && res.data.orderNo) ? res.data.orderNo : ('2025' + Math.floor(100000 + Math.random() * 900000));
       const newTicket = {
-        id: Date.now(),
+        id: (res && res.data && res.data.id) || Date.now(),
         orderNo: newOrderNo,
         time: '刚刚',
         status: 'pending',
@@ -270,7 +228,9 @@ Page({
         confirmText: '好的',
         confirmColor: '#0263e0'
       });
-    }, 800);
+    }).catch(() => {
+      wx.hideLoading();
+    });
   },
 
   // 点击工单“去获取”跳转到详情页

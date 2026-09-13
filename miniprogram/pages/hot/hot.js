@@ -1,4 +1,5 @@
 const { showToast, copyToClipboard } = require('../../utils/util.js');
+const api = require('../../utils/api.js');
 
 Page({
   data: {
@@ -26,128 +27,15 @@ Page({
     ],
     activeCategory: 'all',
 
-    // TOP 1 冠领跑卡片
-    top1: {
-      id: 'picgo',
-      rankBadge: 'TOP 1 冠军榜首',
-      heat: '98.6w',
-      title: 'PicGo 全功能图床神器',
-      version: 'v2.4.1',
-      tag: '免安装绿色版',
-      desc: '集成 GitHub、七牛云、又拍云等 12+ 图床一键智能上传',
-      rating: '9.9 分',
-      size: '82.4 MB',
-      source: 'GitHub Release / 蓝奏高速',
-      link: 'https://github.com/Molunerfinn/PicGo/releases',
-      code: '8866'
-    },
+    // TOP 1 冠领跑卡片 (从数据库动态加载)
+    top1: null,
 
-    // TOP 2 & TOP 3 双列
-    top2: {
-      id: 'typora',
-      rankBadge: 'TOP 2',
-      heat: '89.2w',
-      icon: '/images/hot_typora.svg',
-      title: 'Typora 经典版',
-      sub: '极简 Markdown',
-      desc: '内附极客暗黑主题包',
-      tag: '稳定无弹窗',
-      source: '百度网盘 / 阿里云盘',
-      link: 'https://pan.baidu.com/s/typora-classic',
-      code: 'typo'
-    },
-    top3: {
-      id: 'docker',
-      rankBadge: 'TOP 3',
-      heat: '76.5w',
-      icon: '/images/hot_docker.svg',
-      title: 'Docker 极速版',
-      sub: 'WSL2 镜像调优',
-      desc: '内存降低 40% 开箱即用',
-      tag: '国内高速源',
-      source: 'Quark网盘 / 123云盘',
-      link: 'https://pan.quark.cn/s/docker-desktop-fast',
-      code: 'dock'
-    },
+    // TOP 2 & TOP 3 双列 (从数据库动态加载)
+    top2: null,
+    top3: null,
 
-    // 4 - 10 上升最快热度榜单
-    rankList: [
-      {
-        rank: '04',
-        id: 'windterm',
-        title: 'WindTerm v...',
-        fullTitle: 'WindTerm 极客终端',
-        tag: '开源免配',
-        tagClass: 'tag-blue',
-        rating: '4.9',
-        heat: '64.2w热度',
-        size: '36MB',
-        icon: '/images/hot_windterm.svg',
-        source: 'GitHub / 蓝奏云',
-        link: 'https://github.com/kingToolbox/WindTerm/releases',
-        code: 'wind'
-      },
-      {
-        rank: '05',
-        id: 'pixpin',
-        title: 'PixPin 离线长...',
-        fullTitle: 'PixPin 截图/长截图',
-        tag: '神器级',
-        tagClass: 'tag-amber',
-        rating: '4.9',
-        heat: '58.1w热度',
-        size: '24MB',
-        icon: '/images/hot_pixpin.svg',
-        source: '百度网盘',
-        link: 'https://pan.baidu.com/s/pixpin-standalone',
-        code: 'pixp'
-      },
-      {
-        rank: '06',
-        id: 'vscode',
-        title: 'VS Code 生产...',
-        fullTitle: 'VS Code 生产力调优版',
-        tag: '开箱即用',
-        tagClass: 'tag-green',
-        rating: '5.0',
-        heat: '52.4w热度',
-        size: '185MB',
-        icon: '/images/hot_vscode.svg',
-        source: '阿里云盘',
-        link: 'https://www.alipan.com/s/vscode-geek-setup',
-        code: 'code'
-      },
-      {
-        rank: '07',
-        id: 'cs408',
-        title: '计算机考研 4...',
-        fullTitle: '计算机考研 408 知识体系',
-        tag: '高清PDF',
-        tagClass: 'tag-cyan',
-        rating: '4.9',
-        heat: '49.8w热度',
-        size: '120MB',
-        icon: '/images/hot_cs408.svg',
-        source: '夸克网盘',
-        link: 'https://pan.quark.cn/s/cs408-roadmap-mindmap',
-        code: 'cs40'
-      },
-      {
-        rank: '08',
-        id: 'bandizip',
-        title: 'Bandizip 商...',
-        fullTitle: 'Bandizip 商业纯净版',
-        tag: '绿色免装',
-        tagClass: 'tag-purple',
-        rating: '4.8',
-        heat: '46.7w热度',
-        size: '18MB',
-        icon: '/images/hot_bandizip.svg',
-        source: '直链下载',
-        link: 'https://pan.quark.cn/s/bandizip-clean',
-        code: 'zip6'
-      }
-    ],
+    // 4 - 10 上升最快热度榜单 (从数据库动态加载)
+    rankList: [],
 
     // 资源获取弹窗
     showModal: false,
@@ -156,13 +44,26 @@ Page({
 
   onLoad() {
     this.initNavBarLayout();
+    this.loadRankings(this.data.activeTab, this.data.activeCategory);
   },
 
-  onPullDownRefresh() {
-    setTimeout(() => {
-      wx.stopPullDownRefresh();
-      showToast('全网热度指数已更新', 'success');
-    }, 600);
+  async onPullDownRefresh() {
+    await this.loadRankings(this.data.activeTab, this.data.activeCategory);
+    wx.stopPullDownRefresh();
+    showToast('全网热度指数已更新', 'success');
+  },
+
+  async loadRankings(tab, cat) {
+    const res = await api.getHotRankings(tab, cat);
+    if (res && res.code === 0 && res.data) {
+      const { top1, top2, top3, rankList } = res.data;
+      const updates = {};
+      if (top1) updates.top1 = top1;
+      if (top2) updates.top2 = top2;
+      if (top3) updates.top3 = top3;
+      if (rankList && rankList.length) updates.rankList = rankList;
+      this.setData(updates);
+    }
   },
 
   // 计算自定义导航栏尺寸以适配不同机型状态栏与微信胶囊
@@ -195,11 +96,13 @@ Page({
     const tab = e.currentTarget.dataset.tab;
     this.setData({ activeTab: tab });
     showToast(`已切换至「${tab === 'soar' ? '总榜·飙升' : tab === 'week' ? '本周热门' : tab === 'new' ? '今日新上' : '评分最高'}」`);
+    this.loadRankings(tab, this.data.activeCategory);
   },
 
   setCategory(e) {
     const cat = e.currentTarget.dataset.cat;
     this.setData({ activeCategory: cat });
+    this.loadRankings(this.data.activeTab, cat);
   },
 
   onIndexRuleTap() {
