@@ -69,7 +69,7 @@ Page({
       if (stats && stats.totalResources) updates.totalCount = `${stats.totalResources}+`;
     }
     if (catRes && catRes.code === 0 && Array.isArray(catRes.data)) {
-      updates.categories = catRes.data;
+      updates.categories = catRes.data.slice(0, 5);
     }
     this.setData(updates);
   },
@@ -119,12 +119,21 @@ Page({
     });
   },
 
+  // 高级筛选按钮
   onFilterTap() {
-    wx.showActionSheet({
-      itemList: ['按下载热度排序', '按最新更新时间', '按网盘类型筛选', '仅看开源免安装'],
-      success: (res) => {
-        showToast('已为您重新筛选资源排序');
-      }
+    wx.switchTab({
+      url: '/pages/category/category'
+    });
+  },
+
+  // 金刚区分类点击 (传递选中分类并在分类页自动联动)
+  goToCategory(e) {
+    const type = e.currentTarget.dataset.type;
+    if (type) {
+      wx.setStorageSync('selectedCategory', type);
+    }
+    wx.switchTab({
+      url: '/pages/category/category'
     });
   },
 

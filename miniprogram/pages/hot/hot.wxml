@@ -79,7 +79,7 @@
           <text class="crown-text">{{top1.rankBadge}}</text>
         </view>
         <view class="top1-heat">
-          <image class="heat-icon" src="/images/flame.svg" mode="aspectFit" />
+          <image class="heat-icon" src="/images/heat_trend.svg" mode="aspectFit" />
           <text class="heat-text">{{top1.heat}}</text>
         </view>
       </view>
@@ -87,7 +87,7 @@
       <!-- 中间应用核心信息 -->
       <view class="top1-main-body">
         <view class="picgo-icon-box">
-          <image class="picgo-cloud-icon" src="/images/cloud.svg" mode="aspectFit" />
+          <image class="picgo-cloud-icon" src="{{top1.icon || '/images/cloud.svg'}}" mode="aspectFit" />
           <text class="picgo-icon-label">PICGO</text>
         </view>
         <view class="top1-info-content">
@@ -109,7 +109,7 @@
           <text class="meta-dot">·</text>
           <text class="meta-size">{{top1.size}}</text>
         </view>
-        <view class="top1-action-btn" catchtap="goToDetail" data-id="picgo" hover-class="btn-hover">
+        <view class="top1-action-btn" catchtap="goToDetail" data-id="{{top1.id}}" hover-class="btn-hover">
           <text class="btn-download-icon">📥</text>
           <text class="btn-action-text">高速获取</text>
         </view>
@@ -119,50 +119,62 @@
     <!-- TOP 2 & TOP 3 双列并排 -->
     <view class="top23-grid-row">
       <!-- TOP 2 Typora -->
-      <view class="top23-card" bindtap="goToDetail" data-id="typora" hover-class="card-hover">
+      <view class="top23-card" bindtap="goToDetail" data-id="{{top2.id}}" hover-class="card-hover">
         <view class="top23-top-row">
           <view class="top2-pill">
             <text class="medal-icon">🥈</text>
             <text class="badge-text">{{top2.rankBadge}}</text>
           </view>
           <view class="top23-heat">
-            <image class="heat-icon-sm" src="/images/flame.svg" mode="aspectFit" />
+            <image class="heat-icon-sm" src="/images/heat_trend.svg" mode="aspectFit" />
             <text class="heat-text-sm">{{top2.heat}}</text>
           </view>
         </view>
 
-        <image class="top23-app-icon" src="{{top2.icon}}" mode="aspectFit" />
-        <view class="top23-title">{{top2.title}}</view>
-        <view class="top23-sub">{{top2.sub}}</view>
+        <!-- 应用信息行：左侧图标，右侧标题与副标题 -->
+        <view class="top23-app-row">
+          <image class="top23-app-icon" src="{{top2.icon}}" mode="aspectFit" />
+          <view class="top23-title-col">
+            <view class="top23-title">{{top2.title}}</view>
+            <view class="top23-sub">{{top2.sub}}</view>
+          </view>
+        </view>
+
         <view class="top23-desc">{{top2.desc}}</view>
 
         <view class="top23-bottom-row">
           <text class="tag-green-sm">{{top2.tag}}</text>
-          <view class="top23-get-btn" catchtap="goToDetail" data-id="typora" hover-class="btn-hover">获取</view>
+          <view class="top23-get-btn" catchtap="goToDetail" data-id="{{top2.id}}" hover-class="btn-hover">获取</view>
         </view>
       </view>
 
       <!-- TOP 3 Docker -->
-      <view class="top23-card" bindtap="goToDetail" data-id="docker" hover-class="card-hover">
+      <view class="top23-card" bindtap="goToDetail" data-id="{{top3.id}}" hover-class="card-hover">
         <view class="top23-top-row">
           <view class="top3-pill">
             <text class="medal-icon">🥉</text>
             <text class="badge-text">{{top3.rankBadge}}</text>
           </view>
           <view class="top23-heat">
-            <image class="heat-icon-sm" src="/images/flame.svg" mode="aspectFit" />
+            <image class="heat-icon-sm" src="/images/heat_trend.svg" mode="aspectFit" />
             <text class="heat-text-sm">{{top3.heat}}</text>
           </view>
         </view>
 
-        <image class="top23-app-icon" src="{{top3.icon}}" mode="aspectFit" />
-        <view class="top23-title">{{top3.title}}</view>
-        <view class="top23-sub">{{top3.sub}}</view>
+        <!-- 应用信息行：左侧图标，右侧标题与副标题 -->
+        <view class="top23-app-row">
+          <image class="top23-app-icon" src="{{top3.icon}}" mode="aspectFit" />
+          <view class="top23-title-col">
+            <view class="top23-title">{{top3.title}}</view>
+            <view class="top23-sub">{{top3.sub}}</view>
+          </view>
+        </view>
+
         <view class="top23-desc">{{top3.desc}}</view>
 
         <view class="top23-bottom-row">
           <text class="tag-blue-sm">{{top3.tag}}</text>
-          <view class="top23-get-btn" catchtap="goToDetail" data-id="docker" hover-class="btn-hover">获取</view>
+          <view class="top23-get-btn" catchtap="goToDetail" data-id="{{top3.id}}" hover-class="btn-hover">获取</view>
         </view>
       </view>
     </view>

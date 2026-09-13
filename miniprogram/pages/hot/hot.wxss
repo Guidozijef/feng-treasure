@@ -496,41 +496,58 @@
 .top23-heat {
   display: flex;
   align-items: center;
-  gap: 4rpx;
+  gap: 6rpx;
 }
 
 .heat-icon-sm {
-  width: 22rpx;
-  height: 22rpx;
+  width: 28rpx;
+  height: 28rpx;
 }
 
 .heat-text-sm {
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: 800;
   color: #ef4444;
 }
 
+.top23-app-row {
+  display: flex;
+  align-items: center;
+  margin-top: 14rpx;
+  margin-bottom: 14rpx;
+}
+
 .top23-app-icon {
-  width: 80rpx;
-  height: 80rpx;
+  width: 82rpx;
+  height: 82rpx;
   border-radius: 20rpx;
-  margin-bottom: 12rpx;
+  flex-shrink: 0;
+  margin-right: 14rpx;
+}
+
+.top23-title-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .top23-title {
-  font-size: 29rpx;
+  font-size: 30rpx;
   font-weight: 800;
   color: #0f172a;
-  margin-bottom: 4rpx;
+  line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .top23-sub {
-  font-size: 24rpx;
+  font-size: 23rpx;
   color: #64748b;
-  margin-bottom: 8rpx;
+  margin-top: 6rpx;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -538,10 +555,9 @@
 
 .top23-desc {
   font-size: 24rpx;
-  color: #64748b;
-  line-height: 1.35;
+  color: #334155;
+  line-height: 1.4;
   margin-bottom: 18rpx;
-  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -559,26 +575,26 @@
   color: #16a34a;
   font-size: 22rpx;
   font-weight: 600;
-  padding: 4rpx 10rpx;
-  border-radius: 6rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
 }
 
 .tag-blue-sm {
-  background: #e0ecff;
+  background: #eff6ff;
   color: #0284c7;
   font-size: 22rpx;
   font-weight: 600;
-  padding: 4rpx 10rpx;
-  border-radius: 6rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
 }
 
 .top23-get-btn {
-  background: #e0ecff;
+  background: #eff6ff;
   color: #0f5bd8;
   font-size: 24rpx;
   font-weight: 800;
-  padding: 8rpx 24rpx;
-  border-radius: 20rpx;
+  padding: 8rpx 30rpx;
+  border-radius: 24rpx;
 }
 
 /* 6. 上升最快热度榜单 (4 - 10) */

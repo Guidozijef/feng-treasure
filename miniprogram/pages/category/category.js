@@ -52,6 +52,18 @@ Page({
     await this.initCategoryPage();
   },
 
+  async onShow() {
+    const targetNav = wx.getStorageSync('selectedCategory');
+    if (targetNav) {
+      wx.removeStorageSync('selectedCategory');
+      if (this.data.activeNav !== targetNav) {
+        this.setData({ activeNav: targetNav });
+        await this.loadCategoryScenes(targetNav);
+        await this.refreshContentData();
+      }
+    }
+  },
+
   // 计算自定义导航栏尺寸与胶囊对齐
   initNavBarLayout() {
     try {
