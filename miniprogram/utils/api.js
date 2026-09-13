@@ -140,8 +140,18 @@ const api = {
   },
 
   // 9. 用户资产与认证接口
-  wechatLogin(code) {
-    return request('/user/login', 'POST', { code });
+  wechatLogin(code, extra = {}) {
+    let devId = wx.getStorageSync('dev_client_id');
+    if (!devId) {
+      devId = 'dev_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+      wx.setStorageSync('dev_client_id', devId);
+    }
+    return request('/user/login', 'POST', {
+      code,
+      deviceId: devId,
+      openid: wx.getStorageSync('openid') || '',
+      ...extra
+    });
   },
   updateUserProfile(data) {
     return request('/user/profile/update', 'POST', data);
@@ -149,8 +159,8 @@ const api = {
   getUserProfile(uid) {
     return request(`/user/profile${uid ? '?uid=' + encodeURIComponent(uid) : ''}`);
   },
-  userCheckin() {
-    return request('/user/checkin', 'POST');
+  userCheckin(uid) {
+    return request('/user/checkin', 'POST', { uid });
   },
   getUserFavorites() {
     return request('/user/favorites');

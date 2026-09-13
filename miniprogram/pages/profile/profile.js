@@ -10,11 +10,11 @@ Page({
 
     // 用户核心数据
     userInfo: {
-      nickName: 'Geek_Arthur',
+      nickName: '极客探索者',
       vipBadge: '⚡ SVIP',
-      uid: '8932014',
+      uid: '',
       avatar: '/images/default_avatar.svg',
-      privilegeStatus: '极客永久尊享特权 · 独家节点生效中',
+      privilegeStatus: '微信授权用户 · 极客特权生效中',
       downloadCount: 48,
       favCount: 126,
       ticketCount: 2,
@@ -31,7 +31,7 @@ Page({
     ],
 
     // 登录与授权状态
-    isLoggedIn: true,
+    isLoggedIn: false,
     showNicknameModal: false,
     inputNickname: '',
 
@@ -45,8 +45,11 @@ Page({
     const uid = wx.getStorageSync('uid');
     if (token && uid) {
       this.setData({ isLoggedIn: true });
+      this.loadUserProfile(uid);
+    } else {
+      // 首次加载自动触发微信登录，根据 openId 自动生成唯一 uid
+      this.autoWechatLogin();
     }
-    this.loadUserProfile();
   },
 
   async onPullDownRefresh() {
@@ -55,8 +58,36 @@ Page({
     showToast('个人资产与特权已同步', 'success');
   },
 
-  async loadUserProfile() {
-    const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
+  // 微信静默登录 (自动根据 openId 生成唯一 uid)
+  autoWechatLogin() {
+    wx.login({
+      success: async (loginRes) => {
+        if (loginRes.code) {
+          const res = await api.wechatLogin(loginRes.code);
+          if (res && res.code === 0 && res.data) {
+            const { token, profile } = res.data;
+            if (token) wx.setStorageSync('token', token);
+            if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
+            if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
+            this.setData({
+              isLoggedIn: true,
+              userInfo: {
+                ...this.data.userInfo,
+                ...profile
+              }
+            });
+          }
+        }
+      }
+    });
+  },
+
+  async loadUserProfile(passedUid) {
+    const uid = passedUid || wx.getStorageSync('uid') || this.data.userInfo.uid;
+    if (!uid) {
+      this.autoWechatLogin();
+      return;
+    }
     const res = await api.getUserProfile(uid);
     if (res && res.code === 0 && res.data) {
       this.setData({
@@ -80,6 +111,7 @@ Page({
             const { token, profile } = res.data;
             if (token) wx.setStorageSync('token', token);
             if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
+            if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
             this.setData({
               isLoggedIn: true,
               userInfo: {
@@ -207,10 +239,12 @@ Page({
         } else if (res.tapIndex === 2) {
           wx.removeStorageSync('token');
           wx.removeStorageSync('uid');
+          wx.removeStorageSync('openid');
           this.setData({
             isLoggedIn: false,
             userInfo: {
               ...this.data.userInfo,
+              uid: '',
               nickName: '未登录用户',
               avatar: '/images/default_avatar.svg'
             }
@@ -275,11 +309,22 @@ Page({
       showToast('今日已完成签到打卡');
       return;
     }
+    const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
+    if (!uid) {
+      showToast('请先授权登录后再打卡');
+      this.autoWechatLogin();
+      return;
+    }
     this.setData({
       isCheckIn: true
     });
     showToast('打卡成功！+5 云豆已到账', 'success');
-    api.userCheckin();
+    const res = await api.userCheckin(uid);
+    if (res && res.code === 0 && res.data && res.data.currentPoints) {
+      this.setData({
+        'userInfo.points': res.data.currentPoints
+      });
+    }
   },
 
   onCommunityTap() {

@@ -2,8 +2,8 @@
 App({
   globalData: {
     userInfo: {
-      nickName: '极客探索者_7092',
-      uid: '8932014',
+      nickName: '极客探索者',
+      uid: '',
       level: '普通用户',
       points: 128
     },

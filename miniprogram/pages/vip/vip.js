@@ -138,7 +138,8 @@ Page({
       mask: true
     });
 
-    api.createVipOrder(currentPlan.id, '8932014').finally(() => {
+    const uid = wx.getStorageSync('uid') || '';
+    api.createVipOrder(currentPlan.id, uid).finally(() => {
       wx.hideLoading();
 
       // 存储开通成功的 VIP 状态
