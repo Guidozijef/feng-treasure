@@ -24,12 +24,14 @@
         <view class="avatar-wrap">
           <image class="avatar-img" src="{{userInfo.avatar}}" mode="aspectFill" />
           <view class="avatar-verified-badge"></view>
+          <!-- 微信原生选择头像透明触发按钮 -->
+          <button class="avatar-invisible-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar"></button>
         </view>
 
         <!-- 昵称、SVIP标签与UID -->
         <view class="user-meta-wrap">
           <view class="name-svip-row">
-            <text class="user-nickname">{{userInfo.nickName}}</text>
+            <text class="user-nickname" bindtap="onOpenNicknameModal">{{userInfo.nickName}}</text>
             <view class="svip-badge">
               <image class="svip-flash-icon" src="/images/icon_flash_white.svg" mode="aspectFit" />
               <text class="svip-text">SVIP</text>
@@ -297,5 +299,30 @@
       </view>
     </view>
 
+  </view>
+
+  <!-- 微信昵称授权 / 修改弹窗 -->
+  <view wx:if="{{showNicknameModal}}" class="nickname-modal-mask" bindtap="onCloseNicknameModal">
+    <view class="nickname-modal-box" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">授权微信昵称</text>
+        <text class="modal-close" bindtap="onCloseNicknameModal">✕</text>
+      </view>
+      <view class="modal-tip">点击下方输入框可直接快捷选择您的微信昵称：</view>
+      <view class="nickname-input-wrap">
+        <input 
+          type="nickname" 
+          class="wechat-nickname-input" 
+          placeholder="请输入或点此选择微信昵称" 
+          value="{{inputNickname}}" 
+          bindinput="onNicknameInput"
+          bindchange="onNicknameChange"
+        />
+      </view>
+      <view class="modal-btn-row">
+        <view class="btn-cancel" bindtap="onCloseNicknameModal">取消</view>
+        <view class="btn-confirm" bindtap="onSaveNickname">确认保存</view>
+      </view>
+    </view>
   </view>
 </view>

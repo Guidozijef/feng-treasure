@@ -30,12 +30,22 @@ Page({
       { id: 'redeem', title: '激活兑换', icon: '/images/tool_gift.svg', bg: '#f5f3ff' }
     ],
 
+    // 登录与授权状态
+    isLoggedIn: true,
+    showNicknameModal: false,
+    inputNickname: '',
+
     // 任务打卡状态
     isCheckIn: false
   },
 
   onLoad() {
     this.initNavBarLayout();
+    const token = wx.getStorageSync('token');
+    const uid = wx.getStorageSync('uid');
+    if (token && uid) {
+      this.setData({ isLoggedIn: true });
+    }
     this.loadUserProfile();
   },
 
@@ -46,7 +56,8 @@ Page({
   },
 
   async loadUserProfile() {
-    const res = await api.getUserProfile();
+    const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
+    const res = await api.getUserProfile(uid);
     if (res && res.code === 0 && res.data) {
       this.setData({
         userInfo: {
@@ -54,6 +65,103 @@ Page({
           ...res.data
         }
       });
+    }
+  },
+
+  // 微信授权一键登录
+  onWechatLogin() {
+    wx.showLoading({ title: '微信登录中...', mask: true });
+    wx.login({
+      success: async (loginRes) => {
+        if (loginRes.code) {
+          const res = await api.wechatLogin(loginRes.code);
+          wx.hideLoading();
+          if (res && res.code === 0 && res.data) {
+            const { token, profile } = res.data;
+            if (token) wx.setStorageSync('token', token);
+            if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
+            this.setData({
+              isLoggedIn: true,
+              userInfo: {
+                ...this.data.userInfo,
+                ...profile
+              }
+            });
+            showToast('微信授权登录成功！', 'success');
+          } else {
+            showToast('登录服务响应异常，请重试');
+          }
+        } else {
+          wx.hideLoading();
+          showToast('获取微信登录凭据失败');
+        }
+      },
+      fail: () => {
+        wx.hideLoading();
+        showToast('微信登录接口调用失败');
+      }
+    });
+  },
+
+  // 授权选择微信头像
+  async onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    if (avatarUrl) {
+      this.setData({
+        'userInfo.avatar': avatarUrl
+      });
+      showToast('正在同步头像至数据库...');
+      const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
+      const res = await api.updateUserProfile({
+        uid,
+        avatar: avatarUrl
+      });
+      if (res && res.code === 0) {
+        showToast('头像已同步入库', 'success');
+      }
+    }
+  },
+
+  // 授权与修改微信昵称弹窗
+  onOpenNicknameModal() {
+    this.setData({
+      showNicknameModal: true,
+      inputNickname: this.data.userInfo.nickName || ''
+    });
+  },
+
+  onCloseNicknameModal() {
+    this.setData({ showNicknameModal: false });
+  },
+
+  stopBubble() {},
+
+  onNicknameInput(e) {
+    this.setData({ inputNickname: e.detail.value });
+  },
+
+  onNicknameChange(e) {
+    this.setData({ inputNickname: e.detail.value });
+  },
+
+  async onSaveNickname() {
+    const nick = (this.data.inputNickname || '').trim();
+    if (!nick) {
+      showToast('请输入有效的微信昵称');
+      return;
+    }
+    this.setData({
+      'userInfo.nickName': nick,
+      showNicknameModal: false
+    });
+    showToast('正在保存昵称至数据库...');
+    const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
+    const res = await api.updateUserProfile({
+      uid,
+      nickName: nick
+    });
+    if (res && res.code === 0) {
+      showToast('昵称已成功入库', 'success');
     }
   },
 
@@ -89,13 +197,25 @@ Page({
 
   openSettings() {
     wx.showActionSheet({
-      itemList: ['账号安全与绑定', '清理本地临时缓存', '退出登录'],
+      itemList: ['修改微信头像与昵称', '清理本地临时缓存', '退出登录'],
       success: (res) => {
-        if (res.tapIndex === 1) {
+        if (res.tapIndex === 0) {
+          this.onOpenNicknameModal();
+        } else if (res.tapIndex === 1) {
           wx.clearStorageSync();
           showToast('本地缓存已深度清理', 'success');
-        } else if (res.tapIndex === 0) {
-          showToast('当前极客账号已绑定微信安全凭据');
+        } else if (res.tapIndex === 2) {
+          wx.removeStorageSync('token');
+          wx.removeStorageSync('uid');
+          this.setData({
+            isLoggedIn: false,
+            userInfo: {
+              ...this.data.userInfo,
+              nickName: '未登录用户',
+              avatar: '/images/default_avatar.svg'
+            }
+          });
+          showToast('已退出登录');
         }
       }
     });

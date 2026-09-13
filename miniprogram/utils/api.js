@@ -139,9 +139,15 @@ const api = {
     return request('/vip/create-order', 'POST', { planId, uid });
   },
 
-  // 9. 用户资产接口
-  getUserProfile() {
-    return request('/user/profile');
+  // 9. 用户资产与认证接口
+  wechatLogin(code) {
+    return request('/user/login', 'POST', { code });
+  },
+  updateUserProfile(data) {
+    return request('/user/profile/update', 'POST', data);
+  },
+  getUserProfile(uid) {
+    return request(`/user/profile${uid ? '?uid=' + encodeURIComponent(uid) : ''}`);
   },
   userCheckin() {
     return request('/user/checkin', 'POST');
