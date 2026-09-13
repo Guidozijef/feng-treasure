@@ -220,15 +220,15 @@ Page({
     this.setData({ searchKeyword: e.detail.value });
   },
 
-  onSearchConfirm() {
-    const kw = this.data.searchKeyword.trim();
-    wx.navigateTo({
-      url: kw ? `/pages/search/search?keyword=${encodeURIComponent(kw)}` : '/pages/search/search'
-    });
+  onClearSearch() {
+    this.setData({ searchKeyword: '' });
   },
 
-  onSearchTap() {
-    const kw = this.data.searchKeyword.trim();
+  onSearchConfirm(e) {
+    const raw = (e && e.detail && e.detail.value !== undefined) 
+      ? e.detail.value 
+      : this.data.searchKeyword;
+    const kw = (raw || '').trim();
     wx.navigateTo({
       url: kw ? `/pages/search/search?keyword=${encodeURIComponent(kw)}` : '/pages/search/search'
     });

@@ -17,17 +17,20 @@
   <!-- 主体内容滚动区 -->
   <view class="content-body">
 
-    <!-- 2. 搜索栏 (全宽圆角无多余外置按钮，左放大镜右参数调谐滑块) -->
+    <!-- 2. 搜索栏 (支持正常输入，点击键盘确定搜索才跳转) -->
     <view class="search-section">
-      <view class="search-bar-wrap" bindtap="onSearchTap" hover-class="card-hover">
-        <image class="search-icon" src="/images/search.svg" mode="aspectFit" />
+      <view class="search-bar-wrap">
+        <image class="search-icon" src="/images/search.svg" mode="aspectFit" bindtap="onSearchConfirm" />
         <input 
           class="search-input" 
           placeholder="{{searchPlaceholder}}" 
           placeholder-class="search-placeholder-style"
           value="{{searchKeyword}}"
-          disabled="{{true}}"
+          confirm-type="search"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
         />
+        <text wx:if="{{searchKeyword}}" class="search-clear-cross" catchtap="onClearSearch">✕</text>
         <image class="filter-icon" src="/images/filter.svg" mode="aspectFit" catchtap="onFilterTap" hover-class="btn-hover" />
       </view>
     </view>

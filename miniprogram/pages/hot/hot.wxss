@@ -29,11 +29,11 @@
 }
 
 .nav-logo {
-  width: 52rpx;
-  height: 52rpx;
+  width: 54rpx;
+  height: 54rpx;
   border-radius: 14rpx;
   flex-shrink: 0;
-  box-shadow: 0 4rpx 12rpx rgba(15, 23, 42, 0.12);
+  /* box-shadow: 0 4rpx 12rpx rgba(15, 23, 42, 0.12); */
 }
 
 .nav-title {

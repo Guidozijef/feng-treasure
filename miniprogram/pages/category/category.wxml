@@ -24,12 +24,20 @@
   <!-- 占位垫高区 -->
   <view class="nav-bar-placeholder" style="height: {{statusBarHeight + navBarHeight}}px;"></view>
 
-  <!-- 2. 顶部搜索栏与高级筛选按钮 -->
+  <!-- 2. 顶部搜索栏与高级筛选按钮 (支持正常输入，按键盘确认搜索才跳转) -->
   <view class="cat-top-search-row">
-    <view class="cat-search-capsule" bindtap="onGoToSearch" hover-class="card-hover">
-      <image class="search-glass-icon" src="/images/search.svg" mode="aspectFit" />
-      <text class="search-placeholder-txt">搜索 12,000+ 精选资源...</text>
-      <text class="search-clear-cross">✕</text>
+    <view class="cat-search-capsule">
+      <image class="search-glass-icon" src="/images/search.svg" mode="aspectFit" bindtap="onSearchConfirm" />
+      <input 
+        class="search-text-input" 
+        value="{{searchKeyword}}" 
+        placeholder="搜索 12,000+ 精选资源..." 
+        placeholder-class="search-input-placeholder"
+        confirm-type="search"
+        bindinput="onSearchInput" 
+        bindconfirm="onSearchConfirm" 
+      />
+      <text wx:if="{{searchKeyword}}" class="search-clear-cross" catchtap="onClearSearch">✕</text>
     </view>
     <view class="cat-filter-slider-btn" bindtap="toggleDrawer" hover-class="btn-hover">
       <image class="filter-slider-svg" src="/images/icon_filter_blue.svg" mode="aspectFit" />

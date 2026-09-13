@@ -115,19 +115,26 @@ page {
   opacity: 0.65;
 }
 
-.search-placeholder-txt {
+.search-text-input {
   flex: 1;
+  font-size: 25rpx;
+  color: #0f172a;
+  height: 100%;
+}
+
+.search-input-placeholder {
   font-size: 25rpx;
   color: #94a3b8;
   font-weight: 400;
 }
 
 .search-clear-cross {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #94a3b8;
   font-weight: 400;
-  padding: 4rpx;
+  padding: 6rpx 8rpx;
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .cat-filter-slider-btn {

@@ -264,6 +264,9 @@ Page({
     navBarHeight: 44,
     menuButtonRight: 12,
 
+    // 搜索输入内容
+    searchKeyword: '',
+
     // 左侧选中的导航分类 key
     activeNav: 'pc',
 
@@ -354,10 +357,22 @@ Page({
     });
   },
 
-  // 顶部搜索框点击直达统一搜索中心页面
-  onGoToSearch() {
+  // 搜索相关交互
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value });
+  },
+
+  onClearSearch() {
+    this.setData({ searchKeyword: '' });
+  },
+
+  onSearchConfirm(e) {
+    const raw = (e && e.detail && e.detail.value !== undefined) 
+      ? e.detail.value 
+      : this.data.searchKeyword;
+    const kw = (raw || '').trim();
     wx.navigateTo({
-      url: '/pages/search/search'
+      url: kw ? `/pages/search/search?keyword=${encodeURIComponent(kw)}` : '/pages/search/search'
     });
   },
 
