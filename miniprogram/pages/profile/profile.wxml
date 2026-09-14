@@ -60,12 +60,12 @@
       <view class="user-bottom-row">
         <view class="privilege-status-left">
           <view class="{{userInfo.isSvip ? 'green-status-dot' : 'gray-status-dot'}}"></view>
-          <text class="privilege-status-text">{{userInfo.privilegeStatus || (userInfo.isSvip ? '极客永久尊享特权 · 独家节点生效中' : '普通用户 · 开通会员享全站满速下载')}}</text>
+          <text class="privilege-status-text">{{userInfo.isSvip ? (userInfo.privilegeStatus || '极客黑卡尊享中 · 独家节点生效中') : '普通用户 · 开通会员享全站无广'}}</text>
         </view>
-        <view class="privilege-detail-link" bindtap="openPrivilegeDetails" hover-class="btn-hover">
+        <!-- <view class="privilege-detail-link" bindtap="openPrivilegeDetails" hover-class="btn-hover">
           <text class="link-text">{{userInfo.isSvip ? '权益明细' : '开通特权'}}</text>
           <text class="link-arrow">></text>
-        </view>
+        </view> -->
       </view>
     </view>
 

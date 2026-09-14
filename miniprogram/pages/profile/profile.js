@@ -62,23 +62,40 @@ Page({
   },
 
   // 微信静默登录 (自动根据 openId 生成唯一 uid)
+  // 规范化用户资料数据，确保普通用户绝不展示 SVIP 专属特权文案与角标
+  normalizeProfile(rawProfile) {
+    if (!rawProfile) return {};
+    const isSvip = !!rawProfile.isSvip;
+    return {
+      ...rawProfile,
+      isSvip,
+      vipBadge: isSvip ? (rawProfile.vipBadge || '⚡ SVIP') : '普通用户',
+      vipPlanName: isSvip ? (rawProfile.vipPlanName || '极客黑卡') : '',
+      vipExpireDate: isSvip ? (rawProfile.vipExpireDate || '终身永久有效') : '',
+      privilegeStatus: isSvip
+        ? (rawProfile.privilegeStatus || '极客黑卡尊享中 · 独家节点生效中')
+        : '普通用户 · 开通会员享全站满速下载'
+    };
+  },
+
+  // 微信静默登录 (自动根据 openId 生成唯一 uid)
   autoWechatLogin() {
     wx.login({
       success: async (loginRes) => {
         if (loginRes.code) {
           const res = await api.wechatLogin(loginRes.code);
           if (res && res.code === 0 && res.data) {
-            const { token, profile } = res.data;
+            const profile = this.normalizeProfile(res.data.profile);
+            const token = res.data.token;
             if (token) wx.setStorageSync('token', token);
-            if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
-            if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
-            if (profile) wx.setStorageSync('user_is_svip', !!profile.isSvip);
+            if (profile.uid) wx.setStorageSync('uid', profile.uid);
+            if (profile.openid) wx.setStorageSync('openid', profile.openid);
+            wx.setStorageSync('user_is_svip', profile.isSvip);
             this.setData({
               isLoggedIn: true,
               userInfo: {
                 ...this.data.userInfo,
-                ...profile,
-                isSvip: !!profile?.isSvip
+                ...profile
               }
             });
           }
@@ -95,12 +112,12 @@ Page({
     }
     const res = await api.getUserProfile(uid);
     if (res && res.code === 0 && res.data) {
-      wx.setStorageSync('user_is_svip', !!res.data.isSvip);
+      const profile = this.normalizeProfile(res.data);
+      wx.setStorageSync('user_is_svip', profile.isSvip);
       this.setData({
         userInfo: {
           ...this.data.userInfo,
-          ...res.data,
-          isSvip: !!res.data.isSvip
+          ...profile
         }
       });
     }
@@ -115,17 +132,17 @@ Page({
           const res = await api.wechatLogin(loginRes.code);
           wx.hideLoading();
           if (res && res.code === 0 && res.data) {
-            const { token, profile } = res.data;
+            const profile = this.normalizeProfile(res.data.profile);
+            const token = res.data.token;
             if (token) wx.setStorageSync('token', token);
-            if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
-            if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
-            if (profile) wx.setStorageSync('user_is_svip', !!profile.isSvip);
+            if (profile.uid) wx.setStorageSync('uid', profile.uid);
+            if (profile.openid) wx.setStorageSync('openid', profile.openid);
+            wx.setStorageSync('user_is_svip', profile.isSvip);
             this.setData({
               isLoggedIn: true,
               userInfo: {
                 ...this.data.userInfo,
-                ...profile,
-                isSvip: !!profile?.isSvip
+                ...profile
               }
             });
             showToast('微信授权登录成功！', 'success');

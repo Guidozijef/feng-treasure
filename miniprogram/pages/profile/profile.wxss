@@ -338,6 +338,7 @@
 
 /* 4. 极客黑卡 SVIP 尊享卡片 */
 .black-vip-card {
+  display: none;
   background-color: #141c2c;
   border-radius: 32rpx;
   padding: 34rpx 28rpx 30rpx;
