@@ -37,7 +37,7 @@ Page({
     screenshots: [],
 
     // SVIP 极速加速开关
-    isSvipSpeedEnabled: true,
+    isSvipSpeedEnabled: false,
 
     // 今日剩余提交次数
     remainSubmitTimes: 3,
@@ -50,6 +50,9 @@ Page({
   },
 
   async onLoad(options) {
+    const isSvip = !!wx.getStorageSync('user_is_svip');
+    this.setData({ isSvipSpeedEnabled: isSvip });
+
     if (options && options.title) {
       this.setData({
         resourceName: decodeURIComponent(options.title)
@@ -157,6 +160,22 @@ Page({
 
   // SVIP 加速开关
   onSvipSpeedChange(e) {
+    const isSvip = !!wx.getStorageSync('user_is_svip');
+    if (!isSvip) {
+      wx.showModal({
+        title: 'SVIP 专属特权',
+        content: '极速寻档为 SVIP 会员专享特权，开通后享专人 10~30 分钟极速响应。是否前往开通？',
+        confirmText: '去开通',
+        confirmColor: '#0f5bd8',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/vip/vip' });
+          }
+        }
+      });
+      this.setData({ isSvipSpeedEnabled: false });
+      return;
+    }
     const checked = e.detail.value;
     this.setData({
       isSvipSpeedEnabled: checked

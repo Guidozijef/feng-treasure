@@ -11,15 +11,18 @@ Page({
     // 用户核心数据
     userInfo: {
       nickName: '极客探索者',
-      vipBadge: '⚡ SVIP',
+      vipBadge: '普通用户',
       uid: '',
       avatar: '/images/default_avatar.svg',
-      privilegeStatus: '微信授权用户 · 极客特权生效中',
-      downloadCount: 48,
-      favCount: 126,
-      ticketCount: 2,
-      ticketHasNew: true,
-      points: '1,280'
+      privilegeStatus: '普通用户 · 开通会员享全站满速下载',
+      downloadCount: 0,
+      favCount: 0,
+      ticketCount: 0,
+      ticketHasNew: false,
+      points: 50,
+      isSvip: false,
+      vipPlanName: '',
+      vipExpireDate: ''
     },
 
     // 资产与工具 4 项
@@ -69,11 +72,13 @@ Page({
             if (token) wx.setStorageSync('token', token);
             if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
             if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
+            if (profile) wx.setStorageSync('user_is_svip', !!profile.isSvip);
             this.setData({
               isLoggedIn: true,
               userInfo: {
                 ...this.data.userInfo,
-                ...profile
+                ...profile,
+                isSvip: !!profile?.isSvip
               }
             });
           }
@@ -90,10 +95,12 @@ Page({
     }
     const res = await api.getUserProfile(uid);
     if (res && res.code === 0 && res.data) {
+      wx.setStorageSync('user_is_svip', !!res.data.isSvip);
       this.setData({
         userInfo: {
           ...this.data.userInfo,
-          ...res.data
+          ...res.data,
+          isSvip: !!res.data.isSvip
         }
       });
     }
@@ -112,11 +119,13 @@ Page({
             if (token) wx.setStorageSync('token', token);
             if (profile && profile.uid) wx.setStorageSync('uid', profile.uid);
             if (profile && profile.openid) wx.setStorageSync('openid', profile.openid);
+            if (profile) wx.setStorageSync('user_is_svip', !!profile.isSvip);
             this.setData({
               isLoggedIn: true,
               userInfo: {
                 ...this.data.userInfo,
-                ...profile
+                ...profile,
+                isSvip: !!profile?.isSvip
               }
             });
             showToast('微信授权登录成功！', 'success');
@@ -240,13 +249,19 @@ Page({
           wx.removeStorageSync('token');
           wx.removeStorageSync('uid');
           wx.removeStorageSync('openid');
+          wx.removeStorageSync('user_is_svip');
           this.setData({
             isLoggedIn: false,
             userInfo: {
               ...this.data.userInfo,
               uid: '',
               nickName: '未登录用户',
-              avatar: '/images/default_avatar.svg'
+              avatar: '/images/default_avatar.svg',
+              isSvip: false,
+              vipBadge: '普通用户',
+              vipPlanName: '',
+              vipExpireDate: '',
+              privilegeStatus: '普通用户 · 开通会员享全站满速下载'
             }
           });
           showToast('已退出登录');
