@@ -96,7 +96,8 @@ Page({
               userInfo: {
                 ...this.data.userInfo,
                 ...profile
-              }
+              },
+              isCheckIn: !!res.data.profile?.isCheckIn
             });
           }
         }
@@ -118,7 +119,8 @@ Page({
         userInfo: {
           ...this.data.userInfo,
           ...profile
-        }
+        },
+        isCheckIn: !!res.data?.isCheckIn
       });
     }
   },
@@ -143,7 +145,8 @@ Page({
               userInfo: {
                 ...this.data.userInfo,
                 ...profile
-              }
+              },
+              isCheckIn: !!res.data.profile?.isCheckIn
             });
             showToast('微信授权登录成功！', 'success');
           } else {
@@ -338,7 +341,7 @@ Page({
 
   async onDailyCheckIn() {
     if (this.data.isCheckIn) {
-      showToast('今日已完成签到打卡');
+      showToast('今日已完成打卡，明天再来吧');
       return;
     }
     const uid = wx.getStorageSync('uid') || this.data.userInfo.uid;
@@ -347,15 +350,32 @@ Page({
       this.autoWechatLogin();
       return;
     }
-    this.setData({
-      isCheckIn: true
-    });
-    showToast('打卡成功！+5 云豆已到账', 'success');
-    const res = await api.userCheckin(uid);
-    if (res && res.code === 0 && res.data && res.data.currentPoints) {
-      this.setData({
-        'userInfo.points': res.data.currentPoints
-      });
+
+    wx.showLoading({ title: '打卡中...', mask: true });
+    try {
+      const res = await api.userCheckin(uid);
+      wx.hideLoading();
+
+      if (res && res.code === 0) {
+        if (res.data && res.data.alreadyChecked) {
+          this.setData({ isCheckIn: true });
+          showToast('今日已完成打卡，明天再来吧');
+        } else {
+          const newPoints = res.data?.currentPoints !== undefined 
+            ? res.data.currentPoints 
+            : (parseInt(this.data.userInfo.points || 0) + 5);
+          this.setData({
+            isCheckIn: true,
+            'userInfo.points': newPoints
+          });
+          showToast('打卡成功！+5 云豆已到账', 'success');
+        }
+      } else {
+        showToast(res?.message || '打卡异常，请重试');
+      }
+    } catch (e) {
+      wx.hideLoading();
+      showToast('网络请求失败，请重试');
     }
   },
 

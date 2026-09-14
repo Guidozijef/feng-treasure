@@ -182,7 +182,7 @@
             </view>
           </view>
           <view class="task-action-wrap">
-            <view class="task-btn-solid {{isCheckIn ? 'btn-disabled' : ''}}" bindtap="onDailyCheckIn" hover-class="btn-hover">
+            <view class="task-btn-solid {{isCheckIn ? 'btn-disabled' : ''}}" bindtap="onDailyCheckIn" hover-class="{{isCheckIn ? '' : 'btn-hover'}}">
               {{isCheckIn ? '已打卡' : '立即打卡'}}
             </view>
           </view>
