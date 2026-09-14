@@ -63,6 +63,15 @@ Page({
     showToast('正在生成资源海报...');
   },
 
+  previewImage(e) {
+    const current = e.currentTarget.dataset.src;
+    const urls = (this.data.resource && this.data.resource.images) || [current];
+    wx.previewImage({
+      current,
+      urls
+    });
+  },
+
   onReportTap() {
     const { resource } = this.data;
     if (!resource) return;
