@@ -39,28 +39,26 @@
       />
       <text wx:if="{{searchKeyword}}" class="search-clear-cross" catchtap="onClearSearch">✕</text>
     </view>
-    <view class="cat-filter-slider-btn" bindtap="toggleDrawer" hover-class="btn-hover">
+    <view class="cat-filter-slider-btn {{activeFilterCount > 0 ? 'filter-btn-active' : ''}}" bindtap="toggleDrawer" hover-class="btn-hover">
       <image class="filter-slider-svg" src="/images/icon_filter_blue.svg" mode="aspectFit" />
+      <view wx:if="{{activeFilterCount > 0}}" class="filter-count-badge">{{activeFilterCount}}</view>
     </view>
   </view>
 
-  <!-- 3. 横向快速标签滚动栏 -->
-  <view class="quick-tags-section">
-    <scroll-view class="quick-tags-scroll" scroll-x="true">
-      <view class="quick-tags-inner">
-        <block wx:for="{{quickTags}}" wx:key="id">
-          <view 
-            class="quick-tag-pill {{item.active ? 'tag-pill-active' : ''}}" 
-            bindtap="onToggleQuickTag" 
-            data-id="{{item.id}}"
-            hover-class="card-tap-hover"
-          >
-            <text wx:if="{{item.hasDot}}" class="tag-orange-dot">●</text>
-            <text class="tag-name-text">{{item.name}}</text>
-            <text wx:if="{{item.hasArrow}}" class="tag-arrow-down">⌵</text>
+  <!-- 3. 已激活筛选条件条 (仅在应用筛选后展示，支持快速移除单个条件或一键重置) -->
+  <view class="active-filters-bar" wx:if="{{activeFilterTags.length > 0}}">
+    <scroll-view class="active-filters-scroll" scroll-x="true" enable-flex="true">
+      <view class="active-filters-inner">
+        <text class="filter-bar-label">已筛选:</text>
+        <block wx:for="{{activeFilterTags}}" wx:key="key">
+          <view class="active-filter-chip" bindtap="removeFilterTag" data-type="{{item.type}}" data-val="{{item.val}}">
+            <text class="chip-label">{{item.label}}</text>
+            <text class="chip-x">✕</text>
           </view>
         </block>
-        <view class="quick-tags-tail-spacer"></view>
+        <view class="clear-all-filter-btn" bindtap="onResetDrawer">
+          <text>重置全部</text>
+        </view>
       </view>
     </scroll-view>
   </view>
@@ -224,8 +222,8 @@
     <view class="drawer-header">
       <view class="drawer-title-group">
         <image class="drawer-filter-icon" src="/images/icon_filter_blue.svg" mode="aspectFit" />
-        <text class="drawer-title">多维高级筛选</text>
-        <text class="drawer-badge-tag">精准匹配</text>
+        <text class="drawer-title">高级多维筛选</text>
+        <text class="drawer-badge-tag">精准定向</text>
       </view>
       <view class="drawer-close-box" bindtap="closeDrawer" hover-class="btn-hover">
         <text class="drawer-close-x">✕</text>
@@ -234,30 +232,33 @@
 
     <!-- 筛选主体滚动区 -->
     <scroll-view class="drawer-body" scroll-y="true">
-      <!-- 维度 1: 适用操作系统 -->
+      <!-- 维度 1: 适用系统平台 -->
       <view class="filter-section">
-        <view class="filter-label">适用操作系统 (支持多选)</view>
+        <view class="filter-section-head">
+          <text class="filter-label">适用操作系统</text>
+          <text class="filter-tip">支持多选</text>
+        </view>
         <view class="filter-chips">
           <view 
             class="chip {{drawerFilter.systems.indexOf('win') > -1 ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="win"
           >
-            Windows 10/11
+            Windows (桌面端)
           </view>
           <view 
             class="chip {{drawerFilter.systems.indexOf('mac') > -1 ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="mac"
           >
-            macOS (Apple M芯片)
+            macOS (Apple M/Intel)
           </view>
           <view 
             class="chip {{drawerFilter.systems.indexOf('web') > -1 ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="web"
           >
-            网页版 / Chrome扩展
+            网页端 / Chrome扩展
           </view>
           <view 
             class="chip {{drawerFilter.systems.indexOf('linux') > -1 ? 'active' : ''}}" 
@@ -269,44 +270,12 @@
         </view>
       </view>
 
-      <!-- 维度 2: 文件体积区间 -->
+      <!-- 维度 2: 版本特性与授权 -->
       <view class="filter-section">
-        <view class="filter-label">文件体积区间</view>
-        <view class="filter-chips">
-          <view 
-            class="chip {{drawerFilter.size === 'all' ? 'active' : ''}}" 
-            bindtap="onSelectDrawerSize" 
-            data-val="all"
-          >
-            不限体积
-          </view>
-          <view 
-            class="chip {{drawerFilter.size === 'small' ? 'active' : ''}}" 
-            bindtap="onSelectDrawerSize" 
-            data-val="small"
-          >
-            &lt; 10 MB (极速轻量)
-          </view>
-          <view 
-            class="chip {{drawerFilter.size === 'medium' ? 'active' : ''}}" 
-            bindtap="onSelectDrawerSize" 
-            data-val="medium"
-          >
-            10 - 100 MB (常规工具)
-          </view>
-          <view 
-            class="chip {{drawerFilter.size === 'large' ? 'active' : ''}}" 
-            bindtap="onSelectDrawerSize" 
-            data-val="large"
-          >
-            &gt; 1 GB (离线大包)
-          </view>
+        <view class="filter-section-head">
+          <text class="filter-label">版本特性与授权</text>
+          <text class="filter-tip">定向单选</text>
         </view>
-      </view>
-
-      <!-- 维度 3: 授权与特性 -->
-      <view class="filter-section">
-        <view class="filter-label">版本授权与特性 (多选)</view>
         <view class="filter-chips">
           <view 
             class="chip {{drawerFilter.license === 'all' ? 'active' : ''}}" 
@@ -320,21 +289,154 @@
             bindtap="onSelectDrawerLicense" 
             data-val="green"
           >
-            绿色免安装
+            绿色免安装 / 便携
+          </view>
+          <view 
+            class="chip {{drawerFilter.license === 'official' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerLicense" 
+            data-val="official"
+          >
+            官方纯净原版
           </view>
           <view 
             class="chip {{drawerFilter.license === 'free' ? 'active' : ''}}" 
             bindtap="onSelectDrawerLicense" 
             data-val="free"
           >
-            开源免费
+            永久免费 / 开源
           </view>
           <view 
             class="chip {{drawerFilter.license === 'vip' ? 'active' : ''}}" 
             bindtap="onSelectDrawerLicense" 
             data-val="vip"
           >
-            精校稳定版
+            VIP特权 / 免登录版
+          </view>
+        </view>
+      </view>
+
+      <!-- 维度 3: 特色场景标签池 (支持多选) -->
+      <view class="filter-section">
+        <view class="filter-section-head">
+          <text class="filter-label">特色场景标签</text>
+          <text class="filter-tip">支持多选</text>
+        </view>
+        <view class="filter-chips">
+          <block wx:for="{{availableFilterTags}}" wx:key="*this">
+            <view 
+              class="chip {{drawerFilter.selectedTags.indexOf(item) > -1 ? 'active' : ''}}" 
+              bindtap="onToggleDrawerTag" 
+              data-val="{{item}}"
+            >
+              {{item}}
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 维度 4: 文件体积区间 -->
+      <view class="filter-section">
+        <view class="filter-section-head">
+          <text class="filter-label">文件体积区间</text>
+          <text class="filter-tip">定向单选</text>
+        </view>
+        <view class="filter-chips">
+          <view 
+            class="chip {{drawerFilter.size === 'all' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="all"
+          >
+            不限体积
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'small' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="small"
+          >
+            &lt; 50 MB (极速轻量)
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'medium' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="medium"
+          >
+            50 - 500 MB (常规工具)
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'large' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="large"
+          >
+            500 MB - 2 GB (精选大包)
+          </view>
+          <view 
+            class="chip {{drawerFilter.size === 'xlarge' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerSize" 
+            data-val="xlarge"
+          >
+            &gt; 2 GB (超大海量)
+          </view>
+        </view>
+      </view>
+
+      <!-- 维度 5: 网盘提取码模式 -->
+      <view class="filter-section">
+        <view class="filter-section-head">
+          <text class="filter-label">网盘转存方式</text>
+          <text class="filter-tip">提取码规则</text>
+        </view>
+        <view class="filter-chips">
+          <view 
+            class="chip {{drawerFilter.pwdType === 'all' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerPwdType" 
+            data-val="all"
+          >
+            全部模式
+          </view>
+          <view 
+            class="chip {{drawerFilter.pwdType === 'free' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerPwdType" 
+            data-val="free"
+          >
+            免提取码 (直接转存)
+          </view>
+          <view 
+            class="chip {{drawerFilter.pwdType === 'has_pwd' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerPwdType" 
+            data-val="has_pwd"
+          >
+            需输入提取码
+          </view>
+        </view>
+      </view>
+
+      <!-- 维度 6: 口碑好评评分 -->
+      <view class="filter-section">
+        <view class="filter-section-head">
+          <text class="filter-label">口碑好评评分</text>
+          <text class="filter-tip">极客评分</text>
+        </view>
+        <view class="filter-chips">
+          <view 
+            class="chip {{drawerFilter.minRating === 'all' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerRating" 
+            data-val="all"
+          >
+            全部评分
+          </view>
+          <view 
+            class="chip {{drawerFilter.minRating === '4.8' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerRating" 
+            data-val="4.8"
+          >
+            ★ 4.8 分以上 (满分神作)
+          </view>
+          <view 
+            class="chip {{drawerFilter.minRating === '4.5' ? 'active' : ''}}" 
+            bindtap="onSelectDrawerRating" 
+            data-val="4.5"
+          >
+            ★ 4.5 分以上 (高分必收)
           </view>
         </view>
       </view>
@@ -343,7 +445,7 @@
     <!-- 底部固定操作栏 -->
     <view class="drawer-footer">
       <button class="drawer-reset-btn" bindtap="onResetDrawer" hover-class="btn-hover">重置条件</button>
-      <button class="drawer-confirm-btn" bindtap="applyFilter" hover-class="btn-hover">查看筛选结果 ({{drawerResultCount}}款)</button>
+      <button class="drawer-confirm-btn" bindtap="applyFilter" hover-class="btn-hover">查看筛选结果 (共 {{drawerResultCount}} 款)</button>
     </view>
   </view>
 
