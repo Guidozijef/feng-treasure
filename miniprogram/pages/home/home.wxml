@@ -122,16 +122,21 @@
       <scroll-view class="hot-scroll-view" scroll-x="true" enable-flex="true" show-scrollbar="false">
         <block wx:for="{{topPicks}}" wx:key="id">
           <view class="hot-card" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
-            <!-- 头部：图标与 TOP 角标 -->
+            <!-- 头部：图标与 TOP 排名徽章 (根据热度排名自动展示，非静态标签字段) -->
             <view class="hot-card-header">
-              <view class="hot-card-icon-box" style="background-color: {{item.iconBg}};">
-                <image class="hot-card-icon-img" src="{{item.icon}}" mode="aspectFit" />
+              <view class="hot-card-icon-box" style="background-color: {{item.iconBg || '#edf5ff'}};">
+                <image class="hot-card-icon-img" src="{{item.icon || '/images/cloud.svg'}}" mode="aspectFit" />
               </view>
-              <view class="hot-card-badge" wx:if="{{item.badge}}">{{item.badge}}</view>
+              <view class="hot-card-badge rank-badge-{{index + 1}}">
+                <text class="rank-badge-text">{{item.rankBadge || ('TOP ' + (index + 1))}}</text>
+              </view>
             </view>
 
             <view class="hot-card-title">{{item.title}}</view>
-            <view class="hot-card-desc">{{item.desc}}</view>
+            <view class="hot-card-desc">
+              <text class="hot-card-tag-pill" wx:if="{{item.badge && item.badge !== 'TOP 1' && item.badge !== 'TOP 2' && item.badge !== 'TOP 3'}}">{{item.badge}}</text>
+              <text class="hot-card-desc-text">{{item.desc}}</text>
+            </view>
 
             <!-- 底部：人数与获取 -->
             <view class="hot-card-footer">

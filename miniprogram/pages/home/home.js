@@ -64,7 +64,13 @@ Page({
       const { banners, announcements, topPicks, feedList, stats } = overviewRes.data;
       updates.bannerList = banners || [];
       updates.noticeText = (announcements && announcements.length) ? announcements[0].content : '';
-      updates.topPicks = topPicks || [];
+      // 热门飙升榜：严格截取热度最高的前三条数据，自动生成 TOP 排名序列，与后台标签字段彻底解耦
+      const picks = Array.isArray(topPicks) ? topPicks.slice(0, 3) : [];
+      updates.topPicks = picks.map((item, index) => ({
+        ...item,
+        rank: index + 1,
+        rankBadge: item.rankBadge || `TOP ${index + 1}`
+      }));
       updates.feedList = feedList || [];
       if (stats && stats.totalResources) updates.totalCount = `${stats.totalResources}+`;
     }

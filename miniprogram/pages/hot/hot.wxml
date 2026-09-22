@@ -70,8 +70,8 @@
       <text class="section-more" bindtap="onHallOfFameTap" hover-class="btn-hover">历史名人堂 ></text>
     </view>
 
-    <!-- TOP 1 冠军榜首 (PicGo 全功能图床神器) -->
-    <view class="top1-card" bindtap="goToDetail" data-id="picgo" hover-class="card-hover">
+    <!-- TOP 1 冠军榜首 (全网热度最高领跑) -->
+    <view class="top1-card" bindtap="goToDetail" data-id="{{top1.id}}" hover-class="card-hover">
       <!-- 顶部绶带与热度 -->
       <view class="top1-header-row">
         <view class="top1-crown-badge">
@@ -88,7 +88,7 @@
       <view class="top1-main-body">
         <view class="picgo-icon-box">
           <image class="picgo-cloud-icon" src="{{top1.icon || '/images/cloud.svg'}}" mode="aspectFit" />
-          <text class="picgo-icon-label">PICGO</text>
+          <text class="picgo-icon-label">{{top1.title ? top1.title.slice(0, 5) : 'TOP 1'}}</text>
         </view>
         <view class="top1-info-content">
           <view class="top1-title-row">

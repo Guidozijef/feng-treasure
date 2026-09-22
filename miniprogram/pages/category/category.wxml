@@ -203,8 +203,9 @@
         <view class="cat-footer-wrap">
           <view class="footer-hint-text">已加载全部该分类资源 · 找不到请提需求反馈</view>
           <view class="footer-request-link" bindtap="onRequestResourceTap" hover-class="btn-hover">
-            <text class="rect-icon">□</text>
+            <text class="rect-icon" decode="true">&gt;</text>
             <text class="link-label">求资源 / 纠错通道</text>
+            <text class="rect-icon" decode="true">&lt;</text>
           </view>
         </view>
 

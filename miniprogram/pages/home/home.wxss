@@ -421,13 +421,57 @@
 }
 
 .hot-card-badge {
-  background: #edf5ff;
-  color: #0f5bd8;
   font-size: 22rpx;
   font-weight: 800;
-  padding: 8rpx 22rpx;
+  padding: 6rpx 20rpx;
   border-radius: 30rpx;
   letter-spacing: 1rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* TOP 1: 冠军金橙专属渐变徽章 (热度首位，极客尊享) */
+.hot-card-badge.rank-badge-1 {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  color: #ea580c;
+  border: 1rpx solid #fed7aa;
+  box-shadow: 0 4rpx 12rpx rgba(234, 88, 12, 0.15);
+}
+
+/* TOP 2: 亚军科技蓝极速渐变徽章 */
+.hot-card-badge.rank-badge-2 {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+  border: 1rpx solid #bfdbfe;
+  box-shadow: 0 4rpx 12rpx rgba(29, 78, 216, 0.12);
+}
+
+/* TOP 3: 季军琥珀铜金精选渐变徽章 */
+.hot-card-badge.rank-badge-3 {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  color: #b45309;
+  border: 1rpx solid #fde68a;
+  box-shadow: 0 4rpx 12rpx rgba(180, 83, 9, 0.12);
+}
+
+/* 资源自带的原生特性标签 (区别于 TOP 排名) */
+.hot-card-tag-pill {
+  display: inline-block;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1rpx solid #a7f3d0;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+  margin-right: 8rpx;
+  vertical-align: middle;
+}
+
+.hot-card-desc-text {
+  vertical-align: middle;
 }
 
 .hot-card-title {
