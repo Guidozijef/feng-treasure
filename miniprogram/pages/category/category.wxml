@@ -360,7 +360,7 @@
             bindtap="onSelectDrawerSize" 
             data-val="small"
           >
-            &lt; 50 MB (极速轻量)
+          <text decode="true">&lt; </text>50 MB (极速轻量)
           </view>
           <view 
             class="chip {{drawerFilter.size === 'medium' ? 'active' : ''}}" 
@@ -381,7 +381,7 @@
             bindtap="onSelectDrawerSize" 
             data-val="xlarge"
           >
-            &gt; 2 GB (超大海量)
+            <text decode="true">&gt; </text>2 GB (超大海量)
           </view>
         </view>
       </view>
