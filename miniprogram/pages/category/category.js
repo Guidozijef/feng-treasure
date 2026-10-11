@@ -167,11 +167,17 @@ Page({
     const tag = e.currentTarget.dataset.tag || '';
     if (this.data.activeQuickTag === tag) {
       // 再次点击相同标签则取消，恢复全部
-      this.setData({ activeQuickTag: '' }, () => {
+      this.setData({ 
+        activeQuickTag: '',
+        'drawerFilter.selectedTags': []
+      }, () => {
         this.refreshContentData();
       });
     } else {
-      this.setData({ activeQuickTag: tag }, () => {
+      this.setData({ 
+        activeQuickTag: tag,
+        'drawerFilter.selectedTags': tag ? [tag] : []
+      }, () => {
         this.refreshContentData();
       });
     }
@@ -247,11 +253,11 @@ Page({
     if (df.license && df.license !== 'all') {
       params.license = df.license;
     }
-    // 快捷细分标签或抽屉多维标签过滤
-    if (quickTag) {
-      params.tags = quickTag;
-    } else if (df.selectedTags && df.selectedTags.length > 0) {
+    // 细分标签过滤：优先使用抽屉多选标签，否则使用快捷单选标签
+    if (df.selectedTags && df.selectedTags.length > 0) {
       params.tags = df.selectedTags.join(',');
+    } else if (quickTag) {
+      params.tags = quickTag;
     }
     if (df.size && df.size !== 'all') {
       params.size = df.size;
@@ -278,26 +284,29 @@ Page({
   // 抽屉内实时预览匹配款数
   async previewDrawerCount() {
     const nav = this.data.activeNav;
-    const scene = this.data.activeSceneId;
     const sort = this.data.activeSort;
     const df = this.data.drawerFilter;
 
     const params = {
       category: nav,
-      scene: scene,
       sort: sort
     };
 
     if (df.systems && df.systems.length > 0) params.systems = df.systems.join(',');
     if (df.license && df.license !== 'all') params.license = df.license;
-    if (df.selectedTags && df.selectedTags.length > 0) params.tags = df.selectedTags.join(',');
+    if (df.selectedTags && df.selectedTags.length > 0) {
+      params.tags = df.selectedTags.join(',');
+    } else if (this.data.activeQuickTag) {
+      params.tags = this.data.activeQuickTag;
+    }
     if (df.size && df.size !== 'all') params.size = df.size;
     if (df.pwdType && df.pwdType !== 'all') params.pwdType = df.pwdType;
     if (df.minRating && df.minRating !== 'all') params.minRating = df.minRating;
 
     const res = await api.getResources(params);
-    if (res && res.code === 0 && res.total !== undefined) {
-      this.setData({ drawerResultCount: res.total });
+    if (res && res.code === 0) {
+      const count = res.total !== undefined ? res.total : (Array.isArray(res.data) ? res.data.length : 0);
+      this.setData({ drawerResultCount: count });
     }
   },
 
@@ -479,16 +488,21 @@ Page({
     this.onResetDrawer();
   },
 
-  // 从页面顶部已选胶囊中单独移除某项筛选
+  // 从页面已选胶囊中单独移除某项筛选
   removeFilterTag(e) {
     const { type, val } = e.currentTarget.dataset;
     const df = { ...this.data.drawerFilter };
+    let activeQuickTag = this.data.activeQuickTag;
+
     if (type === 'system') {
       df.systems = (df.systems || []).filter(s => s !== val);
     } else if (type === 'license') {
       df.license = 'all';
     } else if (type === 'tag') {
       df.selectedTags = (df.selectedTags || []).filter(t => t !== val);
+      if (activeQuickTag === val) {
+        activeQuickTag = '';
+      }
     } else if (type === 'size') {
       df.size = 'all';
     } else if (type === 'pwdType') {
@@ -496,14 +510,24 @@ Page({
     } else if (type === 'minRating') {
       df.minRating = 'all';
     }
-    this.setData({ drawerFilter: df }, () => {
+    this.setData({ 
+      drawerFilter: df,
+      activeQuickTag: activeQuickTag
+    }, () => {
       this.refreshContentData();
     });
   },
 
   // 应用抽屉筛选
   applyFilter() {
-    this.setData({ showDrawer: false });
+    const df = this.data.drawerFilter;
+    const selectedTags = df.selectedTags || [];
+    // 同步给页面顶部的快捷标签栏：如果选了单个细分标签则同步选中，选了多个或没选则重置快捷栏
+    const activeQuickTag = selectedTags.length === 1 ? selectedTags[0] : '';
+    this.setData({ 
+      showDrawer: false,
+      activeQuickTag: activeQuickTag
+    });
     this.refreshContentData();
     showToast('多维筛选已生效');
   },

@@ -1,4 +1,17 @@
 <!-- 分类页面 (资源库 1:1 像素级还原) -->
+<wxs module="tools">
+  function includes(arr, val) {
+    if (!arr || !val) return false;
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] === val) return true;
+    }
+    return false;
+  }
+  module.exports = {
+    includes: includes
+  };
+</wxs>
+
 <view class="category-page-container">
 
   <!-- 1. 自定义顶部导航栏 (资源库 ●) -->
@@ -43,6 +56,24 @@
       <image class="filter-slider-svg" src="/images/icon_filter_blue.svg" mode="aspectFit" />
       <view wx:if="{{activeFilterCount > 0}}" class="filter-count-badge">{{activeFilterCount}}</view>
     </view>
+  </view>
+
+  <!-- 2.1 顶部已激活筛选条件条 (置于搜索框正下方，支持横滑查看、点击移除与一键重置) -->
+  <view class="active-filters-bar" wx:if="{{activeFilterTags.length > 0}}">
+    <scroll-view class="active-filters-scroll" scroll-x="true" show-scrollbar="false" enhanced="true">
+      <view class="active-filters-inner">
+        <text class="filter-bar-label">已筛选:</text>
+        <block wx:for="{{activeFilterTags}}" wx:key="key">
+          <view class="active-filter-chip" bindtap="removeFilterTag" data-key="{{item.key}}" data-type="{{item.type}}" data-val="{{item.val}}">
+            <text class="chip-label">{{item.label}}</text>
+            <text class="chip-x">✕</text>
+          </view>
+        </block>
+        <view class="clear-all-filter-btn" bindtap="onResetDrawer" hover-class="btn-hover">
+          <text>重置全部</text>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 3. 主体左右分栏布局 -->
@@ -111,11 +142,11 @@
             </view>
 
             <!-- 高级筛选触发按钮 (精致图标+红点) -->
-            <view class="cat-filter-icon-btn {{activeFilterCount > 0 ? 'filter-active' : ''}}" bindtap="toggleDrawer" hover-class="btn-hover">
+            <!-- <view class="cat-filter-icon-btn {{activeFilterCount > 0 ? 'filter-active' : ''}}" bindtap="toggleDrawer" hover-class="btn-hover">
               <image class="filter-mini-icon" src="/images/icon_filter_blue.svg" mode="aspectFit" />
               <text class="filter-mini-text">筛选</text>
               <view wx:if="{{activeFilterCount > 0}}" class="filter-dot-badge">{{activeFilterCount}}</view>
-            </view>
+            </view> -->
           </view>
         </view>
 
@@ -132,30 +163,18 @@
               </view>
               <block wx:for="{{subScenes}}" wx:key="id">
                 <view 
-                  class="quick-subtag-pill {{activeQuickTag === item.name ? 'pill-active' : ''}}" 
+                  class="quick-subtag-pill {{activeQuickTag === (item.name || item) ? 'pill-active' : ''}}" 
                   bindtap="onSelectQuickTag" 
-                  data-tag="{{item.name}}"
+                  data-tag="{{item.name || item}}"
                 >
-                  {{item.name}}
+                  {{item.name || item}}
                 </view>
               </block>
             </view>
           </scroll-view>
         </view>
 
-        <!-- 3. 已选多维筛选标签摘要 (仅在生效时展开，轻量不挤占) -->
-        <view class="active-filter-chips-row" wx:if="{{activeFilterTags.length > 0}}">
-          <text class="filter-summary-label">已筛选:</text>
-          <block wx:for="{{activeFilterTags}}" wx:key="key">
-            <view class="active-summary-chip" bindtap="removeFilterTag" data-key="{{item.key}}" data-type="{{item.type}}" data-val="{{item.val}}">
-              <text>{{item.label}}</text>
-              <text class="chip-x">✕</text>
-            </view>
-          </block>
-          <text class="clear-all-link" bindtap="onResetDrawer">重置</text>
-        </view>
-
-        <!-- 4. 资源卡片列表 (极客通透质感，合理留白与规格层级) -->
+        <!-- 3. 资源卡片列表 (极客通透质感，合理留白与规格层级) -->
         <view class="cat-resource-list">
           <block wx:for="{{items}}" wx:key="id">
             <view class="res-card-box" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
@@ -247,28 +266,28 @@
         </view>
         <view class="filter-chips">
           <view 
-            class="chip {{drawerFilter.systems.indexOf('win') > -1 ? 'active' : ''}}" 
+            class="chip {{tools.includes(drawerFilter.systems, 'win') ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="win"
           >
             Windows (桌面端)
           </view>
           <view 
-            class="chip {{drawerFilter.systems.indexOf('mac') > -1 ? 'active' : ''}}" 
+            class="chip {{tools.includes(drawerFilter.systems, 'mac') ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="mac"
           >
             macOS (Apple M/Intel)
           </view>
           <view 
-            class="chip {{drawerFilter.systems.indexOf('web') > -1 ? 'active' : ''}}" 
+            class="chip {{tools.includes(drawerFilter.systems, 'web') ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="web"
           >
             网页端 / Chrome扩展
           </view>
           <view 
-            class="chip {{drawerFilter.systems.indexOf('linux') > -1 ? 'active' : ''}}" 
+            class="chip {{tools.includes(drawerFilter.systems, 'linux') ? 'active' : ''}}" 
             bindtap="onToggleDrawerSystem" 
             data-val="linux"
           >
@@ -331,7 +350,7 @@
         <view class="filter-chips">
           <block wx:for="{{availableFilterTags}}" wx:key="*this">
             <view 
-              class="chip {{drawerFilter.selectedTags.indexOf(item) > -1 ? 'active' : ''}}" 
+              class="chip {{tools.includes(drawerFilter.selectedTags, item) ? 'active' : ''}}" 
               bindtap="onToggleDrawerTag" 
               data-val="{{item}}"
             >
