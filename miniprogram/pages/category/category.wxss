@@ -803,7 +803,7 @@ page {
 }
 
 .drawer-footer {
-  padding: 20rpx 28rpx calc(24rpx + env(safe-area-inset-bottom));
+  padding: 20rpx 28rpx;
   display: flex;
   gap: 20rpx;
   border-top: 1rpx solid #f1f5f9;

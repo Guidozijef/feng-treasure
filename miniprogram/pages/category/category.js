@@ -154,15 +154,15 @@ Page({
     await this.refreshContentData();
   },
 
-  // 加载指定大分类下的细分场景
+  // 加载指定大分类下的关联细分标签
   async loadCategoryScenes(navId) {
     const res = await api.getSubScenes(navId);
     const subScenes = (res && res.code === 0 && Array.isArray(res.data)) ? res.data : [];
-    const firstSceneId = (subScenes[0] && subScenes[0].id) ? subScenes[0].id : '';
 
+    // 默认展示该大分类下的全部资源
     this.setData({
-      subScenes,
-      activeSceneId: firstSceneId
+      subScenes: subScenes.map(s => ({ ...s, active: false })),
+      activeSceneId: 'all'
     });
   },
 
@@ -202,21 +202,24 @@ Page({
     await this.refreshContentData();
   },
 
-  // 切换细分场景标签
+  // 切换细分标签
   onSwitchScene(e) {
     const id = e.currentTarget.dataset.id;
+    const name = e.currentTarget.dataset.name;
+    const targetTag = (id === 'all') ? 'all' : (name || id);
+
     const subScenes = this.data.subScenes.map(s => ({
       ...s,
-      active: s.id === id
+      active: (id !== 'all' && (s.id === id || s.name === name))
     }));
     this.setData({
-      activeSceneId: id,
+      activeSceneId: targetTag,
       subScenes
     });
     this.refreshContentData();
   },
 
-  // 点击「全部标签 >」直接打开高级筛选抽屉
+  // 点击「高级筛选 >」直接打开高级筛选抽屉
   onAllTagsTap() {
     this.toggleDrawer();
   },
@@ -240,9 +243,12 @@ Page({
 
     const params = {
       category: nav,
-      scene: scene,
       sort: sort
     };
+
+    if (scene && scene !== 'all') {
+      params.scene = scene;
+    }
 
     if (df.systems && df.systems.length > 0) {
       params.systems = df.systems.join(',');

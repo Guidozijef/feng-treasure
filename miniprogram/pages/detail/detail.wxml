@@ -12,6 +12,12 @@
         <view class="hero-title-row">
           <text class="hero-title">{{resource.title}}</text>
         </view>
+        <!-- 统一细分标签 (与首页列表、分类列表完全一致) -->
+        <view class="detail-tags-row" wx:if="{{resource.tags && resource.tags.length > 0}}">
+          <block wx:for="{{resource.tags}}" wx:for-item="tag" wx:key="text">
+            <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
+          </block>
+        </view>
         <view class="hero-badge-row">
           <view class="hero-version-pill">{{resource.version}}</view>
           <view class="hero-platform-tag">{{resource.platform}}</view>
@@ -63,66 +69,54 @@
     </view>
   </view>
 
-  <!-- 3. 现代化双选项卡 (功能特性 / 使用说明) -->
-  <view class="detail-tabs">
-    <view class="tab-btn {{activeTab === 'features' ? 'active' : ''}}" bindtap="setTab" data-tab="features">
-      <text class="tab-text">功能特性</text>
-    </view>
-    <view class="tab-btn {{activeTab === 'setup' ? 'active' : ''}}" bindtap="setTab" data-tab="setup">
-      <text class="tab-text">使用说明</text>
-    </view>
-  </view>
-
-  <!-- 4. 选项卡对应正文 -->
+  <!-- 3. 详细正文内容卡片 (单页连贯展示，无需繁琐标签页切换) -->
   <view class="content-card">
-    <!-- 4.1 功能特性 (直接渲染数据库保存的富文本 HTML，支持样式段落、有序列表、无序列表、引用提示) -->
-    <block wx:if="{{activeTab === 'features'}}">
-      <view class="rich-detail-wrapper">
-        <block wx:if="{{resource.detailHtml}}">
-          <rich-text class="rich-detail-content" nodes="{{resource.detailHtml}}" user-select="true"></rich-text>
-        </block>
-        <block wx:else>
-          <view class="section-header">
-            <view class="section-indicator"></view>
-            <text class="section-title">功能说明</text>
-          </view>
-          <view class="feature-desc-paragraph">
-            <text class="paragraph-lead" user-select="true">{{resource.fullDesc || resource.desc || '开箱即用，轻量便捷'}}</text>
-          </view>
-        </block>
-      </view>
-
-      <!-- 4.2 界面实拍/截图展示 (仅在数据库中有图片数据时渲染，无图片则彻底不展示) -->
-      <view class="screenshot-section" wx:if="{{resource.images && resource.images.length > 0}}">
-        <view class="section-header mt-28">
+    <!-- 3.1 功能说明与图文详情 -->
+    <view class="rich-detail-wrapper">
+      <block wx:if="{{resource.detailHtml}}">
+        <rich-text class="rich-detail-content" nodes="{{resource.detailHtml}}" user-select="true"></rich-text>
+      </block>
+      <block wx:else>
+        <view class="section-header">
           <view class="section-indicator"></view>
-          <text class="section-title">界面实拍与预览</text>
-          <text class="screenshot-count-hint">点击可放大查看</text>
+          <text class="section-title">功能说明</text>
         </view>
+        <view class="feature-desc-paragraph">
+          <text class="paragraph-lead" user-select="true">{{resource.desc || '开箱即用，轻量便捷'}}</text>
+        </view>
+      </block>
+    </view>
 
-        <view class="screenshot-gallery">
-          <view class="screenshot-card" wx:for="{{resource.images}}" wx:key="index">
-            <image
-              class="screenshot-img"
-              src="{{item}}"
-              mode="widthFix"
-              bindtap="previewImage"
-              data-src="{{item}}"
-              lazy-load="true"
-            />
-          </view>
-        </view>
-        <view class="screenshot-tip">原生界面清爽无干扰 · 支持点击全屏查看高清大图</view>
+    <!-- 3.2 界面实拍/截图展示 (仅在数据库中有图片数据时渲染) -->
+    <view class="screenshot-section" wx:if="{{resource.images && resource.images.length > 0}}">
+      <view class="section-header mt-28">
+        <view class="section-indicator"></view>
+        <text class="section-title">界面实拍与预览</text>
+        <text class="screenshot-count-hint">点击可放大查看</text>
       </view>
-    </block>
 
-    <block wx:if="{{activeTab === 'setup'}}">
-      <view class="section-header">
+      <view class="screenshot-gallery">
+        <view class="screenshot-card" wx:for="{{resource.images}}" wx:key="index">
+          <image
+            class="screenshot-img"
+            src="{{item}}"
+            mode="widthFix"
+            bindtap="previewImage"
+            data-src="{{item}}"
+            lazy-load="true"
+          />
+        </view>
+      </view>
+      <view class="screenshot-tip">原生界面清爽无干扰 · 支持点击全屏查看高清大图</view>
+    </view>
+
+    <!-- 3.3 使用说明与运行指南 (无需切换标签页直接可见) -->
+    <view class="setup-section">
+      <view class="section-header mt-28">
         <view class="section-indicator"></view>
         <text class="section-title">使用说明与运行指南</text>
       </view>
 
-      <!-- 动态步骤列表 -->
       <block wx:if="{{resource.setupSteps && resource.setupSteps.length > 0}}">
         <view class="step-card" wx:for="{{resource.setupSteps}}" wx:key="num">
           <view class="step-badge">{{item.title}}</view>
@@ -140,12 +134,11 @@
         </view>
       </block>
 
-      <!-- 动态常见问题与提示卡片 -->
       <view class="safe-notice-card" wx:if="{{resource.faq}}">
         <view class="safe-notice-title">{{resource.faq.title}}</view>
         <view class="safe-notice-desc">{{resource.faq.desc}}</view>
       </view>
-    </block>
+    </view>
   </view>
 
   <!-- 5. 免责声明 -->

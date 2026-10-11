@@ -96,25 +96,35 @@
     <view class="cat-content-wrapper">
       <scroll-view class="cat-content-scroll" scroll-y="true">
         
-        <!-- 细分场景卡片 -->
+        <!-- 细分标签卡片 (由大分类直接关联) -->
         <view class="sub-scene-card">
           <view class="scene-header-row">
             <view class="scene-header-left">
               <view class="scene-blue-bar"></view>
-              <text class="scene-title-text">细分场景</text>
+              <text class="scene-title-text">细分标签</text>
             </view>
             <view class="scene-header-right" bindtap="onAllTagsTap" hover-class="btn-hover">
-              <text class="all-tags-text">全部标签 ></text>
+              <text class="all-tags-text">高级筛选 ></text>
             </view>
           </view>
 
-          <!-- 2 行 x 3 列场景网格 -->
+          <!-- 细分标签网格 (默认全部 + 分类关联标签) -->
           <view class="scene-tags-grid">
+            <view 
+              class="scene-cell-item {{activeSceneId === 'all' || !activeSceneId ? 'scene-cell-active' : ''}}"
+              bindtap="onSwitchScene"
+              data-id="all"
+              data-name="全部"
+              hover-class="btn-hover"
+            >
+              <text class="scene-cell-name">全部</text>
+            </view>
             <block wx:for="{{subScenes}}" wx:key="id">
               <view 
                 class="scene-cell-item {{item.active ? 'scene-cell-active' : ''}}"
                 bindtap="onSwitchScene"
                 data-id="{{item.id}}"
+                data-name="{{item.name}}"
                 hover-class="btn-hover"
               >
                 <text class="scene-cell-name">{{item.name}}</text>
@@ -157,22 +167,28 @@
           </view>
         </view>
 
-        <!-- 资源卡片列表 (1:1 还原 5 款精选卡片) -->
+        <!-- 资源卡片列表 (统一产品细分标签展示) -->
         <view class="cat-resource-list">
           <block wx:for="{{items}}" wx:key="id">
             <view class="res-card-box" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
               
               <!-- 左侧图标盒子 -->
-              <view class="res-card-left" style="background-color: {{item.iconBg}};">
+              <view class="res-card-left" style="background-color: {{item.iconBg || '#eff6ff'}};">
                 <image class="res-card-icon" src="{{item.icon}}" mode="aspectFit" />
               </view>
 
               <!-- 中间内容区 -->
               <view class="res-card-center">
-                <!-- 标题与版本/状态徽章 -->
+                <!-- 统一产品细分标签 (与首页、详情页统一) -->
+                <!-- <view class="feed-tags-row" wx:if="{{item.tags && item.tags.length > 0}}">
+                  <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
+                    <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
+                  </block>
+                </view> -->
+
+                <!-- 标题 -->
                 <view class="res-card-top-row">
                   <text class="res-card-title">{{item.title}}</text>
-                  <view class="res-badge {{item.badgeClass}}">{{item.badge}}</view>
                 </view>
 
                 <!-- 描述 -->
