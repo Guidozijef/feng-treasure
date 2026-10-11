@@ -191,8 +191,9 @@ page {
 .res-title-row {
   display: flex;
   align-items: center;
-  gap: 12rpx;
-  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 10rpx;
+  width: 100%;
 }
 
 .res-title-text {
@@ -202,7 +203,8 @@ page {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 350rpx;
+  flex: 1;
+  min-width: 0;
 }
 
 .res-version-badge {

@@ -1,55 +1,84 @@
 <!-- pages/detail/detail.wxml -->
 <view class="detail-container">
-  <!-- 1. 头部英雄主卡片 -->
+  <!-- 1. 头部应用核心主卡片 -->
   <view class="hero-card">
+    <!-- 1.1 应用核心标识区 (纯净清爽，绝不堆积杂乱标签) -->
     <view class="hero-top">
-      <!-- 现代化应用图标容器 -->
       <view class="hero-icon-box">
         <image class="hero-icon-img" src="{{resource.icon || '/images/detail_picgo.svg'}}" mode="aspectFit" />
       </view>
       
       <view class="hero-header-text">
+        <!-- 第一行: 应用名称大标题与视觉角标 -->
         <view class="hero-title-row">
           <text class="hero-title">{{resource.title}}</text>
+          <text wx:if="{{resource.badge}}" class="global-visual-badge hero-visual-badge">{{resource.badge}}</text>
         </view>
-        <!-- 统一细分标签 (与首页列表、分类列表完全一致) -->
-        <view class="detail-tags-row" wx:if="{{resource.tags && resource.tags.length > 0}}">
-          <block wx:for="{{resource.tags}}" wx:for-item="tag" wx:key="text">
-            <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
-          </block>
-        </view>
-        <view class="hero-badge-row">
-          <view class="hero-version-pill">{{resource.version}}</view>
-          <view class="hero-platform-tag">{{resource.platform}}</view>
-        </view>
-        <view class="safe-badge">
-          <image class="safe-icon-svg" src="/images/vip_feature_verify.svg" mode="aspectFit" />
-          <text class="safe-text">{{resource.safeText || '官方绿化认证 · 纯净无毒无捆绑'}}</text>
+        
+        <!-- 第二行: 纯净副标题元信息规格 (版本 · 平台 · 日期) -->
+        <view class="hero-subtitle-row">
+          <text wx:if="{{resource.version}}" class="hero-sub-text hero-sub-ver">v{{resource.version}}</text>
+          <text wx:if="{{resource.version && resource.platform}}" class="hero-sub-dot">·</text>
+          <text wx:if="{{resource.platform}}" class="hero-sub-text hero-sub-plat">{{resource.platform}}</text>
+          <text wx:if="{{(resource.version || resource.platform) && resource.publishDate}}" class="hero-sub-dot">·</text>
+          <text wx:if="{{resource.publishDate}}" class="hero-sub-text hero-sub-date">{{resource.publishDate}}</text>
         </view>
       </view>
     </view>
 
-    <!-- 简介描述 -->
-    <view class="hero-desc">{{resource.desc}}</view>
-
-    <!-- 四格核心指标看板 -->
+    <!-- 1.2 四格核心指标规格看板 (规范 4 大核心规格矩阵) -->
     <view class="meta-grid">
       <view class="meta-cell">
-        <text class="meta-val">{{resource.size}}</text>
+        <text class="meta-val">{{resource.size || '未知'}}</text>
         <text class="meta-lbl">文件体积</text>
       </view>
       <view class="meta-cell">
-        <text class="meta-val meta-val-gold">{{resource.rating}} <text class="star-unit">★</text></text>
+        <text class="meta-val meta-val-gold">{{resource.rating || '9.9'}} <text class="star-unit">★</text></text>
         <text class="meta-lbl">极客好评</text>
       </view>
       <view class="meta-cell">
-        <text class="meta-val meta-val-blue">{{resource.downloads}}</text>
+        <text class="meta-val meta-val-blue">{{resource.downloads || 0}}</text>
         <text class="meta-lbl">累计转存</text>
       </view>
       <view class="meta-cell">
-        <text class="meta-val meta-val-green">{{resource.mode || '绿色免装'}}</text>
-        <text class="meta-lbl">运行模式</text>
+        <text class="meta-val meta-val-green">{{resource.platform || '全平台'}}</text>
+        <text class="meta-lbl">适用平台</text>
       </view>
+    </view>
+
+    <!-- 1.3 专属细分标签展区 (分类标签独立成区，优雅 hashtag 药丸，呼吸感充足) -->
+    <view class="detail-tags-section" wx:if="{{resource.tags && resource.tags.length > 0}}">
+      <view class="detail-tags-label-row">
+        <image class="tags-section-icon" src="/images/icon_filter_blue.svg" mode="aspectFit" />
+        <text class="tags-section-title">细分特征标签</text>
+        <text class="tags-section-count">({{resource.tags.length}} 个分类特性)</text>
+      </view>
+      <view class="detail-tags-flow">
+        <block wx:for="{{resource.tags}}" wx:for-item="tag" wx:key="text">
+          <view class="detail-tag-pill tag-{{tag.type || 'blue'}}">
+            <text class="tag-hash">#</text>
+            <text class="tag-name">{{tag.text}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 1.4 绿色安全真机认证条 (独立横幅，专业可信赖) -->
+    <view class="detail-safety-banner">
+      <view class="safety-banner-left">
+        <image class="safety-banner-icon" src="/images/vip_feature_verify.svg" mode="aspectFit" />
+        <view class="safety-banner-info">
+          <text class="safety-banner-title">平台安全绿化认证</text>
+          <text class="safety-banner-sub">{{resource.safeText || '人工真机实测 · 纯净无广告 · 资源完整可用'}}</text>
+        </view>
+      </view>
+      <view class="safety-banner-pill">已实测</view>
+    </view>
+
+    <!-- 1.5 资源功能简介引言盒子 -->
+    <view class="detail-desc-box" wx:if="{{resource.desc}}">
+      <text class="desc-quote-icon">“</text>
+      <text class="desc-text">{{resource.desc}}</text>
     </view>
   </view>
 
@@ -206,10 +235,12 @@
         <view class="modal-res-info">
           <view class="modal-res-name-row">
             <text class="modal-res-name">{{resource.title}}</text>
-            <view class="modal-res-ver-pill">{{resource.versionBadge || 'v2.4.0'}}</view>
+            <view wx:if="{{resource.version}}" class="modal-res-ver-pill">{{resource.version}}</view>
           </view>
           <view class="modal-res-meta">
-            资源大小: {{resource.size}} · {{resource.platform}}
+            <text wx:if="{{resource.size}}">资源大小: {{resource.size}}</text>
+            <text wx:if="{{resource.size && resource.platform}}"> · </text>
+            <text wx:if="{{resource.platform}}">{{resource.platform}}</text>
           </view>
         </view>
       </view>

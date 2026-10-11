@@ -53,6 +53,9 @@ Page({
     // 右侧细分场景标签列表 (从 PocketBase 对应分类动态加载)
     subScenes: [],
 
+    // 当前选中的快捷细分标签名称
+    activeQuickTag: '',
+
     // 当前选中的场景标签 id
     activeSceneId: '',
 
@@ -126,27 +129,14 @@ Page({
     }
   },
 
-  // 页面初始化：从数据库加载分类、标签和初次资源
+  // 页面初始化：从数据库加载分类和初次资源
   async initCategoryPage() {
-    const [catRes, tagRes] = await Promise.all([
-      api.getCategories(),
-      api.getQuickTags()
-    ]);
-
+    const catRes = await api.getCategories();
     const categories = (catRes && catRes.code === 0 && catRes.data) ? catRes.data : [];
-    const quickTags = (tagRes && tagRes.code === 0 && tagRes.data) ? tagRes.data : [];
-
-    const firstNav = (categories[0] && categories[0].id) ? categories[0].id : 'pc';
-
-    // 提取动态热门标签供抽屉使用
-    let availableFilterTags = this.data.availableFilterTags;
-    if (quickTags && quickTags.length > 0) {
-      availableFilterTags = quickTags.map(t => t.name).slice(0, 16);
-    }
+    const firstNav = (categories[0] && (categories[0].cat_id || categories[0].id)) ? (categories[0].cat_id || categories[0].id) : 'pc';
 
     this.setData({
       categories,
-      availableFilterTags,
       activeNav: firstNav
     });
 
@@ -154,16 +144,37 @@ Page({
     await this.refreshContentData();
   },
 
-  // 加载指定大分类下的关联细分标签
+  // 加载指定大分类下的关联细分标签 (用于高级筛选抽屉)
   async loadCategoryScenes(navId) {
     const res = await api.getSubScenes(navId);
     const subScenes = (res && res.code === 0 && Array.isArray(res.data)) ? res.data : [];
+    const categoryTags = subScenes.map(s => (s.name || s));
 
-    // 默认展示该大分类下的全部资源
+    const cat = this.data.categories.find(c => (c.id === navId || c.cat_id === navId));
+    const currentCategoryName = cat ? cat.name : '全部资源';
+
     this.setData({
-      subScenes: subScenes.map(s => ({ ...s, active: false })),
-      activeSceneId: 'all'
+      subScenes,
+      currentCategoryName,
+      availableFilterTags: categoryTags,
+      activeQuickTag: '',
+      'drawerFilter.selectedTags': []
     });
+  },
+
+  // 点击快捷细分标签
+  onSelectQuickTag(e) {
+    const tag = e.currentTarget.dataset.tag || '';
+    if (this.data.activeQuickTag === tag) {
+      // 再次点击相同标签则取消，恢复全部
+      this.setData({ activeQuickTag: '' }, () => {
+        this.refreshContentData();
+      });
+    } else {
+      this.setData({ activeQuickTag: tag }, () => {
+        this.refreshContentData();
+      });
+    }
   },
 
   // 顶部返回箭头点击
@@ -202,23 +213,6 @@ Page({
     await this.refreshContentData();
   },
 
-  // 切换细分标签
-  onSwitchScene(e) {
-    const id = e.currentTarget.dataset.id;
-    const name = e.currentTarget.dataset.name;
-    const targetTag = (id === 'all') ? 'all' : (name || id);
-
-    const subScenes = this.data.subScenes.map(s => ({
-      ...s,
-      active: (id !== 'all' && (s.id === id || s.name === name))
-    }));
-    this.setData({
-      activeSceneId: targetTag,
-      subScenes
-    });
-    this.refreshContentData();
-  },
-
   // 点击「高级筛选 >」直接打开高级筛选抽屉
   onAllTagsTap() {
     this.toggleDrawer();
@@ -237,18 +231,15 @@ Page({
   // 收集当前筛选参数并调用 API 刷新资源列表
   async refreshContentData() {
     const nav = this.data.activeNav;
-    const scene = this.data.activeSceneId;
     const sort = this.data.activeSort;
     const df = this.data.drawerFilter;
+
+    const quickTag = this.data.activeQuickTag;
 
     const params = {
       category: nav,
       sort: sort
     };
-
-    if (scene && scene !== 'all') {
-      params.scene = scene;
-    }
 
     if (df.systems && df.systems.length > 0) {
       params.systems = df.systems.join(',');
@@ -256,7 +247,10 @@ Page({
     if (df.license && df.license !== 'all') {
       params.license = df.license;
     }
-    if (df.selectedTags && df.selectedTags.length > 0) {
+    // 快捷细分标签或抽屉多维标签过滤
+    if (quickTag) {
+      params.tags = quickTag;
+    } else if (df.selectedTags && df.selectedTags.length > 0) {
       params.tags = df.selectedTags.join(',');
     }
     if (df.size && df.size !== 'all') {
@@ -466,6 +460,7 @@ Page({
   // 重置所有筛选条件
   onResetDrawer() {
     this.setData({
+      activeQuickTag: '',
       drawerFilter: {
         systems: [],
         license: 'all',
@@ -478,6 +473,10 @@ Page({
       this.refreshContentData();
       showToast('筛选条件已重置');
     });
+  },
+
+  clearDrawerFilter() {
+    this.onResetDrawer();
   },
 
   // 从页面顶部已选胶囊中单独移除某项筛选

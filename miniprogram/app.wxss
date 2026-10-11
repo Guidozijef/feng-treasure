@@ -97,3 +97,49 @@ view, text, image, navigator, input, button {
 .tag-purple { background: #f5f3ff; color: #7c3aed; border: 1rpx solid #ede9fe; }
 .tag-red { background: #fef2f2; color: #ef4444; border: 1rpx solid #fee2e2; }
 
+/* 全局统一视觉角标文案 (badge) */
+.global-visual-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 3rpx 10rpx;
+  border-radius: 6rpx;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  color: #c2410c;
+  border: 1rpx solid #fed7aa;
+  flex-shrink: 0;
+  line-height: 1.25;
+}
+
+/* 全局统一版本号小胶囊 (version) */
+.global-version-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0;
+  line-height: 1.25;
+}
+
+/* 全局统一规格元数据 Pill */
+.meta-pill {
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  border-radius: 6rpx;
+  line-height: 1.2;
+}
+
+.pill-blue { background: #eff6ff; color: #2563eb; }
+.pill-gray { background: #f1f5f9; color: #64748b; }
+.meta-star {
+  font-size: 21rpx;
+  font-weight: 700;
+  color: #d97706;
+}
+
+

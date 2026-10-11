@@ -67,18 +67,16 @@
 
           <!-- 中间主体信息 -->
           <view class="res-info-center">
-            <!-- 标题 + 版本徽章 -->
+            <!-- 标题 + 视觉角标 -->
             <view class="res-title-row">
-              <text class="res-title-text">{{item.shortTitle || item.title}}</text>
-              <view wx:if="{{item.version}}" class="res-version-badge {{item.versionClass}}">
-                {{item.version}}
-              </view>
+              <text class="res-title-text">{{item.title}}</text>
+              <text wx:if="{{item.badge}}" class="global-visual-badge">{{item.badge}}</text>
             </view>
 
-            <!-- 特色标签组 -->
-            <view class="res-tags-row">
+            <!-- 细分标签组 (最多2个，保持清爽) -->
+            <view class="res-tags-row" wx:if="{{item.tags && item.tags.length > 0}}">
               <block wx:for="{{item.tags}}" wx:key="text" wx:for-item="tag">
-                <text class="res-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
+                <text wx:if="{{index < 2}}" class="res-tag-pill tag-{{tag.type || 'blue'}}">{{tag.text}}</text>
               </block>
             </view>
 

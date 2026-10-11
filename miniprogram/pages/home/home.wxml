@@ -179,23 +179,27 @@
 
             <!-- 中间内容区 -->
             <view class="feed-body-wrap">
-              <!-- 标签行 -->
-              <view class="feed-tags-row">
-                <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
-                  <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
-                </block>
+              <!-- 顶部行: 标题优先完整展示，右侧轻量视觉角标 -->
+              <view class="feed-card-top-row">
+                <text class="feed-title-text">{{item.title}}</text>
+                <!-- <text wx:if="{{item.badge}}" class="global-visual-badge">{{item.badge}}</text> -->
               </view>
 
-              <!-- 资源标题 (单行省略) -->
-              <view class="feed-title-text">{{item.title}}</view>
+              <!-- 第二行: 最多展示 1-2 个精炼细分标签，或展示简介 -->
+              <view class="feed-mid-row">
+                <view class="feed-tags-row" wx:if="{{item.tags && item.tags.length > 0}}">
+                  <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
+                    <text wx:if="{{index < 3}}" class="feed-tag-pill tag-{{tag.type || 'blue'}}">{{tag.text}}</text>
+                  </block>
+                </view>
+                <view class="feed-desc-text" wx:elif="{{item.desc}}">{{item.desc}}</view>
+              </view>
 
-              <!-- 评分与元数据 -->
+              <!-- 基础规格: 平台 + 体积 + 评分 -->
               <view class="feed-meta-row">
-                <text class="feed-rating-star">☆ {{item.rating}}</text>
-                <text class="feed-meta-dot">·</text>
-                <text class="feed-meta-size">{{item.size}}</text>
-                <text class="feed-meta-dot">·</text>
-                <text class="feed-meta-source">{{item.source}}</text>
+                <text wx:if="{{item.platform}}" class="meta-pill pill-blue">{{item.platform}}</text>
+                <text wx:if="{{item.size}}" class="meta-pill pill-gray">{{item.size}}</text>
+                <text wx:if="{{item.rating}}" class="meta-star">⭐ {{item.rating}}</text>
               </view>
             </view>
 
@@ -216,24 +220,24 @@
       <view class="modal-drag-bar"></view>
       <view class="modal-header">
         <view class="modal-title-box">
-          <text class="modal-badge">绿色免安装</text>
+          <text class="modal-badge" wx:if="{{selectedResource.badge}}">{{selectedResource.badge}}</text>
           <view class="modal-title">{{selectedResource.title}}</view>
         </view>
         <view class="modal-close" bindtap="closeModal">×</view>
       </view>
 
       <view class="modal-info-box">
-        <view class="modal-info-row">
+        <view class="modal-info-row" wx:if="{{selectedResource.size}}">
           <text class="info-label">文件大小</text>
           <text class="info-val">{{selectedResource.size}}</text>
         </view>
-        <view class="modal-info-row">
+        <view class="modal-info-row" wx:if="{{selectedResource.rating}}">
           <text class="info-label">资源评分</text>
           <text class="info-val" style="color: #d97706; font-weight: bold;">⭐ {{selectedResource.rating}} 高分</text>
         </view>
-        <view class="modal-info-row">
-          <text class="info-label">转存网盘</text>
-          <text class="info-val">{{selectedResource.source}}</text>
+        <view class="modal-info-row" wx:if="{{selectedResource.platform}}">
+          <text class="info-label">适用平台</text>
+          <text class="info-val">{{selectedResource.platform}}</text>
         </view>
         <view class="modal-info-row">
           <text class="info-label">网盘链接</text>

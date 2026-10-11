@@ -45,25 +45,7 @@
     </view>
   </view>
 
-  <!-- 3. 已激活筛选条件条 (仅在应用筛选后展示，支持快速移除单个条件或一键重置) -->
-  <view class="active-filters-bar" wx:if="{{activeFilterTags.length > 0}}">
-    <scroll-view class="active-filters-scroll" scroll-x="true" enable-flex="true">
-      <view class="active-filters-inner">
-        <text class="filter-bar-label">已筛选:</text>
-        <block wx:for="{{activeFilterTags}}" wx:key="key">
-          <view class="active-filter-chip" bindtap="removeFilterTag" data-type="{{item.type}}" data-val="{{item.val}}">
-            <text class="chip-label">{{item.label}}</text>
-            <text class="chip-x">✕</text>
-          </view>
-        </block>
-        <view class="clear-all-filter-btn" bindtap="onResetDrawer">
-          <text>重置全部</text>
-        </view>
-      </view>
-    </scroll-view>
-  </view>
-
-  <!-- 4. 主体左右分栏布局 -->
+  <!-- 3. 主体左右分栏布局 -->
   <view class="cat-body-main">
 
     <!-- 左侧纵向分类导航 (8 大分类) -->
@@ -96,113 +78,122 @@
     <view class="cat-content-wrapper">
       <scroll-view class="cat-content-scroll" scroll-y="true">
         
-        <!-- 细分标签卡片 (由大分类直接关联) -->
-        <view class="sub-scene-card">
-          <view class="scene-header-row">
-            <view class="scene-header-left">
-              <view class="scene-blue-bar"></view>
-              <text class="scene-title-text">细分标签</text>
-            </view>
-            <view class="scene-header-right" bindtap="onAllTagsTap" hover-class="btn-hover">
-              <text class="all-tags-text">高级筛选 ></text>
-            </view>
+        <!-- 1. 分类主标题、排序与筛选统一导航条 (高度紧凑，释放垂直空间) -->
+        <view class="cat-header-bar">
+          <view class="cat-title-wrap">
+            <text class="cat-current-name">{{currentCategoryName || '全部资源'}}</text>
+            <text class="cat-count-badge">{{totalCount}} 款</text>
           </view>
-
-          <!-- 细分标签网格 (默认全部 + 分类关联标签) -->
-          <view class="scene-tags-grid">
-            <view 
-              class="scene-cell-item {{activeSceneId === 'all' || !activeSceneId ? 'scene-cell-active' : ''}}"
-              bindtap="onSwitchScene"
-              data-id="all"
-              data-name="全部"
-              hover-class="btn-hover"
-            >
-              <text class="scene-cell-name">全部</text>
-            </view>
-            <block wx:for="{{subScenes}}" wx:key="id">
+          <view class="cat-actions-wrap">
+            <!-- 紧凑排序切换: 综合 / 热度 / 评分 -->
+            <view class="cat-sort-group">
               <view 
-                class="scene-cell-item {{item.active ? 'scene-cell-active' : ''}}"
-                bindtap="onSwitchScene"
-                data-id="{{item.id}}"
-                data-name="{{item.name}}"
-                hover-class="btn-hover"
+                class="cat-sort-item {{activeSort === 'comprehensive' ? 'sort-item-active' : ''}}" 
+                bindtap="setSort" 
+                data-sort="comprehensive"
               >
-                <text class="scene-cell-name">{{item.name}}</text>
+                综合
               </view>
-            </block>
+              <view 
+                class="cat-sort-item {{activeSort === 'downloads' ? 'sort-item-active' : ''}}" 
+                bindtap="setSort" 
+                data-sort="downloads"
+              >
+                热度
+              </view>
+              <view 
+                class="cat-sort-item {{activeSort === 'rating' ? 'sort-item-active' : ''}}" 
+                bindtap="setSort" 
+                data-sort="rating"
+              >
+                评分
+              </view>
+            </view>
+
+            <!-- 高级筛选触发按钮 (精致图标+红点) -->
+            <view class="cat-filter-icon-btn {{activeFilterCount > 0 ? 'filter-active' : ''}}" bindtap="toggleDrawer" hover-class="btn-hover">
+              <image class="filter-mini-icon" src="/images/icon_filter_blue.svg" mode="aspectFit" />
+              <text class="filter-mini-text">筛选</text>
+              <view wx:if="{{activeFilterCount > 0}}" class="filter-dot-badge">{{activeFilterCount}}</view>
+            </view>
           </view>
         </view>
 
-        <!-- 排序与数量统计栏 -->
-        <view class="cat-sort-bar-row">
-          <view class="sort-tabs-left">
-            <view 
-              class="sort-btn {{activeSort === 'comprehensive' ? 'sort-btn-active' : ''}}" 
-              bindtap="setSort" 
-              data-sort="comprehensive"
-              hover-class="btn-hover"
-            >
-              <text>综合排序</text>
-              <text class="sort-arrow">▾</text>
+        <!-- 2. 分类专属快捷细分标签栏 (轻量高质感滑块，高度仅 48rpx) -->
+        <view class="quick-subtags-bar" wx:if="{{subScenes && subScenes.length > 0}}">
+          <scroll-view class="quick-subtags-scroll" scroll-x="true" show-scrollbar="false" enhanced="true">
+            <view class="quick-subtags-track">
+              <view 
+                class="quick-subtag-pill {{activeQuickTag === '' ? 'pill-active' : ''}}" 
+                bindtap="onSelectQuickTag" 
+                data-tag=""
+              >
+                全部
+              </view>
+              <block wx:for="{{subScenes}}" wx:key="id">
+                <view 
+                  class="quick-subtag-pill {{activeQuickTag === item.name ? 'pill-active' : ''}}" 
+                  bindtap="onSelectQuickTag" 
+                  data-tag="{{item.name}}"
+                >
+                  {{item.name}}
+                </view>
+              </block>
             </view>
-            <view 
-              class="sort-btn {{activeSort === 'downloads' ? 'sort-btn-active' : ''}}" 
-              bindtap="setSort" 
-              data-sort="downloads"
-              hover-class="btn-hover"
-            >
-              <text>下载最多</text>
-            </view>
-            <view 
-              class="sort-btn {{activeSort === 'rating' ? 'sort-btn-active' : ''}}" 
-              bindtap="setSort" 
-              data-sort="rating"
-              hover-class="btn-hover"
-            >
-              <text>按评分</text>
-            </view>
-          </view>
-          <view class="count-text-right">
-            共 {{totalCount}} 款
-          </view>
+          </scroll-view>
         </view>
 
-        <!-- 资源卡片列表 (统一产品细分标签展示) -->
+        <!-- 3. 已选多维筛选标签摘要 (仅在生效时展开，轻量不挤占) -->
+        <view class="active-filter-chips-row" wx:if="{{activeFilterTags.length > 0}}">
+          <text class="filter-summary-label">已筛选:</text>
+          <block wx:for="{{activeFilterTags}}" wx:key="key">
+            <view class="active-summary-chip" bindtap="removeFilterTag" data-key="{{item.key}}" data-type="{{item.type}}" data-val="{{item.val}}">
+              <text>{{item.label}}</text>
+              <text class="chip-x">✕</text>
+            </view>
+          </block>
+          <text class="clear-all-link" bindtap="onResetDrawer">重置</text>
+        </view>
+
+        <!-- 4. 资源卡片列表 (极客通透质感，合理留白与规格层级) -->
         <view class="cat-resource-list">
           <block wx:for="{{items}}" wx:key="id">
             <view class="res-card-box" bindtap="goToDetail" data-id="{{item.id}}" hover-class="card-hover">
               
               <!-- 左侧图标盒子 -->
-              <view class="res-card-left" style="background-color: {{item.iconBg || '#eff6ff'}};">
-                <image class="res-card-icon" src="{{item.icon}}" mode="aspectFit" />
+              <view class="res-card-left">
+                <image class="res-card-icon" src="{{item.icon || '/images/cloud.svg'}}" mode="aspectFit" />
               </view>
 
               <!-- 中间内容区 -->
               <view class="res-card-center">
-                <!-- 统一产品细分标签 (与首页、详情页统一) -->
-                <!-- <view class="feed-tags-row" wx:if="{{item.tags && item.tags.length > 0}}">
-                  <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
-                    <text class="feed-tag-pill tag-{{tag.type}}">{{tag.text}}</text>
-                  </block>
-                </view> -->
-
-                <!-- 标题 -->
+                <!-- 第一行: 标题优先独占整行，右侧轻量视觉角标 -->
                 <view class="res-card-top-row">
                   <text class="res-card-title">{{item.title}}</text>
+                  <!-- <text wx:if="{{item.badge}}" class="res-visual-badge">{{item.badge}}</text> -->
                 </view>
 
-                <!-- 描述 -->
-                <view class="res-card-desc">{{item.desc}}</view>
+                <!-- 第二行: 最多展示 1-2 个代表细分标签，或展示简介 (整洁不臃肿) -->
+                <view class="res-card-mid-row">
+                  <view class="feed-tags-row" wx:if="{{item.tags && item.tags.length > 0}}">
+                    <block wx:for="{{item.tags}}" wx:for-item="tag" wx:key="text">
+                      <text wx:if="{{index < 2}}" class="feed-tag-pill tag-{{tag.type || 'blue'}}">{{tag.text}}</text>
+                    </block>
+                  </view>
+                  <view class="res-card-desc" wx:elif="{{item.desc}}">{{item.desc}}</view>
+                </view>
 
-                <!-- 底部元信息标签 -->
+                <!-- 第三行: 运行平台 · 文件体积 · 评分 (统一规格信息行) -->
                 <view class="res-card-meta-row">
-                  <text class="meta-pill pill-blue">{{item.platform}}</text>
-                  <text class="meta-pill pill-gray">{{item.size}}</text>
-                  <text class="meta-star">⭐ {{item.rating}}</text>
+                  <text wx:if="{{item.platform}}" class="meta-spec-text">{{item.platform}}</text>
+                  <text wx:if="{{item.platform && item.size}}" class="meta-spec-dot">·</text>
+                  <text wx:if="{{item.size}}" class="meta-spec-text">{{item.size}}</text>
+                  <text wx:if="{{(item.platform || item.size) && item.rating}}" class="meta-spec-dot">·</text>
+                  <text wx:if="{{item.rating}}" class="meta-star-text">★ {{item.rating}}</text>
                 </view>
               </view>
 
-              <!-- 右侧操作按钮 -->
+              <!-- 右侧操作按钮: 现代化轻巧获取药丸 -->
               <view class="res-card-right">
                 <view class="res-get-btn" catchtap="goToDetail" data-id="{{item.id}}" hover-class="btn-hover">
                   获取
@@ -331,10 +322,10 @@
         </view>
       </view>
 
-      <!-- 维度 3: 特色场景标签池 (支持多选) -->
+      <!-- 维度 3: 所属分类专属细分标签 (支持多选) -->
       <view class="filter-section">
         <view class="filter-section-head">
-          <text class="filter-label">特色场景标签</text>
+          <text class="filter-label">【{{currentCategoryName || '当前分类'}}】专属细分标签</text>
           <text class="filter-tip">支持多选</text>
         </view>
         <view class="filter-chips">
